@@ -1,4 +1,4 @@
-# 第一部分第二课
+# 深度学习：第一部分第二课
 
 +   [论坛](http://forums.fast.ai/t/wiki-lesson-2/9399/1)
 +   [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson1.ipynb)
