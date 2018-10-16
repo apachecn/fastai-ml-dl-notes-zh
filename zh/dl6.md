@@ -15,7 +15,7 @@
  @property  def model(self): return self.models.model 
 ```
 
-`learn.models`是`learn.models`的一个实例，它是PyTorch模型的一个薄包装器，它允许我们使用“层组”，这不是PyTorch中可用的概念，而fast.ai使用它将不同的学习速率应用于不同的层集（层组）。
+`learn.models`是`learn.models`的一个实例，它是PyTorch模型的一个薄包装器，它允许我们使用“层组”，这不是PyTorch中可用的概念，而fast.ai使用它将不同的学习率应用于不同的层集（层组）。
 
 PyTorch模型很好地打印出层，包括层名，这就是我们在代码中称之为的层名。
 
@@ -464,7 +464,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
  fit(m, md, 1, opt, F.nll_loss)  set_lrs(opt, 0.001)  fit(m, md, 1, opt, F.nll_loss) 
 ```
 
-*   我们没有找到学习速率查找器和SGDR，因为我们没有使用`Learner` ，所以我们需要手动进行学习速率退火（将LR设置得稍低）
+*   我们没有找到学习率查找器和SGDR，因为我们没有使用`Learner` ，所以我们需要手动进行学习率退火（将LR设置得稍低）
 
 #### 测试模型[ [1:35:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h35m58s) ]
 

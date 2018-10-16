@@ -39,13 +39,13 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
  tfms = tfms_from_model(f_model, sz, crop_type=CropType.NO,  aug_tfms=augs)  md = Image **Classifier** Data.from_csv(PATH, JPEGS, BB_CSV, tfms=tfms,  **continuous=True** , bs=4) 
 ```
 
-#### 让我们创建一些数据扩充[ [4:40](https://youtu.be/0frKXR-2PBY%3Ft%3D4m40s) ]
+#### 让我们创建一些数据增强[ [4:40](https://youtu.be/0frKXR-2PBY%3Ft%3D4m40s) ]
 
 ```
  augs = [RandomFlip(),  RandomRotate(30),  RandomLighting(0.1,0.1)] 
 ```
 
-通常，我们使用Jeremy为我们创建的这些快捷方式，但它们只是随机扩充的列表。 但是你可以很容易地创建自己的（大多数（如果不是全部）以“随机”开头）。
+通常，我们使用Jeremy为我们创建的这些快捷方式，但它们只是随机增强的列表。 但是你可以很容易地创建自己的（大多数（如果不是全部）以“随机”开头）。
 
 ![](../img/1_lAIQHKT0GbjY0fRZKmpFaA.png)
 
@@ -63,7 +63,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1_QMa_SUUVOypZHKaAuXDkSw.png)
 
-正如你所看到的，图像旋转并且光线变化，但是边界框_没有移动_并且_位于错误的位置_ [ [6:17](https://youtu.be/0frKXR-2PBY%3Ft%3D6m17s) ]。 当您的因变量是像素值或以某种方式连接到自变量时，这是数据增强的问题 - 它们需要一起扩充。 正如您在边界框坐标`[ 115\. 63\. 240\. 311.]`中所看到的，我们的图像是224乘224 - 所以它既不缩放也不裁剪。 因变量需要经历所有几何变换作为自变量。
+正如你所看到的，图像旋转并且光线变化，但是边界框_没有移动_并且_位于错误的位置_ [ [6:17](https://youtu.be/0frKXR-2PBY%3Ft%3D6m17s) ]。 当您的因变量是像素值或以某种方式连接到自变量时，这是数据增强的问题 - 它们需要一起增强。 正如您在边界框坐标`[ 115\. 63\. 240\. 311.]`中所看到的，我们的图像是224乘224 - 所以它既不缩放也不裁剪。 因变量需要经历所有几何变换作为自变量。
 
 要做到这一点[ [7:10](https://youtu.be/0frKXR-2PBY%3Ft%3D7m10s) ]，每个转换都有一个可选的`tfm_y`参数：
 
@@ -75,7 +75,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
  tfms = tfms_from_model(f_model, sz, crop_type=CropType.NO,  tfm_y=TfmType.COORD, aug_tfms=augs)  md = ImageClassifierData.from_csv(PATH, JPEGS, BB_CSV, tfms=tfms,  continuous=True, bs=4) 
 ```
 
-`TrmType.COORD`表示_y_值表示坐标。 这需要添加到所有扩充以及`tfms_from_model` ，后者负责裁剪，缩放，调整大小，填充等。
+`TrmType.COORD`表示_y_值表示坐标。 这需要添加到所有增强以及`tfms_from_model` ，后者负责裁剪，缩放，调整大小，填充等。
 
 ```
  idx=3  fig,axes = plt.subplots(3,3, figsize=(9,9))  for i,ax in enumerate(axes.flat):  x,y=next(iter(md.aug_dl))  ima=md.val_ds.denorm(to_np(x))[idx]  b = bb_hw(to_np(y[idx]))  print(b)  show_img(ima, ax=ax)  draw_rect(ax, b) 
@@ -231,7 +231,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 **问题：**作为一般规则，在ReLU [ [18:02](https://youtu.be/0frKXR-2PBY%3Ft%3D18m2s) ]之前或之后放置BatchNorm会更好吗？ Jeremy建议将它放在ReLU之后，因为BathNorm意味着走向零均值的单标准偏差。 因此，如果你把ReLU放在它之后，你将它截断为零，这样就无法创建负数。 但是如果你把ReLU然后放入BatchNorm，它确实具有这种能力并且给出稍微好一些的结果。 话虽如此，无论如何都不是太大的交易。 你在课程的这一部分看到，大多数时候，Jeremy做了ReLU然后是BatchNorm，但是当他想要与论文保持一致时，有时则相反。
 
-**问题** ：BatchNorm之后使用dropout的直觉是什么？ BatchNorm是否已经做好了正规化[ [19:12](https://youtu.be/0frKXR-2PBY%3Ft%3D19m12s) ]的工作？ BatchNorm可以正常化，但如果你回想第1部分，我们讨论了一些事情，我们这样做是为了避免过度拟合，添加BatchNorm就像数据增加一样。 但你完全有可能仍然过度拟合。 关于辍学的一个好处是，它有一个参数来说明辍学的数量。 参数是特别重要的参数，决定了规则的多少，因为它可以让你构建一个漂亮的大参数化模型，然后决定规范它的程度。 Jeremy倾向于总是从`p=0`开始辍学，然后当他添加正则化时，他可以改变辍学参数而不用担心他是否保存了他想要能够加载它的模型，但如果他有在一个中丢弃层而在另一个中没有，它将不再加载。 所以这样，它保持一致。
+**问题** ：BatchNorm之后使用dropout的直觉是什么？ BatchNorm是否已经做好了正规化[ [19:12](https://youtu.be/0frKXR-2PBY%3Ft%3D19m12s) ]的工作？ BatchNorm可以正常化，但如果你回想第1部分，我们讨论了一些事情，我们这样做是为了避免过拟合，添加BatchNorm就像数据增强一样。 但你完全有可能仍然过拟合。 关于辍学的一个好处是，它有一个参数来说明辍学的数量。 参数是特别重要的参数，决定了规则的多少，因为它可以让你构建一个漂亮的大参数化模型，然后决定规范它的程度。 Jeremy倾向于总是从`p=0`开始辍学，然后当他添加正则化时，他可以改变辍学参数而不用担心他是否保存了他想要能够加载它的模型，但如果他有在一个中丢弃层而在另一个中没有，它将不再加载。 所以这样，它保持一致。
 
 现在我们有输入和目标，我们可以计算L1损失并添加交叉熵[ [20:39](https://youtu.be/0frKXR-2PBY%3Ft%3D20m39s) ]：
 

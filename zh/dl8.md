@@ -43,12 +43,12 @@ Yann LeCun一直在宣传我们并不称之为“深度学习”，而是称之�
 
 Jeremy喜欢建立模型的方式：
 
-*   创造一些绝对非常过度参数化的东西，它肯定会大量过度装备，训练它并确保它过度适应。 那时，你有一个能够反映训练集的模型。 然后就像做这些事情一样简单，以减少过度拟合。
+*   创造一些绝对非常过度参数化的东西，它肯定会大量过度装备，训练它并确保它过度适应。 那时，你有一个能够反映训练集的模型。 然后就像做这些事情一样简单，以减少过拟合。
 
-如果你没有从过度拟合的东西开始，你就会迷失方向。 所以你先从过度拟合的东西开始，然后减少过度装备，你可以：
+如果你没有从过拟合的东西开始，你就会迷失方向。 所以你先从过拟合的东西开始，然后减少过度装备，你可以：
 
 *   添加更多数据
-*   添加更多数据扩充
+*   添加更多数据增强
 *   做更多批处理规范图层，密集网络或可以处理更少数据的各种事情。
 *   添加正规化，如重量衰减和辍学
 *   终于（这通常是人们先做的事情，但这应该是你最后做的事情）降低架构的复杂性。 具有较少的层数或较少的激活。
@@ -391,13 +391,13 @@ Jeremy喜欢建立模型的方式：
 
 #### 我们来谈谈open_image [ [1:10:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h10m52s) ]
 
-Fastai使用OpenCV。 TorchVision使用PyTorch张量进行数据增强等。许多人使用Pillow `PIL` 。 Jeremy对所有这些进行了大量测试，他发现OpenCV比TorchVision快5到10倍。 对于[行星卫星图像竞争](https://www.kaggle.com/c/planet-understanding-the-amazon-from-space) [ [1:11:55](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ]，TorchVision速度[太快](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ，因为他们只进行了大量的数据增加，因此只能获得25％的GPU利用率。 Profiler显示它全部在TorchVision中。
+Fastai使用OpenCV。 TorchVision使用PyTorch张量进行数据增强等。许多人使用Pillow `PIL` 。 Jeremy对所有这些进行了大量测试，他发现OpenCV比TorchVision快5到10倍。 对于[行星卫星图像竞争](https://www.kaggle.com/c/planet-understanding-the-amazon-from-space) [ [1:11:55](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ]，TorchVision速度[太快](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ，因为他们只进行了大量的数据增强，因此只能获得25％的GPU利用率。 Profiler显示它全部在TorchVision中。
 
-枕头速度要快得多，但它不如OpenCV快，而且也不像线程安全[ [1:12:19](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h12m19s) ]。 Python有这个称为全局解释器锁（GIL）的东西，这意味着两个线程不能同时做pythonic事情 - 这使得Python成为现代编程的一种糟糕的语言，但我们坚持使用它。 OpenCV发布了GIL。 fast.ai库如此之快的原因之一是因为它不像其他库那样使用多个处理器来进行数据扩充 - 它实际上是多线程的。 它可以做多线程的原因是因为它使用OpenCV。 不幸的是，OpenCV有一个难以理解的API，文档有点迟钝。 这就是杰里米试图做到这一点的原因，以至于没有人使用fast.ai需要知道它正在使用OpenCV。 您无需知道要打开图像的标志。 您不需要知道如果读取失败，则不会显示异常 - 它会以静默方式返回`None` 。
+枕头速度要快得多，但它不如OpenCV快，而且也不像线程安全[ [1:12:19](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h12m19s) ]。 Python有这个称为全局解释器锁（GIL）的东西，这意味着两个线程不能同时做pythonic事情 - 这使得Python成为现代编程的一种糟糕的语言，但我们坚持使用它。 OpenCV发布了GIL。 fast.ai库如此之快的原因之一是因为它不像其他库那样使用多个处理器来进行数据增强 - 它实际上是多线程的。 它可以做多线程的原因是因为它使用OpenCV。 不幸的是，OpenCV有一个难以理解的API，文档有点迟钝。 这就是杰里米试图做到这一点的原因，以至于没有人使用fast.ai需要知道它正在使用OpenCV。 您无需知道要打开图像的标志。 您不需要知道如果读取失败，则不会显示异常 - 它会以静默方式返回`None` 。
 
 ![](../img/1_afXUCCfpzM6E1anLo8bKxA.png)
 
-不要开始使用PyTorch进行数据扩充或开始引入Pillow - 你会发现突然发生的事情变得非常缓慢或多线程不再起作用。 您应该坚持使用OpenCV进行处理[ [1:14:10](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m10s) ]
+不要开始使用PyTorch进行数据增强或开始引入Pillow - 你会发现突然发生的事情变得非常缓慢或多线程不再起作用。 您应该坚持使用OpenCV进行处理[ [1:14:10](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m10s) ]
 
 #### 更好地使用Matplotlib [ [1:14:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m45s) ]
 
@@ -505,7 +505,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 #### **我们来看看[** [**1:30:48**](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h30m48s) **]**
 
-有一点不同的是`crop_type` 。 在fast.ai中创建224 x 224图像的默认策略是首先调整它的大小，使最小边为224.然后在训练期间采用随机平方裁剪。 在验证期间，除非我们使用数据扩充，否则我们采用中心作物。
+有一点不同的是`crop_type` 。 在fast.ai中创建224 x 224图像的默认策略是首先调整它的大小，使最小边为224.然后在训练期间采用随机平方裁剪。 在验证期间，除非我们使用数据增强，否则我们采用中心作物。
 
 对于边界框，我们不希望这样做，因为与图像网不同，我们关心的东西几乎在中间并且非常大，对象检测中的很多东西都很小并且接近边缘。 通过将`crop_type`设置为`CropType.NO` ，它将不会裁剪，因此，为了使其成为正方形，它会使它[ [1:32:09](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h32m9s) ]。 一般来说，如果你裁剪而不是挤压，许多计算机视觉模型的效果会好一点，但是如果你压扁它们仍然可以很好地工作。 在这种情况下，我们绝对不想裁剪，所以这完全没问题。
 
@@ -535,7 +535,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
  show_img(md.val_ds.denorm(to_np(x))[0]); 
 ```
 
-#### 使用ResNet34进行培训[ [1:38:36](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h38m36s) ]
+#### 使用ResNet34进行训练[ [1:38:36](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h38m36s) ]
 
 ```
  learn = ConvLearner.pretrained(f_model, md, metrics=[accuracy])  learn.opt_fn = optim.Adam 
@@ -673,7 +673,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
  tfms = tfms_from_model(f_model, sz, crop_type=CropType.NO,  **tfm_y=TfmType.COORD** )  md = ImageClassifierData.from_csv(PATH, JPEGS, BB_CSV, tfms=tfms,  **continuous=True** ) 
 ```
 
-下周我们将看看`TfmType.COORD` ，但是现在，我们才意识到当我们进行缩放和数据扩充时，需要在边界框中进行，而不仅仅是图像。
+下周我们将看看`TfmType.COORD` ，但是现在，我们才意识到当我们进行缩放和数据增强时，需要在边界框中进行，而不仅仅是图像。
 
 ```
  x,y=next(iter(md.val_dl)) 
