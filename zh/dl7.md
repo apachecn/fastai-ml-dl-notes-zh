@@ -146,7 +146,7 @@
  **class** **CharSeqStatefulRnn** (nn.Module):  **def** __init__(self, vocab_size, n_fac, bs):  self.vocab_size = vocab_size  super().__init__()  self.e = nn.Embedding(vocab_size, n_fac)  self.rnn = nn.RNN(n_fac, n_hidden)  self.l_out = nn.Linear(n_hidden, vocab_size)  self.init_hidden(bs)  **def** forward(self, cs):  bs = cs[0].size(0)  **if self.h.size(1) != bs: self.init_hidden(bs)**  outp,h = self.rnn(self.e(cs), self.h)  self.h = repackage_var(h)  **return** **F.log_softmax(self.l_out(outp), dim=-1).view(-1, self.vocab_size)**  **def** init_hidden(self, bs): self.h = V(torch.zeros(1, bs, n_hidden)) 
 ```
 
-*   **皱纹＃3**  [[33:51](https://youtu.be/H3g26EVADgY%3Ft%3D33m51s)] ：Jeremy说他们说小批量的尺寸保持不变。 除非数据集完全被`bptt`乘以`bs`整除，否则最后一个小批量很可能比其他小批量短。 这就是为什么我们检查`self.h`的第二个维度是否与输入的`bs`相同。 如果不相同，请使用输入的`bs`将其设置为零。 这发生在纪元的末尾和纪元的开始（设置回完整的批量大小）。
+*   **皱纹＃3**  [[33:51](https://youtu.be/H3g26EVADgY%3Ft%3D33m51s)] ：Jeremy说他们说小批量的尺寸保持不变。 除非数据集完全被`bptt`乘以`bs`整除，否则最后一个小批量很可能比其他小批量短。 这就是为什么我们检查`self.h`的第二个维度是否与输入的`bs`相同。 如果不相同，请使用输入的`bs`将其设置为零。 这发生在迭代的末尾和迭代的开始（设置回完整的批量大小）。
 *   **Wrinkle＃4**  [[35:44](https://youtu.be/H3g26EVADgY%3Ft%3D35m44s)] ：最后的皱纹对于PyTorch来说有点糟糕，也许有人可以用PR来修复它。 损失函数不满意接收秩3张量（即三维阵列）。 没有特别的原因他们应该不乐意接受等级3张量（按结果的批量大小的序列长度 - 所以你可以只计算两个初始轴中每一个的损失）。 适用于等级2或4，但不适用于3。
 *   `.view`将通过`vocab_size`将等级3张量重塑为`-1`等级2（无论多么大）。 TorchText会自动更改**目标**以使其变平，因此我们不需要为实际值执行此操作（当我们在第4课中查看小批量时，我们注意到它已被展平。杰里米说我们将了解为什么以后，所以后来现在。）
 *   PyTorch（截至0.3）， `log_softmax`要求我们指定我们想要在哪个轴上执行softmax（即我们想要总和为哪个轴）。 在这种情况下，我们希望在最后一个轴上进行`dim = -1` 。
@@ -251,8 +251,8 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 
 *   当我们调用`fit` ，我们现在可以传递`LayerOptimizer`以及`callbacks` 。
 *   在这里，我们使用余弦退火回调 - 这需要一个`LayerOptimizer`对象。 它通过改变`lo`对象的学习率来进行余弦退火。
-*   概念：创建一个余弦退火回调，它将更新层优化器中的学习率。 一个纪元的长度等于`len(md.trn_dl)` - 一个纪元中有多少`len(md.trn_dl)`批量是数据加载器的长度。 由于它正在进行余弦退火，因此需要知道复位的频率。 你可以用通常的方式传递`cycle_mult` 。 我们甚至可以像在`Learner.fit`使用`cycle_save_name`一样自动保存模型。
-*   我们可以在训练，纪元或批次开始时，或在训练，纪元或批次结束时进行回调。
+*   概念：创建一个余弦退火回调，它将更新层优化器中的学习率。 一个迭代的长度等于`len(md.trn_dl)` - 一个迭代中有多少`len(md.trn_dl)`批量是数据加载器的长度。 由于它正在进行余弦退火，因此需要知道复位的频率。 你可以用通常的方式传递`cycle_mult` 。 我们甚至可以像在`Learner.fit`使用`cycle_save_name`一样自动保存模型。
+*   我们可以在训练，迭代或批次开始时，或在训练，迭代或批次结束时进行回调。
 *   它已被用于`CosAnneal` （SGDR），去耦权重衰减（AdamW），时间损失图等。
 
 #### 测试 [[59:55](https://youtu.be/H3g26EVADgY%3Ft%3D59m55s)] 
