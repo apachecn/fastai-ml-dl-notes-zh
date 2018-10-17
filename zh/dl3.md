@@ -85,7 +85,7 @@ Quick Dogs v Cats
 
 *   `bn_freeze` ：如果你在一个与ImageNet非常相似的数据集上使用更大的更深层次的模型，如ResNet50或ResNext101（数字大于34的任何东西）（即标准对象的侧面照片，其大小类似于ImageNet在200-500之间像素），你应该添加这一行。 我们将在课程的后半部分了解更多信息，但这会导致批量标准化移动平均值无法更新。
 
-#### [如何使用其他图书馆 - Keras](https://github.com/fastai/fastai/blob/master/courses/dl1/keras_lesson1.ipynb)  [[20:02](https://youtu.be/9C06ZPF8Uuc%3Ft%3D20m2s)] 
+#### [如何使用其他库 - Keras](https://github.com/fastai/fastai/blob/master/courses/dl1/keras_lesson1.ipynb)  [[20:02](https://youtu.be/9C06ZPF8Uuc%3Ft%3D20m2s)] 
 
 了解如何使用Fast.ai以外的库非常重要。 Keras是一个很好的例子，因为就像Fast.ai一样位于PyTorch之上，它位于各种库之上，如TensorFlow，MXNet，CNTK等。
 
@@ -581,7 +581,7 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
  def join_df(left, right, left_on, right_on=None, suffix='_y'):  if right_on is None: right_on = left_on  return left. **merge** (right, how='left', left_on=left_on,  right_on=right_on, suffixes=("", suffix)) 
 ```
 
-来自Fast.ai图书馆：
+来自Fast.ai库：
 
 ```
  add_datepart(train, "Date", drop=False) 
