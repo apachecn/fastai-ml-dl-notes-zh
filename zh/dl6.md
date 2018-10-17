@@ -9,7 +9,7 @@
 
 我们上周深入研究了协同过滤，最后我们在fast.ai库中重新创建了`EmbeddingDotBias`类（ `column_data.py` ）。 让我们看一下嵌入式的样子 [[笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb)] 。
 
-在学习者`learn`内部，你可以通过调用`learn.model`来获取PyTorch模型。 `@property`看起来像常规函数，但在调用它时不需要括号。
+在学习器`learn`内部，你可以通过调用`learn.model`来获取PyTorch模型。 `@property`看起来像常规函数，但在调用它时不需要括号。
 
 ```
  @property  def model(self): return self.models.model 
@@ -320,7 +320,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 #### 图像CNN具有单密集隐藏层
 
-我们将介绍如何在下周更多地压平层，但主要方法称为“自适应最大池” - 我们在高度和宽度上进行平均并将其转换为矢量。
+我们将介绍如何在下周更多地压平层，但主要方法称为“自适应最大池” - 我们在高度和宽度上进行平均并将其转换为向量。
 
 ![](../img/1_VEEVatttQmlWeI98vTO0iA.png)
 
