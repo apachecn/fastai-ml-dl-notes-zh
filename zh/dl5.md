@@ -2,9 +2,9 @@
 
 ### [第5课](http://forums.fast.ai/t/wiki-lesson-5/9403)
 
-### 一，导言
+### 一，引言
 
-没有足够的关于结构化深度学习的出版物，但它肯定发生在行业中：
+没有足够的关于结构化深度学习的出版物，但它肯定出现在行业中：
 
 [**结构化深度学习**](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848 "https://towardsdatascience.com/structured-deep-learning-b8ca4138b848")[
 ](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848 "https://towardsdatascience.com/structured-deep-learning-b8ca4138b848")[_作者：Kerem Turgutlu_朝向datascience.com](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848 "https://towardsdatascience.com/structured-deep-learning-b8ca4138b848")[](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848)
@@ -14,18 +14,18 @@
 [**小图像数据集的乐趣（第2部分）**](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96 "https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96")[
 ](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96 "https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96")[_作者：Nikhil B_ towardsdatascience.com](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96 "https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96")[](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96)
 
-关于如何训练神经网络的介绍（一篇伟大的技术写作）：
+如何训练神经网络的介绍（一篇伟大的技术写作）：
 
 [**我们如何“训练”神经网络？**](https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73 "https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73")[
 ](https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73 "https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73")[_由Vitaly Bushaev_朝向dasatcience.com](https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73 "https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73")[](https://towardsdatascience.com/how-do-we-train-neural-networks-edd985562b73)
 
 学生们在[Kaggle幼苗分类比赛中](https://www.kaggle.com/c/plant-seedlings-classification/leaderboard)与Jeremy [竞争](https://www.kaggle.com/c/plant-seedlings-classification/leaderboard) 。
 
-### II。 协作过滤 - 使用MovieLens数据集
+### II。 协同过滤 - 使用MovieLens数据集
 
 讨论的笔记本可以在[这里](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb)找到[（lesson5-movielens.ipynb）](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb) 。
 
-我们来看看数据。 我们将使用`userId` （分类）， `movieId` （分类）和`rating` （依赖）进行建模。
+我们来看看数据。 我们将使用`userId` （类别）， `movieId` （类别）和`rating`（因变量）进行建模。
 
 ```
  ratings = pd.read_csv(path+'ratings.csv')  ratings.head() 
@@ -35,7 +35,7 @@
 
 #### **为Excel创建子集**
 
-我们创建了最受欢迎的电影和大多数电影上瘾用户的交叉表，我们将其复制到Excel中进行可视化。
+我们创建了最受欢迎的电影和大多数电影狂热粉的交叉表，我们将其复制到Excel中进行可视化。
 
 ```
  g=ratings.groupby('userId')['rating'].count()  topUsers=g.sort_values(ascending=False)[:15] 
@@ -55,23 +55,23 @@
 
 ![](../img/1_QO-Doqw_0YGOU-vmI-R5CA.png)
 
-[这](https://github.com/fastai/fastai/blob/master/courses/dl1/excel/collab_filter.xlsx)是包含上述信息的excel文件。 首先，我们将使用**矩阵分解/分解**而不是构建神经网络。
+[这](https://github.com/fastai/fastai/blob/master/courses/dl1/excel/collab_filter.xlsx)是包含上述信息的excel文件。 首先，我们将使用**矩阵分解**而不是构建神经网络。
 
 ![](../img/1_ps-Mq2y88JBT3JsKBh-sKQ.png)
 
-*   蓝色细胞 - 实际评级
-*   紫色细胞 - 我们的预测
-*   红细胞 - 我们的损失函数即均方根误差（RMSE）
+*   蓝色单元格 - 实际评级
+*   紫色单元格 - 我们的预测
+*   红色单元格 - 我们的损失函数即均方根误差（RMSE）
 *   绿色单元格 - 电影嵌入（随机初始化）
 *   橙色单元格 - 用户嵌入（随机初始化）
 
-每个预测是电影嵌入矢量和用户嵌入矢量的点积。 在线性代数项中，它等于矩阵乘积，因为一个是行，一个是列。 如果没有实际评级，我们将预测设置为零（将其视为测试数据 - 而不是训练数据）。
+每个预测是电影嵌入向量和用户嵌入向量的点积。 在线性代数术语中，它等于矩阵乘积，因为一个是行，一个是列。 如果没有实际评级，我们将预测设置为零（将其视为测试数据 - 而不是训练数据）。
 
 ![](../img/1_2SeWMcKe9VCLkVQVuCvU8g.png)
 
-然后我们使用Gradient Descent来减少损失。 Microsoft Excel在加载项中有一个“求解器”，可以通过更改所选单元格来最小化变量（ `GRG Nonlinear`是你要使用的方法）。
+然后我们使用梯度下降来减少损失。 Microsoft Excel在加载项中有一个“求解器”，可以通过更改所选单元格来最小化变量（ `GRG Nonlinear`是你要使用的方法）。
 
-这可称为“浅学习”（与深度学习相反），因为没有非线性层或第二线性层。 那么我们直觉上做了什么呢？ 每部电影的五个数字称为“嵌入”（潜在因素） - 第一个数字可能代表科幻和幻想的数量，第二个数字可能是电影使用了多少特效，第三个可能是如何类似地，每个用户还有5个数字，例如，表示用户喜欢幻想幻想，特效和电影中的对话驱动多少。 我们的预测是这些载体的交叉产物。 由于我们没有针对每个用户进行所有电影评论，因此我们试图找出哪些电影与这部电影相似，以及其他用户如何评价与此用户类似的其他电影为此电影评分（因此称为“协作”）。
+这可称为“浅学习”（与深度学习相反），因为没有非线性层或第二线性层。 那么我们直觉上做了什么呢？ 每部电影的五个数字称为“嵌入”（潜在因式） - 第一个数字可能代表科幻和幻想的数量，第二个数字可能是电影使用了多少特效，第三个可能是如何类似地，每个用户还有5个数字，例如，表示用户喜欢幻想，特效和电影中的对话的多少。 我们的预测是这些载体的叉乘。 由于我们没有每个用户的所有电影评论，因此我们试图找出哪些电影与这部电影相似，以及其他用户评价其他电影，如何与这个用户评价这个电影类似（因此称为“协同”）。
 
 我们如何处理新用户或新电影 - 我们是否需要重新训练模型？ 我们现在没有时间来讨论这个问题，但基本上你需要有一个新的用户模型或最初会使用的新电影模型，随着时间的推移你需要重新训练模型。
 
@@ -89,7 +89,7 @@
  cf = CollabFilterDataset.from_csv(path, 'ratings.csv', 'userId', 'movieId', 'rating') 
 ```
 
-然后我们得到一个适合模型数据的学习者，并适合模型：
+然后我们得到一个适合模型数据的学习器，并拟合模型：
 
 ```
  learn = cf.get_learner(n_factors, val_idxs, 64, opt_fn=optim.Adam) 
@@ -105,13 +105,13 @@
 
 
 
-由于输出是Mean Squared Error，你可以通过以下方式获取RMSE：
+由于输出是均方误差，你可以通过以下方式获取 RMSE：
 
 ```
  math.sqrt(0.765) 
 ```
 
-产量约为0.88，优于0.91的基准。
+输出约为0.88，优于0.91的基准。
 
 你可以通过常规方式获得预测：
 
@@ -119,7 +119,7 @@
  preds = learn.predict() 
 ```
 
-你也可以使用seaborn `sns` （建立在matplotlib之上）：
+你也可以使用seaborn `sns`（建立在`matplotlib`之上）：
 
 ```
  y = learn.data.val_y  sns.jointplot(preds, y, kind='hex', stat_func=None) 
@@ -127,19 +127,19 @@
 
 ![](../img/1_cXAU8huHFkxKbJjZUwwxIA.png)
 
-#### **使用Python的Dot产品**
+#### **使用Python的点乘**
 
 ![](../img/1_kSUYsjtdLbyn2SqW9cKiHA.jpeg)
 
 ![](../img/1_H_VqypjqEku0QjLZ51rvKA.jpeg)
 
-`T`是火炬中的张量
+`T`是 PyTorch 中的张量
 
 ```
  a = T([[1., 2], [3, 4]])  b = T([[2., 2], [10, 10]]) 
 ```
 
-当我们在numpy或PyTorch中的张量之间有一个数学运算符时，它将在元素方面假设它们都具有相同的维数。 下面是你如何计算两个向量的点积（例如（1,2）·（2,2）= 6 - 矩阵a和b的第一行）：
+当我们在numpy或PyTorch中的张量之间有一个数学运算符时，它将逐元素运算，假设它们都具有相同的维数。 下面是你如何计算两个向量的点积（例如`(1,2)·(2,2)= 6` - 矩阵`a`和`b`的第一行）：
 
 ```
  (a*b).sum(1) 
@@ -149,15 +149,15 @@
  6  70  [torch.FloatTensor of size 2] 
 ```
 
-#### **构建我们的第一个自定义层（即PyTorch模块）[** [**33:55**](https://youtu.be/J99NV9Cr75I%3Ft%3D33m55s) **]**
+#### **构建我们的第一个自定义层（即 PyTorch 模块）[** [**33:55**](https://youtu.be/J99NV9Cr75I%3Ft%3D33m55s) **]**
 
-我们通过创建一个扩展`nn.Module`并覆盖`forward`函数的Python类来实现这一点。
+我们通过创建一个扩展`nn.Module`并覆盖`forward`函数的 Python 类来实现它。
 
 ```
  class DotProduct (nn.Module):  def forward(self, u, m): return (u*m).sum(1) 
 ```
 
-现在我们可以调用它并得到预期的结果（注意我们不需要说`model.forward(a, b)`来调用`forward`函数 - 它是PyTorch魔法。） [[40:14](https://youtu.be/J99NV9Cr75I%3Ft%3D40m14s)] ：
+现在我们可以调用它并得到预期的结果（注意我们不需要写`model.forward(a, b)`来调用`forward`函数 - 它是PyTorch魔法。） [[40:14](https://youtu.be/J99NV9Cr75I%3Ft%3D40m14s)] ：
 
 ```
  model = DotProduct()  **model(a,b)** 
@@ -284,7 +284,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 既然我们有神经网络，我们可以尝试很多东西：
 
-*   添加辍学者
+*   添加 Dropout 者
 *   使用不同的嵌入大小进行用户嵌入和电影嵌入
 *   不仅是用户和电影嵌入，而且还附加来自原始数据的电影类型嵌入和/或时间戳。
 *   增加/减少隐藏层数和激活次数
@@ -346,7 +346,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 ####  Adam  [[1:59:04](https://youtu.be/J99NV9Cr75I%3Ft%3D1h59m4s)] 
 
- Adam 的速度要快得多，但问题在于最终的预测并不像SGD那样有动力。 似乎这是由于 Adam 和体重衰减的联合使用。 解决此问题的新版本称为**AdamW** 。
+ Adam 的速度要快得多，但问题在于最终的预测并不像SGD那样有动力。 似乎这是由于 Adam 和权重衰减的联合使用。 解决此问题的新版本称为**AdamW** 。
 
 ![](../img/1_0yZ9Hbn2BPSNY9L-5jL0Tg.png)
 
@@ -377,6 +377,6 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 #### AdamW  [[2:11:18](https://youtu.be/J99NV9Cr75I%3Ft%3D2h11m18s)] 
 
-当参数多于数据点时，正则化变得很重要。 我们以前见过辍学，体重衰退是另一种正规化。 权重衰减（L2正则化）通过将平方权重（权重衰减乘数乘以）加到损失中来惩罚大权重。 现在损失函数想要保持较小的权重，因为增加权重会增加损失; 因此，只有当损失提高超过罚款时才这样做。
+当参数多于数据点时，正则化变得很重要。 我们以前见过 Dropout ，权重衰退是另一种正规化。 权重衰减（L2正则化）通过将平方权重（权重衰减乘数乘以）加到损失中来惩罚大权重。 现在损失函数想要保持较小的权重，因为增加权重会增加损失; 因此，只有当损失提高超过罚款时才这样做。
 
 问题在于，由于我们将平方权重添加到损失函数，这会影响梯度的移动平均值和Adam的平方梯度的移动平均值。 这导致当梯度变化很大时减少权重衰减量，并且当变化很小时增加权重衰减量。 换句话说，“惩罚大权重，除非渐变变化很大”，这不是我们想要的。 AdamW从损失函数中删除了权重衰减，并在更新权重时直接添加它。
