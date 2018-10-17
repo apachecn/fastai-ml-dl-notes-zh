@@ -189,8 +189,8 @@ learn.fit(1e-2, 1)
 [ 6. 0.01356 0.01518 0.9956 ]
 ```
 
-*   早些时候我们说`3`是epoch的数量，但它实际上是**周期** 。 因此，如果`cycle_len=2` ，它将进行3个循环，其中每个循环是2个epoch（即6个epoch）。 那为什么7呢？ 这是因为`cycle_mult`
-*   `cycle_mult=2` ：每个周期后,周期长度*`cycle_mult`（1个时期+ 2个时期+ 4个时期= 7个时期）。
+*   早些时候我们说`3`是迭代的数量，但它实际上是**周期**。 因此，如果`cycle_len=2`，它将进行 3 个周期，其中每个周期是 2 个迭代（即 6 个迭代）。那为什么是 7 呢？ 这是因为`cycle_mult`
+*   `cycle_mult=2`：它乘以每个周期后的周期长度（1 个迭代 + 2 个迭代 + 4 个迭代 = 7 个迭代）。
 
 ![](../img/1_SA5MA3z-jOBwvzF2e6-E6Q.png)
 
@@ -361,7 +361,7 @@ label_df.pivot_table(index='breed', aggfunc=len).sort_values('id', ascending=Fal
 *   `max_zoom` - 我们将放大1.1倍
 *   `ImageClassifierData.from_csv` - 上次我们使用了`from_paths`但由于标签是CSV文件，我们将调用`from_csv` 。
 *   `test_name` - 如果要提交给Kaggle比赛，我们需要指定测试集的位置
-*   `val_idx` - 没有`validation`文件夹，但我们仍想跟踪我们的本地性能有多好。 所以上面你会看到：
+*   `val_idx` - 没有`validation`文件夹，但我们仍想跟踪我们的本地表现有多好。 所以上面你会看到：
 
 `n = len(list(open(label_csv)))-1` ：打开CSV文件，创建行列表，然后获取长度。 `-1`因为第一行是标题。 因此`n`是我们拥有的图像数量。
 
@@ -471,7 +471,7 @@ label_df.pivot_table(index='breed', aggfunc=len).sort_values('id', ascending=Fal
  learn.fit(1e-2, 5, cycle_len =1) 
 ```
 
-*   提醒：一个`epoch`是一次通过数据，一个`cycle`是一个周期经历多少个epoch
+*   提醒：一个`epoch`是一次通过数据，一个`cycle`是你所说的`cycle`有多少个迭代
 
 ```py
  learn.save('224_pre')  
@@ -486,7 +486,7 @@ label_df.pivot_table(index='breed', aggfunc=len).sort_values('id', ascending=Fal
 
 *   如果你在较小尺寸的图像上训练模型，则可以调用`learn.set_data`并传入更大尺寸的数据集。 这将让你在当前的基础上继续训练更大的图像。
 
-> 开始对几个epoch的小图像进行训练，然后切换到更大的图像并继续训练是避免过拟合的一种非常有效的方法。
+> 开始对几个迭代的小图像进行训练，然后切换到更大的图像，继续训练是避免过拟合的一种非常有效的方法。
 
 ```py
  learn.fit(1e-2, 3, cycle_len=1) 
