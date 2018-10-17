@@ -24,7 +24,7 @@
 
 
 *   箭头表示一个或多个层操作 - 一般来说是线性的，后跟非线性函数，在这种情况下，矩阵乘法后跟`relu`或`tanh`
-*   相同颜色的箭头表示使用的完全相同的重量矩阵。
+*   相同颜色的箭头表示使用的完全相同的权重矩阵。
 *   与之前的一个细微差别是第二和第三层有输入。 我们尝试了两种方法 - 将这些输入连接并添加到当前激活中。
 
 ```
@@ -73,7 +73,7 @@
 *   `forward`将处理8个字符，然后返回传播通过8个层，跟踪隐藏状态中的值，但它将丢弃其操作历史。 这称为**反向支撑通过时间（bptt）** 。
 *   换句话说，在`for`循环之后，只需丢弃操作历史并重新开始。 所以我们保持隐藏的状态，但我们没有保持隐藏的状态历史。
 *   不通过太多层反向传播的另一个好理由是，如果你有任何类型的梯度不稳定性（例如梯度爆炸或梯度消失），你拥有的层数越多，网络训练越难（速度越慢，弹性越小） 。
-*   另一方面，较长的`bptt`意味着您可以显式捕获更长的内存和更多的状态。
+*   另一方面，较长的`bptt`意味着你可以显式捕获更长的内存和更多的状态。
 *   **Wrinkle＃2** [ [16:00](https://youtu.be/H3g26EVADgY%3Ft%3D16m) ] - 如何创建迷你批次。 我们不希望一次处理一个部分，而是一次并行处理一个部分。
 *   当我们第一次开始关注TorchText时，我们谈到了它如何创建这些迷你批次。
 *   Jeremy说我们整整一份长文件，包括Nietzsche的整个作品或所有IMDB评论连在一起，我们把它分成64个相同大小的块（不是64块大小的块）。
@@ -98,7 +98,7 @@
 
 #### 有状态的RNN和TorchText [ [23:23](https://youtu.be/H3g26EVADgY%3Ft%3D23m23s) ]
 
-当使用希望数据为特定格式的现有API时，您可以更改数据以适合该格式，也可以编写自己的数据集子类来处理数据已经存在的格式。要么很好，要么在这种情况下，我们将以TorchText格式提供我们的数据。 围绕TorchText的Fast.ai包装器已经具有可以具有训练路径和验证路径的东西，并且每个路径中的一个或多个文本文件包含为您的语言模型连接在一起的一堆文本。
+当使用希望数据为特定格式的现有API时，你可以更改数据以适合该格式，也可以编写自己的数据集子类来处理数据已经存在的格式。要么很好，要么在这种情况下，我们将以TorchText格式提供我们的数据。 围绕TorchText的Fast.ai包装器已经具有可以具有训练路径和验证路径的东西，并且每个路径中的一个或多个文本文件包含为你的语言模型连接在一起的一堆文本。
 
 ```
  **from** **torchtext** **import** vocab, data 
@@ -126,7 +126,7 @@
 
 *   制作了Nietzsche文件的副本，粘贴到训练和验证目录中。 然后从训练集中删除了最后20％的行，并删除了验证集[ [25:15](https://youtu.be/H3g26EVADgY%3Ft%3D25m15s) ]中除最后20％之外的所有行。
 *   这样做的另一个好处是，拥有一个不是随机混乱的文本行集的验证集似乎更为现实，但它完全是语料库的一部分。
-*   在进行语言模型时，实际上并不需要单独的文件。 您可以拥有多个文件，但无论如何它们只是连在一起。
+*   在进行语言模型时，实际上并不需要单独的文件。 你可以拥有多个文件，但无论如何它们只是连在一起。
 
 ```
  TEXT = data.Field(lower= **True** , tokenize=list)  bs=64; bptt=8; n_fac=42; n_hidden=256  FILES = dict(train=TRN_PATH, validation=VAL_PATH, test=VAL_PATH)  md = LanguageModelData.from_text_files(PATH, TEXT, **FILES, bs=bs, bptt=bptt, min_freq=3)  len(md.trn_dl), md.nt, len(md.trn_ds), len(md.trn_ds[0].text)  _(963, 56, 1, 493747)_ 
@@ -167,7 +167,7 @@
  **def** RNNCell(input, hidden, w_ih, w_hh, b_ih, b_hh):  **return** F.tanh(F.linear(input, w_ih, b_ih) + F.linear(hidden, w_hh, b_hh)) 
 ```
 
-关于`tanh`问题[ [44:06](https://youtu.be/H3g26EVADgY%3Ft%3D44m6s) ]：正如我们上周看到的那样， `tanh`强迫值在-1和1之间。由于我们一次又一次地乘以这个权重矩阵，我们会担心`relu` （因为它是无界）可能有更多的梯度爆炸问题。 话虽如此，您可以指定`RNNCell`使用默认为`tanh`不同`nonlineality` ，并要求它使用`relu`如果您愿意）。
+关于`tanh`问题[ [44:06](https://youtu.be/H3g26EVADgY%3Ft%3D44m6s) ]：正如我们上周看到的那样， `tanh`强迫值在-1和1之间。由于我们一次又一次地乘以这个权重矩阵，我们会担心`relu` （因为它是无界）可能有更多的梯度爆炸问题。 话虽如此，你可以指定`RNNCell`使用默认为`tanh`不同`nonlineality` ，并要求它使用`relu`如果你愿意）。
 
 ```
  **class** **CharSeqStatefulRnn2** (nn.Module):  **def** __init__(self, vocab_size, n_fac, bs):  super().__init__()  self.vocab_size = vocab_size  self.e = nn.Embedding(vocab_size, n_fac)  self.rnn = **nn.RNNCell** (n_fac, n_hidden)  self.l_out = nn.Linear(n_hidden, vocab_size)  self.init_hidden(bs)  **def** forward(self, cs):  bs = cs[0].size(0)  **if** self.h.size(1) != bs: self.init_hidden(bs)  outp = []  o = self.h  **for** c **in** cs:  o = self.rnn(self.e(c), o)  outp.append(o)  outp = self.l_out(torch.stack(outp))  self.h = repackage_var(o)  **return** F.log_softmax(outp, dim=-1).view(-1, self.vocab_size)  **def** init_hidden(self, bs): self.h = V(torch.zeros(1, bs, n_hidden)) 
@@ -234,7 +234,7 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 ```
 
 *   在创建标准PyTorch模型之后，我们通常会执行类似`opt = optim.Adam(m.parameters(), 1e-3)` 。 相反，我们将使用fast.ai `LayerOptimizer` ，它采用优化器`optim.Adam` ，我们的模型`m` ，学习率`1e-2` ，以及可选的权重衰减`1e-5` 。
-*   `LayerOptimizer`存在的一个关键原因是差异学习率和差`LayerOptimizer`重衰减。 我们需要使用它的原因是fast.ai中的所有机制假设你有其中一个。 如果您想在代码中使用回调或SGDR而不使用Learner类，则需要使用它。
+*   `LayerOptimizer`存在的一个关键原因是差异学习率和差`LayerOptimizer`重衰减。 我们需要使用它的原因是fast.ai中的所有机制假设你有其中一个。 如果你想在代码中使用回调或SGDR而不使用Learner类，则需要使用它。
 *   `lo.opt`返回优化器。
 
 ```
@@ -253,7 +253,7 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 *   在这里，我们使用余弦退火回调 - 这需要一个`LayerOptimizer`对象。 它通过改变`lo`对象的学习率来进行余弦退火。
 *   概念：创建一个余弦退火回调，它将更新层优化器中的学习率。 一个纪元的长度等于`len(md.trn_dl)` - 一个纪元中有多少`len(md.trn_dl)`批量是数据加载器的长度。 由于它正在进行余弦退火，因此需要知道复位的频率。 你可以用通常的方式传递`cycle_mult` 。 我们甚至可以像在`Learner.fit`使用`cycle_save_name`一样自动保存模型。
 *   我们可以在训练，纪元或批次开始时，或在训练，纪元或批次结束时进行回调。
-*   它已被用于`CosAnneal` （SGDR），去耦重量衰减（AdamW），时间损失图等。
+*   它已被用于`CosAnneal` （SGDR），去耦权重衰减（AdamW），时间损失图等。
 
 #### 测试[ [59:55](https://youtu.be/H3g26EVADgY%3Ft%3D59m55s) ]
 
@@ -283,7 +283,7 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 
 ### [回到计算机视觉：CIFAR 10](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-cifar10.ipynb) [ [1:01:58](https://youtu.be/H3g26EVADgY%3Ft%3D1h1m58s) ]
 
-CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前，有CIFAR 10.它在图像数量和图像大小方面都很小，这使它变得有趣和具有挑战性。 您可能会使用数千张图片而不是一百五十万张图片。 我们在医学成像中看到的很多东西，我们正在寻找有肺结节的特定区域，你可能最多看32×32像素。
+CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前，有CIFAR 10.它在图像数量和图像大小方面都很小，这使它变得有趣和具有挑战性。 你可能会使用数千张图片而不是一百五十万张图片。 我们在医学成像中看到的很多东西，我们正在寻找有肺结节的特定区域，你可能最多看32×32像素。
 
 它也运行得很快，所以测试我们的算法要好得多。 正如Ali Rahini在2017年NIPS中所提到的，Jeremy担心许多人没有仔细调整和深入学习实验，而是他们抛出大量的GPU和TPU或大量数据并考虑一天。 在CIFAR 10等数据集上测试算法的许多版本非常重要，而不是需要数周的ImageNet。 即使人们倾向于抱怨，MNIST也有利于研究和实验。
 
@@ -306,7 +306,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 ```
 
 *   `classes` - 图像标签
-*   `stats` - 当我们使用预先训练的模型时，您可以调用`tfms_from_model`来创建必要的变换，以根据训练过的原始模型中每个通道的均值和标准偏差将我们的数据集转换为标准化数据集。由于我们是从头开始训练模型，我们需要告诉它我们的数据的均值和标准偏差来规范它。 确保您可以计算每个通道的平均值和标准偏差。
+*   `stats` - 当我们使用预先训练的模型时，你可以调用`tfms_from_model`来创建必要的变换，以根据训练过的原始模型中每个通道的均值和标准偏差将我们的数据集转换为标准化数据集。由于我们是从头开始训练模型，我们需要告诉它我们的数据的均值和标准偏差来规范它。 确保你可以计算每个通道的平均值和标准偏差。
 *   `tfms` - 对于CIFAR 10数据增强，人们通常在边缘周围进行水平翻转和黑色填充，并在填充图像中随机选择32×32区域。
 
 ```
@@ -406,7 +406,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 ```
 
 *   `ConvNet([3, 20, 40, 80], 10)` - 它以3个RGB通道， `ConvNet([3, 20, 40, 80], 10)`个特征开始，然后是10个类来预测。
-*   `AdaptiveMaxPool2d` - 接下来是一个线性层，是从3乘3到预测10个类中的一个的方法，现在是最先进算法的标准。 最后一层，我们执行一种特殊的max-pooling，您可以为其指定输出激活分辨率，而不是要调查的区域大小。 换句话说，这里我们做3乘3 max-pool，相当于1乘1 _自适应_ max-pool。
+*   `AdaptiveMaxPool2d` - 接下来是一个线性层，是从3乘3到预测10个类中的一个的方法，现在是最先进算法的标准。 最后一层，我们执行一种特殊的max-pooling，你可以为其指定输出激活分辨率，而不是要调查的区域大小。 换句话说，这里我们做3乘3 max-pool，相当于1乘1 _自适应_ max-pool。
 *   `x = x.view(x.size(0), -1)` - `x`的特征形状为1乘1，因此它将删除最后两层。
 *   这个模型被称为“完全卷积网络” - 每个层都是卷积的，除了最后一层。
 
@@ -472,39 +472,39 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
  class BnLayer (nn.Module):  def __init__(self, ni, nf, stride=2, kernel_size=3):  super().__init__()  self.conv = nn.Conv2d(ni, nf, kernel_size=kernel_size,  stride=stride, bias= False , padding=1)  self.a = nn.Parameter(torch.zeros(nf,1,1))  self.m = nn.Parameter(torch.ones(nf,1,1))  def forward(self, x):  x = F.relu(self.conv(x))  x_chan = x.transpose(0,1).contiguous().view(x.size(1), -1)  if self.training:  self.means = x_chan.mean(1)[:,None,None]   self.stds = x_chan.std (1)[:,None,None]  return (x-self.means) / self.stds *self.m + self.a 
 ```
 
-*   Calculate the mean of each channel or each filter and standard deviation of each channel or each filter. Then subtract the means and divide by the standard deviations.
-*   We no longer need to normalize our input because it is normalizing it per channel or for later layers it is normalizing per filter.
-*   Turns out this is not enough since SGD is bloody-minded [ [01:29:20](https://youtu.be/H3g26EVADgY%3Ft%3D1h29m20s) ]. If SGD decided that it wants matrix to be bigger/smaller overall, doing `(x=self.means) / self.stds` is not enough because SGD will undo it and try to do it again in the next mini-batch. So we will add two parameters: `a` — adder (initial value zeros) and `m` — multiplier (initial value ones) for each channel.
-*   `Parameter` tells PyTorch that it is allowed to learn these as weights.
-*   为什么这样做？ If it wants to scale the layer up, it does not have to scale up every single value in the matrix. It can just scale up this single trio of numbers `self.m` , if it wants to shift it all up or down a bit, it does not have to shift the entire weight matrix, they can just shift this trio of numbers `self.a` . Intuition: We are normalizing the data and then we are saying you can then shift it and scale it using far fewer parameters than would have been necessary if it were to actually shift and scale the entire set of convolutional filters. In practice, it allows us to increase our learning rates, it increase the resilience of training, and it allows us to add more layers and still train effectively.
-*   The other thing batch norm does is that it regularizes, in other words, you can often decrease or remove dropout or weight decay. The reason why is each mini-batch is going to have a different mean and a different standard deviation to the previous mini-batch. So they keep changing and it is changing the meaning of the filters in a subtle way acting as a noise (ie regularization).
-*   In real version, it does not use this batch's mean and standard deviation but takes an exponentially weighted moving average standard deviation and mean.
-*   `**if** self.training` — this is important because when you are going through the validation set, you do not want to be changing the meaning of the model. There are some types of layer that are actually sensitive to what the mode of the network is whether it is in training mode or evaluation/test mode. There was a bug when we implemented mini net for MovieLens that dropout was applied during the validation — which was fixed. In PyTorch, there are two such layer: dropout and batch norm. `nn.Dropout` already does the check.
-*   [ [01:37:01](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s) ] The key difference in fast.ai which no other library does is that these means and standard deviations get updated in training mode in every other library as soon as you basically say I am training, regardless of whether that layer is set to trainable or not. With a pre-trained network, that is a terrible idea. If you have a pre-trained network for specific values of those means and standard deviations in batch norm, if you change them, it changes the meaning of those pre-trained layers. In fast.ai, always by default, it will not touch those means and standard deviations if your layer is frozen. As soon as you un-freeze it, it will start updating them unless you set `learn.bn_freeze=True` . In practice, this often seems to work a lot better for pre-trained models particularly if you are working with data that is quite similar to what the pre-trained model was trained with.
-*   Where do you put batch-norm layer? We will talk more in a moment, but for now, after `relu`
+*   计算每个通道或每个过滤器的平均值以及每个通道或每个过滤器的标准偏差。 然后减去均值并除以标准差。
+*   我们不再需要对输入进行标准化，因为它会对每个通道进行标准化，或者对于以后的图层，它按照过滤器进行标准化。
+*   原来这还不够，因为SGD是血腥的[ [01:29:20](https://youtu.be/H3g26EVADgY%3Ft%3D1h29m20s) ]。 如果SGD决定它希望矩阵整体更大/更小，那么做`(x=self.means) / self.stds`是不够的，因为SGD将撤消它并尝试在下一个小批量中再次执行。 因此，我们将为每个通道添加两个参数： `a` - 加法器（初始值零）和`m` - 乘数（初始值1）。
+*   `Parameter`告诉PyTorch允许将它们作为权重学习。
+*   为什么这样做？ 如果要扩展图层，则不必扩展矩阵中的每个值。 它可以扩展这个单独的三个数字`self.m` ，如果它想要将它全部向上或向下移动一点，它不必移动整个权重矩阵，它们可以将这三个数字`self.a`为`self.a` 直觉：我们正在对数据进行标准化，然后我们说你可以转移它并使用比实际移位和缩放整个卷积滤波器组所需的参数少得多的参数来缩放它。 在实践中，它允许我们提高我们的学习率，增加训练的弹性，并且它允许我们添加更多层并且仍然有效地训练。
+*   批量规范所做的另一件事是它规则化，换句话说，你可以经常减少或消除辍学或体重衰减。 原因是每个小批量将与先前的小批量具有不同的平均值和不同的标准偏差。 因此，它们不断变化，并以微妙的方式改变滤波器的含义，作为噪声（即正则化）。
+*   在实际版本中，它不使用此批次的均值和标准差，而是采用指数加权移动平均标准差和均值。
+*   `**if** self.training` - 这很重要，因为当你通过验证集时，你不想改变模型的含义。 有些类型的层实际上对网络模式敏感，无论是处于训练模式还是评估/测试模式。 当我们为MovieLens实现迷你网时出现了一个错误，即在验证过程中应用了dropout - 这是固定的。 在PyTorch中，有两个这样的层：dropout和batch norm。 `nn.Dropout`已经进行了检查。
+*   [ [01:37:01](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s) ] [fast.ai](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s)的关键区别在于，无论其他图书馆做什么，只要你基本上说我正在训练，这些手段和标准偏差都会在其他图书馆的训练模式中更新，无论该层是否是否可以训练。 有了预先训练好的网络，这是一个糟糕的主意。 如果你有一个预先训练好的网络，用于批量标准中的那些均值和标准偏差的特定值，如果你更改它们，它将改变那些预先训练的图层的含义。 在fast.ai中，始终默认情况下，如果你的图层被冻结，它将不会触及那些均值和标准偏差。 一旦你取消冻结它，除非你设置`learn.bn_freeze=True` ，否则它将开始更新它们。 在实践中，对于预训练的模型，这似乎通常效果更好，特别是如果你使用的数据与预训练模型的训练非常相似。
+*   你在哪里放置批量标准层？ 我们稍后会谈谈更多，但就目前来说，经过`relu`
 
-#### Ablation Study [ [01:39:41](https://youtu.be/H3g26EVADgY%3Ft%3D1h39m41s) ]
+#### 消融研究[ [01:39:41](https://youtu.be/H3g26EVADgY%3Ft%3D1h39m41s) ]
 
-It is something where you try turning on and off different pieces of your model to see which bits make which impacts, and one of the things that wasn't done in the original batch norm paper was any kind of effective ablation. And one of the things therefore that was missing was this question which was just asked — where to put the batch norm. That oversight caused a lot of problems because it turned out the original paper did not actually put it in the best spot. Other people since then have now figured that out and when Jeremy show people code where it is actually in the spot that is better, people say his batch norm is in the wrong spot.
+在这种情况下，你可以尝试打开和关闭模型的不同部分，以查看哪些部位产生了哪些影响，而原始批次规范文件中未执行的操作之一是任何有效的消融。 因此缺少的一件事就是这个问题刚才被问到 - 在哪里提出批量规范。 这种疏忽造成了很多问题，因为事实证明原始论文并没有真正把它放在最佳位置。 从那时起，其他人现在已经想到了这一点，当Jeremy向人们展示实际上在现场更好的代码时，人们说他的批量规范是在错误的位置。
 
-*   Try and always use batch norm on every layer if you can
-*   Don't stop normalizing your data so that people using your data will know how you normalized your data. Other libraries might not deal with batch norm for pre-trained models correctly, so when people start re-training, it might cause problems.
+*   如果可以，请尝试并始终在每个图层上使用批量规范
+*   不要停止对数据进行规范化，以便使用你的数据的人知道你如何规范化数据。 其他图书馆可能无法正确处理预训练模型的批量规范，因此当人们开始重新训练时，可能会导致问题。
 
 ```
- class ConvBnNet (nn.Module):  def __init__(self, layers, c):  super().__init__()  self.conv1 = nn.Conv2d(3, 10, kernel_size=5, stride=1, padding=2)  self.layers = nn.ModuleList([ BnLayer (layers[i], layers[i + 1])  for i in range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  def forward(self, x):  x = self.conv1(x)  for l in self.layers: x = l(x)  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  return F.log_softmax(self.out(x), dim=-1) 
+ **class** **ConvBnNet** (nn.Module):  **def** __init__(self, layers, c):  super().__init__()  **self.conv1 = nn.Conv2d(3, 10, kernel_size=5, stride=1, padding=2)**  self.layers = nn.ModuleList([ **BnLayer** (layers[i], layers[i + 1])  **for** i **in** range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  **def** forward(self, x):  x = self.conv1(x)  **for** l **in** self.layers: x = l(x)  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  **return** F.log_softmax(self.out(x), dim=-1) 
 ```
 
-*   Rest of the code is similar — Using `BnLayer` instead of `ConvLayer`
-*   A single convolutional layer was added at the start trying to get closer to the modern approaches. It has a bigger kernel size and a stride of 1\. The basic idea is that we want the first layer to have a richer input. It does convolution using the 5 by 5 area which allows it to try and find more interesting richer features in that 5 by 5 area, then spit out bigger output (in this case, it's 10 by 5 by 5 filters). Typically it is 5 by 5 or 7 by 7, or even 11 by 11 convolution with quite a few filters coming out (eg 32 filters).
-*   Since `padding = kernel_size — 1 / 2` and `stride=1` , the input size is the same as the output size — just more filters.
-*   It is a good way of trying to create a richer starting point.
+*   其余代码类似 - 使用`BnLayer`而不是`ConvLayer`
+*   在开始时添加了单个卷积层，试图更接近现代方法。 它具有更大的内核大小和1的步幅。基本思想是我们希望第一层具有更丰富的输入。 它使用5×5区域进行卷积，这允许它尝试在5×5区域内找到更有趣的更丰富的特征，然后吐出更大的输出（在这种情况下，它是10乘5乘5个滤波器）。 通常它是5乘5或7乘7，或甚至11乘11卷积，并且有相当多的滤波器出来（例如32个滤波器）。
+*   由于`padding = kernel_size — 1 / 2`并且`stride=1` ，输入大小与输出大小相同 - 只是更多的过滤器。
+*   这是尝试创造更丰富起点的好方法。
 
 #### Deep BatchNorm [ [01:50:52](https://youtu.be/H3g26EVADgY%3Ft%3D1h50m52s) ]
 
-Let's increase the depth of the model. We cannot just add more of stride 2 layers since it halves the size of the image each time. Instead, after each stride 2 layer, we insert a stride 1 layer.
+让我们增加模型的深度。 我们不能只添加更多的步幅2层，因为它每次将图像的大小减半。 相反，在每个步幅2层之后，我们插入步幅1层。
 
 ```
- class ConvBnNet2 (nn.Module):  def __init__(self, layers, c):  super().__init__()  self.conv1 = nn.Conv2d(3, 10, kernel_size=5, stride=1, padding=2)  self.layers = nn.ModuleList([BnLayer(layers[i], layers[i+1])  for i in range(len(layers) - 1)])  self.layers2 = nn.ModuleList([BnLayer(layers[i+1], layers[i + 1], 1)  for i in range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  def forward(self, x):  x = self.conv1(x)  for l,l2 in zip(self.layers, self.layers2):  x = l(x)  x = l2(x)  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  return F.log_softmax(self.out(x), dim=-1) 
+ **class** **ConvBnNet2** (nn.Module):  **def** __init__(self, layers, c):  super().__init__()  self.conv1 = nn.Conv2d(3, 10, kernel_size=5, stride=1, padding=2)  self.layers = nn.ModuleList([BnLayer(layers[i], layers[i+1])  **for** i **in** range(len(layers) - 1)])  self.layers2 = nn.ModuleList([BnLayer(layers[i+1], layers[i + 1], 1)  **for** i **in** range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  **def** forward(self, x):  x = self.conv1(x)  **for** l,l2 **in** zip(self.layers, self.layers2):  x = l(x)  x = l2(x)  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  **return** F.log_softmax(self.out(x), dim=-1) 
 ```
 
 ```
@@ -516,15 +516,11 @@ Let's increase the depth of the model. We cannot just add more of stride 2 layer
 ```
 
 ```
- A Jupyter Widget 
+ _A Jupyter Widget_ 
 ```
 
 ```
- [ 0\. 1.53499 1.43782 0.47588] 
- [ 1\. 1.28867 1.22616 0.55537] 
-
- CPU times: user 1min 22s, sys: 34.5 s, total: 1min 56s 
- Wall time: 58.2 s 
+ _[ 0\. 1.53499 1.43782 0.47588]_  _[ 1\. 1.28867 1.22616 0.55537]_  _CPU times: user 1min 22s, sys: 34.5 s, total: 1min 56s_  _Wall time: 58.2 s_ 
 ```
 
 ```
@@ -532,31 +528,27 @@ Let's increase the depth of the model. We cannot just add more of stride 2 layer
 ```
 
 ```
- A Jupyter Widget 
+ _A Jupyter Widget_ 
 ```
 
 ```
- [ 0\. 1.10933 1.06439 0.61582] 
- [ 1\. 1.04663 0.98608 0.64609] 
-
- CPU times: user 1min 21s, sys: 32.9 s, total: 1min 54s 
- Wall time: 57.6 s 
+ _[ 0\. 1.10933 1.06439 0.61582]_  _[ 1\. 1.04663 0.98608 0.64609]_  _CPU times: user 1min 21s, sys: 32.9 s, total: 1min 54s_  _Wall time: 57.6 s_ 
 ```
 
-The accuracy remained the same as before. This is now 12 layers deep, and it is too deep even for batch norm to handle. It is possible to train 12 layer deep conv net but it starts to get difficult. And it does not seem to be helping much if at all.
+准确性与以前一样。 现在这是12层深，即使批量规范也要处理太深。 可以训练12层深度转换网但它开始变得困难。 如果有的话，它似乎没有多大帮助。
 
 #### ResNet [ [01:52:43](https://youtu.be/H3g26EVADgY%3Ft%3D1h52m43s) ]
 
 ```
- class ResnetLayer (BnLayer):  def forward(self, x): return x + super().forward(x) 
+ **class** **ResnetLayer** (BnLayer):  **def** forward(self, x): **return** **x + super().forward(x)** 
 ```
 
 ```
- class Resnet (nn.Module):  def __init__(self, layers, c):  super().__init__()  self.conv1 = nn.Conv2d(3, 10, kernel_size=5, stride=1, padding=2)  self.layers = nn.ModuleList([BnLayer(layers[i], layers[i+1])  for i in range(len(layers) - 1)])  self.layers2 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  for i in range(len(layers) - 1)])  self.layers3 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  for i in range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  def forward(self, x):  x = self.conv1(x)  for l,l2,l3 in zip(self.layers, self.layers2, self.layers3):  x = l3(l2(l(x)))  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  return F.log_softmax(self.out(x), dim=-1) 
+ **class** **Resnet** (nn.Module):  **def** __init__(self, layers, c):  super().__init__()  self.conv1 = nn.Conv2d(3, 10, kernel_size=5, stride=1, padding=2)  self.layers = nn.ModuleList([BnLayer(layers[i], layers[i+1])  **for** i **in** range(len(layers) - 1)])  self.layers2 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  **for** i **in** range(len(layers) - 1)])  self.layers3 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  **for** i **in** range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  **def** forward(self, x):  x = self.conv1(x)  **for** l,l2,l3 **in** zip(self.layers, self.layers2, self.layers3):  x = l3(l2(l(x)))  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  **return** F.log_softmax(self.out(x), dim=-1) 
 ```
 
-*   `ResnetLayer` inherit from `BnLayer` and override `forward` .
-*   Then add bunch of layers and make it 3 times deeper, ad it still trains beautifully just because of `x + super().forward(x)` .
+*   `ResnetLayer`继承自`BnLayer`并覆盖`forward` 。
+*   然后添加一堆图层并使它更深3倍，因为`x + super().forward(x)` ，它仍然训练得很漂亮。
 
 ```
  learn = ConvLearner.from_model_data(Resnet([10, 20, 40, 80, 160], 10), data) 
@@ -571,15 +563,11 @@ The accuracy remained the same as before. This is now 12 layers deep, and it is 
 ```
 
 ```
- A Jupyter Widget 
+ _A Jupyter Widget_ 
 ```
 
 ```
- [ 0\. 1.58191 1.40258 0.49131] 
- [ 1\. 1.33134 1.21739 0.55625] 
-
- CPU times: user 1min 27s, sys: 34.3 s, total: 2min 1s 
- Wall time: 1min 3s 
+ _[ 0\. 1.58191 1.40258 0.49131]_  _[ 1\. 1.33134 1.21739 0.55625]_  _CPU times: user 1min 27s, sys: 34.3 s, total: 2min 1s_  _Wall time: 1min 3s_ 
 ```
 
 ```
@@ -587,20 +575,11 @@ The accuracy remained the same as before. This is now 12 layers deep, and it is 
 ```
 
 ```
- A Jupyter Widget 
+ _A Jupyter Widget_ 
 ```
 
 ```
- [ 0\. 1.11534 1.05117 0.62549] 
- [ 1\. 1.06272 0.97874 0.65185] 
- [ 2\. 0.92913 0.90472 0.68154] 
- [ 3\. 0.97932 0.94404 0.67227] 
- [ 4\. 0.88057 0.84372 0.70654] 
- [ 5\. 0.77817 0.77815 0.73018] 
- [ 6\. 0.73235 0.76302 0.73633] 
-
- CPU times: user 5min 2s, sys: 1min 59s, total: 7min 1s 
- Wall time: 3min 39s 
+ _[ 0\. 1.11534 1.05117 0.62549]_  _[ 1\. 1.06272 0.97874 0.65185]_  _[ 2\. 0.92913 0.90472 0.68154]_  _[ 3\. 0.97932 0.94404 0.67227]_  _[ 4\. 0.88057 0.84372 0.70654]_  _[ 5\. 0.77817 0.77815 0.73018]_  _[ 6\. 0.73235 0.76302 0.73633]_  _CPU times: user 5min 2s, sys: 1min 59s, total: 7min 1s_  _Wall time: 3min 39s_ 
 ```
 
 ```
@@ -608,74 +587,40 @@ The accuracy remained the same as before. This is now 12 layers deep, and it is 
 ```
 
 ```
- A Jupyter Widget 
+ _A Jupyter Widget_ 
 ```
 
 ```
- [ 0\. 0.8307 0.83635 0.7126 ] 
- [ 1\. 0.74295 0.73682 0.74189] 
- [ 2\. 0.66492 0.69554 0.75996] 
- [ 3\. 0.62392 0.67166 0.7625 ] 
- [ 4\. 0.73479 0.80425 0.72861] 
- [ 5\. 0.65423 0.68876 0.76318] 
- [ 6\. 0.58608 0.64105 0.77783] 
- [ 7\. 0.55738 0.62641 0.78721] 
- [ 8\. 0.66163 0.74154 0.7501 ] 
- [ 9\. 0.59444 0.64253 0.78106] 
- [ 10\. 0.53 0.61772 0.79385] 
- [ 11\. 0.49747 0.65968 0.77832] 
- [ 12\. 0.59463 0.67915 0.77422] 
- [ 13\. 0.55023 0.65815 0.78106] 
- [ 14\. 0.48959 0.59035 0.80273] 
- [ 15\. 0.4459 0.61823 0.79336] 
- [ 16\. 0.55848 0.64115 0.78018] 
- [ 17\. 0.50268 0.61795 0.79541] 
- [ 18\. 0.45084 0.57577 0.80654] 
- [ 19\. 0.40726 0.5708 0.80947] 
- [ 20\. 0.51177 0.66771 0.78232] 
- [ 21\. 0.46516 0.6116 0.79932] 
- [ 22\. 0.40966 0.56865 0.81172] 
- [ 23\. 0.3852 0.58161 0.80967] 
- [ 24\. 0.48268 0.59944 0.79551] 
- [ 25\. 0.43282 0.56429 0.81182] 
- [ 26\. 0.37634 0.54724 0.81797] 
- [ 27\. 0.34953 0.54169 0.82129] 
- [ 28\. 0.46053 0.58128 0.80342] 
- [ 29\. 0.4041 0.55185 0.82295] 
- [ 30\. 0.3599 0.53953 0.82861] 
- [ 31\. 0.32937 0.55605 0.82227] 
-
- CPU times: user 22min 52s, sys: 8min 58s, total: 31min 51s 
- Wall time: 16min 38s 
+ _[ 0\. 0.8307 0.83635 0.7126 ]_  _[ 1\. 0.74295 0.73682 0.74189]_  _[ 2\. 0.66492 0.69554 0.75996]_  _[ 3\. 0.62392 0.67166 0.7625 ]_  _[ 4\. 0.73479 0.80425 0.72861]_  _[ 5\. 0.65423 0.68876 0.76318]_  _[ 6\. 0.58608 0.64105 0.77783]_  _[ 7\. 0.55738 0.62641 0.78721]_  _[ 8\. 0.66163 0.74154 0.7501 ]_  _[ 9\. 0.59444 0.64253 0.78106]_  _[ 10\. 0.53 0.61772 0.79385]_  _[ 11\. 0.49747 0.65968 0.77832]_  _[ 12\. 0.59463 0.67915 0.77422]_  _[ 13\. 0.55023 0.65815 0.78106]_  _[ 14\. 0.48959 0.59035 0.80273]_  _[ 15\. 0.4459 0.61823 0.79336]_  _[ 16\. 0.55848 0.64115 0.78018]_  _[ 17\. 0.50268 0.61795 0.79541]_  _[ 18\. 0.45084 0.57577 0.80654]_  _[ 19\. 0.40726 0.5708 0.80947]_  _[ 20\. 0.51177 0.66771 0.78232]_  _[ 21\. 0.46516 0.6116 0.79932]_  _[ 22\. 0.40966 0.56865 0.81172]_  _[ 23\. 0.3852 0.58161 0.80967]_  _[ 24\. 0.48268 0.59944 0.79551]_  _[ 25\. 0.43282 0.56429 0.81182]_  _[ 26\. 0.37634 0.54724 0.81797]_  _[ 27\. 0.34953 0.54169 0.82129]_  _[ 28\. 0.46053 0.58128 0.80342]_  _[ 29\. 0.4041 0.55185 0.82295]_  _[ 30\. 0.3599 0.53953 0.82861]_  _[ 31\. 0.32937 0.55605 0.82227]_  _CPU times: user 22min 52s, sys: 8min 58s, total: 31min 51s_  _Wall time: 16min 38s_ 
 ```
 
-**ResNet block** [ [01:53:18](https://youtu.be/H3g26EVADgY%3Ft%3D1h53m18s) ]
+**ResNet块** [ [01:53:18](https://youtu.be/H3g26EVADgY%3Ft%3D1h53m18s) ]
 
 `**return** **x + super().forward(x)**`
 
-_y = x + f(x)_
+_y = x + f（x）_
 
-Where _x_ is prediction from the previous layer, _y_ is prediction from the current layer.Shuffle around the formula and we get:formula shuffle
+其中_x_是来自前一层的预测， _y_是来自当前层的预测。围绕公式进行预测，我们得到：公式shuffle
 
-_f(x) = y − x_
+_f（x）= y - x_
 
-The difference _y − x_ is **residual** . The residual is the error in terms of what we have calculated so far. What this is saying is that try to find a set of convolutional weights that attempts to fill in the amount we were off by. So in other words, we have an input, and we have a function which tries to predict the error (ie how much we are off by). Then we add a prediction of how much we were wrong by to the input, then add another prediction of how much we were wrong by that time, and repeat that layer after layer — zooming into the correct answer. This is based on a theory called **boosting** .
+差值_y - x_是**残差** 。 残差是我们到目前为止计算的误差。 这就是说，试图找到一组卷积权重，试图填补我们所关闭的数量。 换句话说，我们有一个输入，我们有一个功能，试图预测错误（即我们有多少关闭）。 然后我们添加一个对输入错误的预测，然后添加另一个我们错误的预测，并在图层之后重复该层 - 缩放到正确的答案。 这是基于一种称为**助推**的理论。
 
-*   The full ResNet does two convolutions before it gets added back to the original input (we did just one here).
-*   In every block `x = l3(l2(l(x)))` , one of the layers is not a `ResnetLayer` but a standard convolution with `stride=2` — this is called a “bottleneck layer”. ResNet does not convolutional layer but a different form of bottleneck block which we will cover in Part 2\.
+*   完整的ResNet在将其添加回原始输入之前会进行两次卷积（我们在这里只做了一次）。
+*   在每个块`x = l3(l2(l(x)))` ，其中一个层不是`ResnetLayer`而是`stride=2`的标准卷积 - 这称为“瓶颈层”。 ResNet不是卷积层，而是一种不同形式的瓶颈块，我们将在第2部分中介绍。
 
 ![](../img/1_0_0J8BFYOTK4Mupk94Izrw.png)
 
 #### ResNet 2 [ [01:59:33](https://youtu.be/H3g26EVADgY%3Ft%3D1h59m33s) ]
 
-Here, we increased the size of features and added dropout.
+在这里，我们增加了功能的大小并增加了丢失。
 
 ```
- class Resnet2 (nn.Module):  def __init__(self, layers, c, p=0.5):  super().__init__()  self.conv1 = BnLayer(3, 16, stride=1, kernel_size=7)  self.layers = nn.ModuleList([BnLayer(layers[i], layers[i+1])  for i in range(len(layers) - 1)])  self.layers2 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  for i in range(len(layers) - 1)])  self.layers3 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  for i in range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  self.drop = nn.Dropout(p)  def forward(self, x):  x = self.conv1(x)  for l,l2,l3 in zip(self.layers, self.layers2, self.layers3):  x = l3(l2(l(x)))  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  x = self.drop(x)  return F.log_softmax(self.out(x), dim=-1) 
+ **class** **Resnet2** (nn.Module):  **def** __init__(self, layers, c, p=0.5):  super().__init__()  self.conv1 = BnLayer(3, 16, stride=1, kernel_size=7)  self.layers = nn.ModuleList([BnLayer(layers[i], layers[i+1])  **for** i **in** range(len(layers) - 1)])  self.layers2 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  **for** i **in** range(len(layers) - 1)])  self.layers3 = nn.ModuleList([ResnetLayer(layers[i+1], layers[i + 1], 1)  **for** i **in** range(len(layers) - 1)])  self.out = nn.Linear(layers[-1], c)  self.drop = nn.Dropout(p)  **def** forward(self, x):  x = self.conv1(x)  **for** l,l2,l3 **in** zip(self.layers, self.layers2, self.layers3):  x = l3(l2(l(x)))  x = F.adaptive_max_pool2d(x, 1)  x = x.view(x.size(0), -1)  x = self.drop(x)  **return** F.log_softmax(self.out(x), dim=-1) 
 ```
 
 ```
- learn = ConvLearner.from_model_data(Resnet2([ 16, 32, 64, 128, 256 ], 10, 0.2), data) 
+ learn = ConvLearner.from_model_data(Resnet2([ **16, 32, 64, 128, 256** ], 10, 0.2), data) 
 ```
 
 ```
@@ -691,20 +636,20 @@ Here, we increased the size of features and added dropout.
 ```
 
 ```
- metrics.log_loss(y,preds), accuracy(preds,y)  (0.44507397166057938, 0.84909999999999997) 
+ metrics.log_loss(y,preds), accuracy(preds,y)  _(0.44507397166057938, 0.84909999999999997)_ 
 ```
 
-85% was a state-of-the-art back in 2012 or 2013 for CIFAR 10\. Nowadays, it is up to 97% so there is a room for improvement but all based on these tecniques:
+对于CIFAR 10来说，85％是2012年或2013年的最先进的背部。如今，它高达97％，因此有改进的余地，但都基于这些技术：
 
-*   Better approaches to data augmentation
-*   Better approaches to regularization
-*   Some tweaks on ResNet
+*   更好的数据增强方法
+*   更好的正规化方法
+*   ResNet上的一些调整
 
-Question [ [02:01:07](https://youtu.be/H3g26EVADgY%3Ft%3D2h1m7s) ]: Can we apply “training on the residual” approach for non-image problem? 是! But it has been ignored everywhere else. In NLP, “transformer architecture” recently appeared and was shown to be the state of the art for translation, and it has a simple ResNet structure in it. This general approach is called “skip connection” (ie the idea of skipping over a layer) and appears a lot in computer vision, but nobody else much seems to be using it even through there is nothing computer vision specific about it. Good opportunity!
+问题[ [02:01:07](https://youtu.be/H3g26EVADgY%3Ft%3D2h1m7s) ]：我们可以对非图像问题应用“剩余训练”方法吗？ 是! 但它在其他任何地方都被忽视了。 在NLP中，“变形结构”最近出现并被证明是最先进的翻译技术，它有一个简单的ResNet结构。 这种通用的方法被称为“跳过连接”（即跳过一层的想法）并且在计算机视觉中出现了很多，但是即使没有任何关于它的计算机视觉，也没有其他人似乎使用它。 良机！
 
-### [Dogs vs. Cats](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-CAM.ipynb) [ [02:02:03](https://youtu.be/H3g26EVADgY%3Ft%3D2h2m3s) ]
+### [狗与猫](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-CAM.ipynb) [ [02:02:03](https://youtu.be/H3g26EVADgY%3Ft%3D2h2m3s) ]
 
-Going back dogs and cats. We will create resnet34 (if you are interested in what the trailing number means, [see here](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py) — just different parameters).
+回去的狗和猫。 我们将创建resnet34（如果你对尾随数字的含义感兴趣， [请参阅此处](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py) - 只是不同的参数）。
 
 ```
  PATH = "data/dogscats/"  sz = 224  arch = resnet34 # <-- Name of the function  bs = 64 
@@ -715,65 +660,7 @@ Going back dogs and cats. We will create resnet34 (if you are interested in what
 ```
 
 ```
- ResNet( 
- (conv1): Conv2d (3, 64, _kernel_size=(7, 7)_ , stride=(2, 2), padding=(3, 3), bias=False) 
- (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (maxpool): MaxPool2d(kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), dilation=(1, 1)) 
- ( _layer1_ ): Sequential( 
- (0): BasicBlock( 
- (conv1): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- _)_ 
- (1): BasicBlock( 
- (conv1): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- _)_ 
- (2): BasicBlock( 
- (conv1): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True) 
- _)_  _)_ 
- ( _layer2_ ): Sequential( 
- (0): BasicBlock( 
- (conv1): Conv2d (64, 128, kernel_size=(3, 3), _stride=(2, 2)_ , padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- (downsample): Sequential( 
- (0): Conv2d (64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False) 
- (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- _)_  _)_ 
- (1): BasicBlock( 
- (conv1): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- _)_ 
- (2): BasicBlock( 
- (conv1): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- _)_ 
- (3): BasicBlock( 
- (conv1): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- (relu): ReLU(inplace) 
- (conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) 
- (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True) 
- _)_  _)_ 
+ _ResNet(_  _(conv1): Conv2d (3, 64,_ **_kernel_size=(7, 7)_** _, stride=(2, 2), padding=(3, 3), bias=False)_  _(bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(maxpool): MaxPool2d(kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), dilation=(1, 1))_  _(_ **_layer1_** _): Sequential(_  _(0): BasicBlock(_  _(conv1): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _)_  _(1): BasicBlock(_  _(conv1): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _)_  _(2): BasicBlock(_  _(conv1): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)_  _)_  _)_  _(_ **_layer2_** _): Sequential(_  _(0): BasicBlock(_  _(conv1): Conv2d (64, 128, kernel_size=(3, 3),_ **_stride=(2, 2)_** _, padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _(downsample): Sequential(_  _(0): Conv2d (64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)_  _(1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _)_  _)_  _(1): BasicBlock(_  _(conv1): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _)_  _(2): BasicBlock(_  _(conv1): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _)_  _(3): BasicBlock(_  _(conv1): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _(relu): ReLU(inplace)_  _(conv2): Conv2d (128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)_  _(bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)_  _)_  _)_ 
 ```
 
 ```
@@ -781,32 +668,30 @@ Going back dogs and cats. We will create resnet34 (if you are interested in what
 ```
 
 ```
-  (avgpool): AvgPool2d(kernel_size=7, stride=7, padding=0, ceil_mode=False, count_include_pad=True) 
- (fc): Linear(in_features=512, out_features=1000) 
- _)_ 
+ _(avgpool): AvgPool2d(kernel_size=7, stride=7, padding=0, ceil_mode=False, count_include_pad=True)_  _(fc): Linear(in_features=512, out_features=1000)_  _)_ 
 ```
 
-Our ResNet model had Relu → BatchNorm. TorchVision does BatchNorm →Relu. There are three different versions of ResNet floating around, and the best one is PreAct ( [https://arxiv.org/pdf/1603.05027.pdf](https://arxiv.org/pdf/1603.05027.pdf) ).
+我们的ResNet模型有Relu→BatchNorm。 TorchVision执行BatchNorm→Relu。 有三种不同版本的ResNet浮动，最好的版本是PreAct（ [https://arxiv.org/pdf/1603.05027.pdf](https://arxiv.org/pdf/1603.05027.pdf) ）。
 
-*   Currently, the final layer has a thousands features because ImageNet has 1000 features, so we need to get rid of it.
-*   When you use fast.ai's `ConvLearner` , it deletes the last two layers for you. fast.ai replaces `AvgPool2d` with Adaptive Average Pooling and Adaptive Max Pooling and concatenate the two together.
-*   For this exercise, we will do a simple version.
+*   目前，最后一层有数千个功能，因为ImageNet有1000个功能，所以我们需要摆脱它。
+*   当你使用fast.ai的`ConvLearner` ，它会为你删除最后两层。 fast.ai将AvgPool2d替换为Adaptive Average Pooling和Adaptive Max Pooling，并将两者连接在一起。
+*   在本练习中，我们将做一个简单的版本。
 
 ```
  m = nn.Sequential(*children(m)[:-2],  nn.Conv2d(512, 2, 3, padding=1),  nn.AdaptiveAvgPool2d(1), Flatten(),  nn.LogSoftmax()) 
 ```
 
-*   Remove the last two layers
-*   Add a convolution which just has 2 outputs.
-*   Do average pooling then softmax
-*   There is no linear layer at the end. This is a different way of producing just two numbers — which allows us to do CAM!
+*   删除最后两层
+*   添加一个只有2个输出的卷积。
+*   平均汇集然后softmax
+*   最后没有线性层。 这是产生两个数字的另一种方式 - 这使我们可以做CAM！
 
 ```
  tfms = tfms_from_model(arch, sz, aug_tfms=transforms_side_on, max_zoom=1.1)  data = ImageClassifierData.from_paths(PATH, tfms=tfms, bs=bs) 
 ```
 
 ```
- learn = ConvLearner.from_model_data (m, data) 
+ learn = **ConvLearner.from_model_data** (m, data) 
 ```
 
 ```
@@ -817,62 +702,60 @@ Our ResNet model had Relu → BatchNorm. TorchVision does BatchNorm →Relu. The
  learn.fit(0.01, 1)  learn.fit(0.01, 1, cycle_len=1) 
 ```
 
-*   `ConvLearner.from_model` is what we learned about earlier — allows us to create a Learner object with custom model.
-*   Then freeze the layer except the ones we just added.
+*   `ConvLearner.from_model`是我们之前学到的 - 允许我们使用自定义模型创建一个Learner对象。
+*   然后冻结除我们刚添加的图层之外的图层。
 
-#### Class Activation Maps (CAM) [ [02:08:55](https://youtu.be/H3g26EVADgY%3Ft%3D2h8m55s) ]
+#### 类激活图（CAM）[ [02:08:55](https://youtu.be/H3g26EVADgY%3Ft%3D2h8m55s) ]
 
-We pick a specific image, and use a technique called CAM where we take a model and we ask it which parts of the image turned out to be important.
+我们选择一个特定的图像，并使用一种名为CAM的技术，我们在这里采用一个模型，然后我们会问它图像的哪些部分变得很重要。
 
-![](../img/1_BrMBBupbny4CFsqBVjgcfA.png)
+![](../img/1_BrMBBupbny4CFsqBVjgcfA.png)![](../img/1_zayLvr0jvnUXe-G27odldQ.png)
 
-![](../img/1_zayLvr0jvnUXe-G27odldQ.png)
-
-How did it do this? Let's work backwards. The way it did it was by producing this matrix:
+它是怎么做到的？ 让我们倒退吧。 它的方式是通过生成这个矩阵：
 
 ![](../img/1_DPIlEiNjJOeAbiIQUubNLg.png)
 
-Big numbers correspond to the cat. So what is this matrix? This matrix simply equals to the value of feature matrix `feat` times `py` vector:
+大数字对应猫。 那么这个矩阵是什么？ 该矩阵简单地等于特征矩阵特征`py`矢量的值：
 
 ```
- f2=np.dot(np.rollaxis( feat ,0,3), py )  f2-=f2.min()  f2/=f2.max()  f2 
+ f2=np.dot(np.rollaxis( **feat** ,0,3), **py** )  f2-=f2.min()  f2/=f2.max()  f2 
 ```
 
-`py` vector is the predictions that says “I am 100% confident it's a cat.” `feat` is the values (2×7×7) coming out of the final convolutional layer (the `Conv2d` layer we added). If we multiply `feat` by `py` , we get all of the first channel and none of the second channel. Therefore, it is going to return the value of the last convolutional layers for the section which lines up with being a cat. In other words, if we multiply `feat` by `[0, 1]` , it will line up with being a dog.
+`py` vector是预测，“我100％确信它是一只猫。” `feat`是从最终卷积层（我们添加的`Conv2d`层）出来的值（2×7×7）。 如果我们将`feat`乘以`py` ，我们得到所有第一个通道而不是第二个通道。 因此，它将返回与猫对齐的部分的最后卷积层的值。 换句话说，如果我们将`feat`乘以`[0, 1]` ，它就会成为一只狗。
 
 ```
  sf = SaveFeatures(m[-4])  py = m(Variable(x.cuda()))  sf.remove()  py = np.exp(to_np(py)[0]); py 
 ```
 
 ```
- array([ 1., 0.], dtype=float32) 
+ _array([ 1., 0.], dtype=float32)_ 
 ```
 
 ```
  feat = np.maximum(0, sf.features[0])  feat.shape 
 ```
 
-Put it in another way, in the model, the only thing that happened after the convolutional layer was an average pooling layer. The average pooling layer took took the 7 by 7 grid and averaged out how much each part is “cat-like”. We then took the “cattyness” matrix, resized it to be the same size as the original cat image, and overlaid it on top, then you get the heat map.
+换句话说，在模型中，卷积层之后发生的唯一事情是平均池层。 平均汇集层花了7乘7的网格，并平均每个部分是“猫似的”多少。 然后我们采用“cattyness”矩阵，将其大小调整为与原始猫图像相同的大小，并将其覆盖在顶部，然后获得热图。
 
-The way you can use this technique at home is
+你在家里使用这种技术的方法是
 
-1.  when you have a large image, you can calculate this matrix on a quick small little convolutional net
-2.  zoom into the area that has the highest value
-3.  re-run it just on that part
+1.  当你有一个大图像时，你可以在一个快速的小卷积网上计算这个矩阵
+2.  放大具有最高值的区域
+3.  在那部分重新运行它
 
-We skipped this over quickly as we ran out of time, but we will learn more about these kind of approaches in Part 2\.
+由于时间不多，我们很快就跳过了这个问题，但我们将在第2部分中详细了解这些方法。
 
-“Hook” is the mechanism that lets us ask the model to return the matrix. `register_forward_hook` asks PyTorch that every time it calculates a layer it runs the function given — sort of like a callback that happens every time it calculates a layer. In the following case, it saves the value of the particular layer we were interested in:
+“钩子”是让我们让模型返回矩阵的机制。 `register_forward_hook`要求PyTorch每次计算一个图层时都会运行给定的函数 - 有点像每次计算图层时发生的回调。 在下面的例子中，它保存了我们感兴趣的特定图层的值：
 
 ```
- class SaveFeatures ():  features= None  def __init__(self, m):  self.hook = m.register_forward_hook(self.hook_fn)  def hook_fn(self, module, input, output):  self.features = to_np(output)  def remove(self): self.hook.remove() 
+ **class** **SaveFeatures** ():  features= **None**  **def** __init__(self, m):  self.hook = m.register_forward_hook(self.hook_fn)  **def** hook_fn(self, module, input, output):  self.features = to_np(output)  **def** remove(self): self.hook.remove() 
 ```
 
-#### Questions to Jeremy [ [02:14:27](https://youtu.be/H3g26EVADgY%3Ft%3D2h14m27s) ]: “Your journey into Deep Learning” and “How to keep up with important research for practitioners”
+#### 对杰里米的问题[ [02:14:27](https://youtu.be/H3g26EVADgY%3Ft%3D2h14m27s) ]：“你的深度学习之旅”和“如何跟上从业者的重要研究”
 
-“If you intend to come to Part 2, you are expected to master all the techniques er have learned in Part 1”. Here are something you can do:
+“如果你打算参加第2部分，你应该掌握在第1部分中学到的所有技巧”。 你可以执行以下操作：
 
-1.  Watch each of the video at least 3 times.
-2.  Make sure you can re-create the notebooks without watching the videos — maybe do so with different datasets to make it more interesting.
-3.  Keep an eye on the forum for recent papers, recent advances.
-4.  Be tenacious and keep working at it!
+1.  观看每个视频至少3次。
+2.  确保你可以在不观看视频的情况下重新创建笔记本电脑 - 也许可以使用不同的数据集来创建笔记本电脑以使其更有趣。
+3.  密切关注最近的论文，最近的进展论坛。
+4.  要顽强，继续努力吧！

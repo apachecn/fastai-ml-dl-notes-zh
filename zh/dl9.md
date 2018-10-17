@@ -63,7 +63,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1_QMa_SUUVOypZHKaAuXDkSw.png)
 
-正如你所看到的，图像旋转并且光线变化，但是边界框_没有移动_并且_位于错误的位置_ [ [6:17](https://youtu.be/0frKXR-2PBY%3Ft%3D6m17s) ]。 当您的因变量是像素值或以某种方式连接到自变量时，这是数据增强的问题 - 它们需要一起增强。 正如您在边界框坐标`[ 115\. 63\. 240\. 311.]`中所看到的，我们的图像是224乘224 - 所以它既不缩放也不裁剪。 因变量需要经历所有几何变换作为自变量。
+正如你所看到的，图像旋转并且光线变化，但是边界框_没有移动_并且_位于错误的位置_ [ [6:17](https://youtu.be/0frKXR-2PBY%3Ft%3D6m17s) ]。 当你的因变量是像素值或以某种方式连接到自变量时，这是数据增强的问题 - 它们需要一起增强。 正如你在边界框坐标`[ 115\. 63\. 240\. 311.]`中所看到的，我们的图像是224乘224 - 所以它既不缩放也不裁剪。 因变量需要经历所有几何变换作为自变量。
 
 要做到这一点[ [7:10](https://youtu.be/0frKXR-2PBY%3Ft%3D7m10s) ]，每个转换都有一个可选的`tfm_y`参数：
 
@@ -87,7 +87,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1__ge-RyZpEIQ5fiSvo207rA.png)
 
-现在，边界框随图像移动并位于正确的位置。 您可能会注意到，有时它看起来很奇怪，就像底行中间的那样。 这是我们所拥有信息的约束。 如果对象占据原始边界框的角，则在图像旋转后，新的边界框需要更大。 所以你必须**小心不要使用边界框进行太高的旋转，**因为没有足够的信息让它们保持准确。 如果我们在做多边形或分段，我们就不会遇到这个问题。
+现在，边界框随图像移动并位于正确的位置。 你可能会注意到，有时它看起来很奇怪，就像底行中间的那样。 这是我们所拥有信息的约束。 如果对象占据原始边界框的角，则在图像旋转后，新的边界框需要更大。 所以你必须**小心不要使用边界框进行太高的旋转，**因为没有足够的信息让它们保持准确。 如果我们在做多边形或分段，我们就不会遇到这个问题。
 
 ![](../img/1_4V4sjFZxn-y2cU9tCJPEUw.png)
 
@@ -197,7 +197,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 该体系结构将与我们用于分类器和边界框回归的体系结构相同，但我们将仅将它们组合在一起。 换句话说，如果我们有`c`类，那么我们在最后一层中需要的激活次数是4加`c` 。 4用于边界框坐标和`c`概率（每个类一个）。
 
-这次我们将使用额外的线性层，加上一些辍学，以帮助我们训练更灵活的模型。 一般来说，我们希望我们的自定义头能够自己解决问题，如果它所连接的预训练骨干是合适的。 所以在这种情况下，我们试图做很多 - 分类器和边界框回归，所以只是单个线性层似乎不够。 如果您想知道为什么在第一个`ReLU`之后没有`BatchNorm1d` ，ResNet主干已经将`BatchNorm1d`作为其最后一层。
+这次我们将使用额外的线性层，加上一些辍学，以帮助我们训练更灵活的模型。 一般来说，我们希望我们的自定义头能够自己解决问题，如果它所连接的预训练骨干是合适的。 所以在这种情况下，我们试图做很多 - 分类器和边界框回归，所以只是单个线性层似乎不够。 如果你想知道为什么在第一个`ReLU`之后没有`BatchNorm1d` ，ResNet主干已经将`BatchNorm1d`作为其最后一层。
 
 ```
  head_reg4 = nn.Sequential(  Flatten(),  nn.ReLU(),  nn.Dropout(0.5),  nn.Linear(25088,256),  nn.ReLU(),  nn.BatchNorm1d(256),  nn.Dropout(0.5),  nn.Linear(256, **4+len(cats)** ),  )  models = ConvnetBuilder(f_model, 0, 0, 0, custom_head=head_reg4)  learn = ConvLearner(md, models)  learn.opt_fn = optim.Adam 
@@ -279,7 +279,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 检测精度低至80，与以前相同。 这并不奇怪，因为ResNet旨在进行分类，因此我们不希望以这种简单的方式改进事物。 它当然不是为了进行边界框回归而设计的。 它显然实际上是以不关心几何的方式设计的 - 它需要最后7到7个激活网格并将它们平均放在一起扔掉所有关于来自何处的信息。
 
-有趣的是，当我们同时进行准确性（分类）和边界框时，L1似乎比我们刚进行边界框回归时要好一些[ [22:46](https://youtu.be/0frKXR-2PBY%3Ft%3D22m46s) ]。 如果这对你来说是违反直觉的，那么这将是本课后要考虑的主要事项之一，因为这是一个非常重要的想法。 这个想法是这样的 - 弄清楚图像中的主要对象是什么，是一种困难的部分。 然后确定边界框的确切位置以及它的类别是一个简单的部分。 所以当你有一个网络既说对象是什么，对象在哪里时，它就会分享关于找到对象的所有计算。 所有共享计算都非常有效。 当我们返回传播类和地方中的错误时，这就是有助于计算找到最大对象的所有信息。 因此，只要您有多个任务分享这些任务完成工作所需要的概念，他们很可能应该至少共享网络的某些层。 今天晚些时候，我们将看一个模型，其中除了最后一层之外，大多数层都是共享的。
+有趣的是，当我们同时进行准确性（分类）和边界框时，L1似乎比我们刚进行边界框回归时要好一些[ [22:46](https://youtu.be/0frKXR-2PBY%3Ft%3D22m46s) ]。 如果这对你来说是违反直觉的，那么这将是本课后要考虑的主要事项之一，因为这是一个非常重要的想法。 这个想法是这样的 - 弄清楚图像中的主要对象是什么，是一种困难的部分。 然后确定边界框的确切位置以及它的类别是一个简单的部分。 所以当你有一个网络既说对象是什么，对象在哪里时，它就会分享关于找到对象的所有计算。 所有共享计算都非常有效。 当我们返回传播类和地方中的错误时，这就是有助于计算找到最大对象的所有信息。 因此，只要你有多个任务分享这些任务完成工作所需要的概念，他们很可能应该至少共享网络的某些层。 今天晚些时候，我们将看一个模型，其中除了最后一层之外，大多数层都是共享的。
 
 结果如下[ [24:34](https://youtu.be/0frKXR-2PBY%3Ft%3D24m34s) ]。 和以前一样，当图像中有单个主要对象时，它做得很好。
 
@@ -341,7 +341,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 其中一名学生指出，通过使用Pandas，我们可以比使用`collections.defaultdict`更简单，并分享[这个要点](https://gist.github.com/binga/1bc4ebe5e41f670f5954d2ffa9d6c0ed) 。 你越了解熊猫，你越经常意识到它是解决许多不同问题的好方法。
 
-**问题** ：当您在较小的模型上逐步构建时，是否将它们重新用作预先训练过的权重？ 或者你把它扔掉然后从头开始重新训练[ [27:11](https://youtu.be/0frKXR-2PBY%3Ft%3D27m11s) ]？ 当Jeremy在他这样做时想出东西时，他通常会倾向于扔掉，因为重复使用预先训练过的砝码会带来不必要的复杂性。 然而，如果他试图达到他可以在真正大的图像上进行训练的程度，他通常会从更小的角度开始，并且经常重新使用这些重量。
+**问题** ：当你在较小的模型上逐步构建时，是否将它们重新用作预先训练过的权重？ 或者你把它扔掉然后从头开始重新训练[ [27:11](https://youtu.be/0frKXR-2PBY%3Ft%3D27m11s) ]？ 当Jeremy在他这样做时想出东西时，他通常会倾向于扔掉，因为重复使用预先训练过的砝码会带来不必要的复杂性。 然而，如果他试图达到他可以在真正大的图像上进行训练的程度，他通常会从更小的角度开始，并且经常重新使用这些权重。
 
 ```
  f_model=resnet34  sz=224  bs=64 
@@ -441,7 +441,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1_IgL2CMSit3Hh9N2Fq2Zlgg.png)
 
-进行一次激活（在这种情况下，在maxpool图层中）让我们看看它来自哪里[ [38:45](https://youtu.be/0frKXR-2PBY%3Ft%3D38m45s) ]。 在excel中，您可以执行公式→跟踪先例。 一直追溯到输入层，您可以看到它来自图像的这个6 x 6部分（以及过滤器）。 更重要的是，中间部分有很多重量从外面的细胞出来只有一个重量出来的地方。 因此，我们将这个6 x 6细胞称为我们选择的一次激活的感受野。
+进行一次激活（在这种情况下，在maxpool图层中）让我们看看它来自哪里[ [38:45](https://youtu.be/0frKXR-2PBY%3Ft%3D38m45s) ]。 在excel中，你可以执行公式→跟踪先例。 一直追溯到输入层，你可以看到它来自图像的这个6 x 6部分（以及过滤器）。 更重要的是，中间部分有很多权重从外面的细胞出来只有一个权重出来的地方。 因此，我们将这个6 x 6细胞称为我们选择的一次激活的感受野。
 
 ![](../img/1_cCBVbJ2WjiPMlqX4nA2bwA.png)
 
@@ -537,7 +537,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1_xjKmShqdLnD_JX4Aj7U80g.png)
 
-每个方形盒子，不同的纸张都称它们为不同的东西。 您将听到的三个术语是：锚箱，先前的箱子或默认箱子。 我们将坚持使用术语锚箱。
+每个方形盒子，不同的纸张都称它们为不同的东西。 你将听到的三个术语是：锚箱，先前的箱子或默认箱子。 我们将坚持使用术语锚箱。
 
 我们要为这个损失函数做些什么，我们将要经历一个匹配问题，我们将采用这16个方框中的每一个，看看这三个地面实况对象中哪一个具有最大的重叠量给定方[ [55:21](https://youtu.be/0frKXR-2PBY%3Ft%3D55m21s) ]。 要做到这一点，我们必须有一些方法来测量重叠量，这个标准函数叫做[Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index) （IoU）。
 
@@ -620,145 +620,122 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
  [torch.cuda.LongTensor of size 16 (GPU 0)]) 
 ```
 
-Now you can see a list of all the assignments [ [1:01:05](https://youtu.be/0frKXR-2PBY%3Ft%3D1h1m5s) ]. Anywhere that has `gt_overlap &lt; 0.5` gets assigned background. The three row-wise max anchor box has high number to force the assignments. Now we can combine these values to classes:
+现在你可以看到所有作业的列表[ [1:01:05](https://youtu.be/0frKXR-2PBY%3Ft%3D1h1m5s) ]。 任何`gt_overlap &lt; 0.5`都会被分配背景。 三行最大锚箱具有较高的数字以强制分配。 现在我们可以将这些值组合到类中：
 
 ```
  gt_clas = clas[gt_idx]; gt_clas 
 ```
 
 ```
- Variable containing: 
- _8_  _8_  _8_  _8_  _8_  _8_  _8_  _8_  _10_  _10_  _8_  _17_  _10_  _10_  _8_  _8_ 
- [torch.cuda.LongTensor of size 16 (GPU 0)] 
+ _Variable containing:_  _8_  _8_  _8_  _8_  _8_  _8_  _8_  _8_  _10_  _10_  _8_  _17_  _10_  _10_  _8_  _8_  _[torch.cuda.LongTensor of size 16 (GPU 0)]_ 
 ```
 
-Then add a threshold and finally comes up with the three classes that are being predicted:
+然后添加一个阈值，最后得出预测的三个类：
 
 ```
  thresh = 0.5  pos = gt_overlap > thresh  pos_idx = torch.nonzero(pos)[:,0]  neg_idx = torch.nonzero(1-pos)[:,0]  pos_idx 
 ```
 
 ```
- _11_  _13_  _14_ 
- [torch.cuda.LongTensor of size 3 (GPU 0)] 
+ _11_  _13_  _14_  _[torch.cuda.LongTensor of size 3 (GPU 0)]_ 
 ```
 
-And here are what each of these anchor boxes is meant to be predicting:
+以下是每个锚箱的预测：
 
 ```
- gt_clas[1-pos] = len(id2cat)  [id2cat[o] if o<len(id2cat) else 'bg' for o in gt_clas.data] 
+ gt_clas[1-pos] = len(id2cat)  [id2cat[o] **if** o<len(id2cat) **else** 'bg' **for** o **in** gt_clas.data] 
 ```
 
 ```
- ['bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'bg', 
- 'sofa', 
- 'bg', 
- 'diningtable', 
- 'chair', 
- 'bg'] 
+ _['bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'bg',_  _'sofa',_  _'bg',_  _'diningtable',_  _'chair',_  _'bg']_ 
 ```
 
-So that was the matching stage [ [1:02:29](https://youtu.be/0frKXR-2PBY%3Ft%3D1h2m29s) ]. For L1 loss, we can:
+这就是匹配阶段[ [1:02:29](https://youtu.be/0frKXR-2PBY%3Ft%3D1h2m29s) ]。 对于L1损失，我们可以：
 
-1.  take the activations which matched ( `pos_idx = [11, 13, 14]` )
-2.  subtract from those the ground truth bounding boxes
-3.  take the absolute value of the difference
-4.  take the mean of that.
+1.  采取匹配的激活（ `pos_idx = [11, 13, 14]` ）
+2.  从那些真实的边界框中减去
+3.  取差异的绝对值
+4.  采取的意思。
 
-For classifications, we can just do a cross entropy
+对于分类，我们可以做一个交叉熵
 
 ```
  gt_bbox = bbox[gt_idx]  loc_loss = ((a_ic[pos_idx] - gt_bbox[pos_idx]).abs()).mean()  clas_loss = F.cross_entropy(b_clasi, gt_clas)  loc_loss,clas_loss 
 ```
 
 ```
- (Variable containing: 
- 1.00000e-02 * 
- 6.5887 
- [torch.cuda.FloatTensor of size 1 (GPU 0)], Variable containing: 
- 1.0331 
- [torch.cuda.FloatTensor of size 1 (GPU 0)]) 
+ _(Variable containing:_  _1.00000e-02 *_  _6.5887_  _[torch.cuda.FloatTensor of size 1 (GPU 0)], Variable containing:_  _1.0331_  _[torch.cuda.FloatTensor of size 1 (GPU 0)])_ 
 ```
 
-We will end up with 16 predicted bounding boxes, most of them will be background. If you are wondering what it predicts in terms of bounding box of background, the answer is it totally ignores it.
+我们最终会得到16个预测的边界框，其中大多数都是背景框。 如果你想知道它在背景的边界框中预测了什么，答案是完全忽略它。
 
 ```
- fig, axes = plt.subplots(3, 4, figsize=(16, 12))  for idx,ax in enumerate(axes.flat):  ima=md.val_ds.ds.denorm(to_np(x))[idx]  bbox,clas = get_y(y[0][idx], y[1][idx])  ima=md.val_ds.ds.denorm(to_np(x))[idx]  bbox,clas = get_y(bbox,clas); bbox,clas  a_ic = actn_to_bb(b_bb[idx], anchors)  torch_gt(ax, ima, a_ic, b_clas[idx].max(1)[1],  b_clas[idx].max(1)[0].sigmoid(), 0.01)  plt.tight_layout() 
+ fig, axes = plt.subplots(3, 4, figsize=(16, 12))  **for** idx,ax **in** enumerate(axes.flat):  ima=md.val_ds.ds.denorm(to_np(x))[idx]  bbox,clas = get_y(y[0][idx], y[1][idx])  ima=md.val_ds.ds.denorm(to_np(x))[idx]  bbox,clas = get_y(bbox,clas); bbox,clas  a_ic = actn_to_bb(b_bb[idx], anchors)  torch_gt(ax, ima, a_ic, b_clas[idx].max(1)[1],  b_clas[idx].max(1)[0].sigmoid(), 0.01)  plt.tight_layout() 
 ```
 
 ![](../img/1_8azTUd1Ujf3FQSMBwIXgAw.png)
 
-#### Tweak 1\. How do we interpret the activations [ [1:04:16](https://youtu.be/0frKXR-2PBY%3Ft%3D1h4m16s) ]?
+#### 调整1.我们如何解释激活[ [1:04:16](https://youtu.be/0frKXR-2PBY%3Ft%3D1h4m16s) ]？
 
-The way we interpret the activation is defined here:
-
-```
- def actn_to_bb(actn, anchors):  actn_bbs = torch.tanh(actn)  actn_centers = (actn_bbs[:,:2]/2 * grid_sizes) + anchors[:,:2]  actn_hw = (actn_bbs[:,2:]/2+1) * anchors[:,2:]  return hw2corners(actn_centers, actn_hw) 
-```
-
-We grab the activations, we stick them through `tanh` (remember `tanh` is the same shape as sigmoid except it is scaled to be between -1 and 1) which forces it to be within that range. We then grab the actual position of the anchor boxes, and we will move them around according to the value of the activations divided by two ( `actn_bbs[:,:2]/2` ). In other words, each predicted bounding box can be moved by up to 50% of a grid size from where its default position is. Ditto for its height and width — it can be up to twice as big or half as big as its default size.
-
-#### Tweak 2\. We actually use binary cross entropy loss instead of cross entropy [ [1:05:36](https://youtu.be/0frKXR-2PBY%3Ft%3D1h5m36s) ]
+我们解释激活的方式在这里定义：
 
 ```
- class BCE_Loss (nn.Module):  def __init__(self, num_classes):  super().__init__()  self.num_classes = num_classes  def forward(self, pred, targ):  t = one_hot_embedding(targ, self.num_classes+1)  t = V(t[:,:-1].contiguous()) #.cpu()  x = pred[:,:-1]  w = self.get_weight(x,t)  return F.binary_cross_entropy_with_logits(x, t, w,  size_average= False )/self.num_classes  def get_weight(self,x,t): return None 
+ **def** actn_to_bb(actn, anchors):  actn_bbs = torch.tanh(actn)  actn_centers = (actn_bbs[:,:2]/2 * grid_sizes) + anchors[:,:2]  actn_hw = (actn_bbs[:,2:]/2+1) * anchors[:,2:]  **return** hw2corners(actn_centers, actn_hw) 
 ```
 
-Binary cross entropy is what we normally use for multi-label classification. Like in the planet satellite competition, each satellite image could have multiple things. If it has multiple things in it, you cannot use softmax because softmax really encourages just one thing to have the high number. In our case, each anchor box can only have one object associated with it, so it is not for that reason that we are avoiding softmax. It is something else — which is it is possible for an anchor box to have nothing associated with it. There are two ways to handle this idea of “background”; one would be to say background is just a class, so let's use softmax and just treat background as one of the classes that the softmax could predict. A lot of people have done it this way. But that is a really hard thing to ask neural network to do [ [1:06:52](https://youtu.be/0frKXR-2PBY%3Ft%3D1h5m52s) ] — it is basically asking whether this grid cell does not have any of the 20 objects that I am interested with Jaccard overlap of more than 0.5\. It is a really hard to thing to put into a single computation. On the other hand, what if we just asked for each class; “is it a motorbike?” “is it a bus?”, “ is it a person?” etc and if all the answer is no, consider that background. That is the way we do it here. It is not that we can have multiple true labels, but we can have zero.
+我们抓住激活，我们将它们穿过`tanh` （记住`tanh`与sigmoid的形状相同，除了它被缩放到介于-1和1之间），这迫使它在该范围内。 然后我们抓住锚箱的实际位置，我们将根据激活的值除以2（ `actn_bbs[:,:2]/2` ）来移动它们。 换句话说，每个预测的边界框可以从其默认位置移动最多50％的网格大小。 它的高度和宽度同样如此 - 它可以是默认尺寸的两倍大或一半大。
 
-In `forward` :
-
-1.  First we take the one hot embedding of the target (at this stage, we do have the idea of background)
-2.  Then we remove the background column (the last one) which results in a vector either of all zeros or one one.
-3.  Use binary cross-entropy predictions.
-
-This is a minor tweak, but it is the kind of minor tweak that Jeremy wants you to think about and understand because it makes a really big difference to your training and when there is some increment over a previous paper, it would be something like this [ [1:08:25](https://youtu.be/0frKXR-2PBY%3Ft%3D1h8m25s) ]. It is important to understand what this is doing and more importantly why.
-
-So now we have [ [1:09:39](https://youtu.be/0frKXR-2PBY%3Ft%3D1h9m39s) ]:
-
-*   A custom loss function
-*   A way to calculate Jaccard index
-*   A way to convert activations to bounding box
-*   A way to map anchor boxes to ground truth
-
-Now all it's left is SSD loss function.
-
-#### SSD Loss Function [ [1:09:55](https://youtu.be/0frKXR-2PBY%3Ft%3D1h9m55s) ]
+#### 调整2.我们实际上使用二元交叉熵损失而不是交叉熵[ [1:05:36](https://youtu.be/0frKXR-2PBY%3Ft%3D1h5m36s) ]
 
 ```
- def ssd_1_loss(b_c,b_bb,bbox,clas,print_it= False ):  bbox,clas = get_y(bbox,clas)  a_ic = actn_to_bb(b_bb, anchors)  overlaps = jaccard(bbox.data, anchor_cnr.data)  gt_overlap,gt_idx = map_to_ground_truth(overlaps,print_it)  gt_clas = clas[gt_idx]  pos = gt_overlap > 0.4  pos_idx = torch.nonzero(pos)[:,0]  gt_clas[1-pos] = len(id2cat)  gt_bbox = bbox[gt_idx]  loc_loss = ((a_ic[pos_idx] - gt_bbox[pos_idx]).abs()).mean()  clas_loss = loss_f(b_c, gt_clas)  return loc_loss, clas_loss  def ssd_loss(pred,targ,print_it= False ):  lcs,lls = 0.,0\.  for b_c,b_bb,bbox,clas in zip(*pred,*targ):  loc_loss,clas_loss = ssd_1_loss(b_c,b_bb,bbox,clas,print_it)  lls += loc_loss  lcs += clas_loss  if print_it: print(f'loc: {lls.data[0]} , clas: {lcs.data[0]} ')  return lls+lcs 
+ **class** **BCE_Loss** (nn.Module):  **def** __init__(self, num_classes):  super().__init__()  self.num_classes = num_classes  **def** forward(self, pred, targ):  t = one_hot_embedding(targ, self.num_classes+1)  t = V(t[:,:-1].contiguous()) _#.cpu()_  x = pred[:,:-1]  w = self.get_weight(x,t)  **return** F.binary_cross_entropy_with_logits(x, t, w,  size_average= **False** )/self.num_classes  **def** get_weight(self,x,t): **return** **None** 
 ```
 
-The `ssd_loss` function which is what we set as the criteria, it loops through each image in the mini-batch and call `ssd_1_loss` function (ie SSD loss for one image).
+二元交叉熵是我们通常用于多标签分类的。 就像在星球卫星比赛中一样，每个卫星图像可能有多种东西。 如果它有多个内容，你就不能使用softmax，因为softmax真的只鼓励一件事就是拥有高数字。 在我们的例子中，每个锚盒只能有一个与之关联的对象，因此我们不能避免使用softmax。 它是另一回事 - 锚盒可能没有与之相关的东西。 有两种方法可以处理这种“背景”的概念; 可以说背景只是一个类，所以让我们使用softmax并将背景视为softmax可以预测的类之一。 很多人都是这样做的。 但要求神经网络[ [1:06:52](https://youtu.be/0frKXR-2PBY%3Ft%3D1h5m52s) ]这是一件非常困难的事情 - 它基本上是在询问这个网格单元是否没有我对Jaccard重叠超过0.5感兴趣的20个对象中的任何一个。 单一计算是一件非常难的事情。 另一方面，如果我们只是要求每个班级怎么办？ “这是一辆摩托车吗？”“这是一辆公共汽车吗？”，“它是一个人吗？”等等，如果所有的答案都不是，那就考虑一下背景。 这就是我们在这里做的方式。 我们不能拥有多个真正的标签，但我们可以拥有零。
 
-`ssd_1_loss` is where it is all happening. It begins by de-structuring `bbox` and `clas` . Let's take a closer look at `get_y` [ [1:10:38](https://youtu.be/0frKXR-2PBY%3Ft%3D1h10m38s) ]:
+在`forward` ：
+
+1.  首先，我们采用目标的一个热嵌入（在这个阶段，我们确实有背景的想法）
+2.  然后我们删除背景列（最后一列），这会产生一个全零或一个向量的向量。
+3.  使用二进制交叉熵预测。
+
+这是一个小调整，但这是Jeremy希望你思考和理解的一种小调整，因为它对你的训练产生了很大的影响，而且当前一篇论文有一些增量时，它会是这样的[ [1:08:25](https://youtu.be/0frKXR-2PBY%3Ft%3D1h8m25s) ] 重要的是要了解这是做什么，更重要的是为什么。
+
+所以现在我们[ [1:09:39](https://youtu.be/0frKXR-2PBY%3Ft%3D1h9m39s) ]：
+
+*   自定义丢失功能
+*   一种计算Jaccard指数的方法
+*   一种将激活转换为边界框的方法
+*   一种将锚箱映射到地面实况的方法
+
+现在剩下的就是SSD丢失功能。
+
+#### SSD丢失功能[ [1:09:55](https://youtu.be/0frKXR-2PBY%3Ft%3D1h9m55s) ]
 
 ```
- def get_y(bbox,clas):  bbox = bbox.view(-1,4)/sz  bb_keep = ((bbox[:,2]-bbox[:,0])>0).nonzero()[:,0]  return bbox[bb_keep],clas[bb_keep] 
+ **def** ssd_1_loss(b_c,b_bb,bbox,clas,print_it= **False** ):  bbox,clas = get_y(bbox,clas)  a_ic = actn_to_bb(b_bb, anchors)  overlaps = jaccard(bbox.data, anchor_cnr.data)  gt_overlap,gt_idx = map_to_ground_truth(overlaps,print_it)  gt_clas = clas[gt_idx]  pos = gt_overlap > 0.4  pos_idx = torch.nonzero(pos)[:,0]  gt_clas[1-pos] = len(id2cat)  gt_bbox = bbox[gt_idx]  loc_loss = ((a_ic[pos_idx] - gt_bbox[pos_idx]).abs()).mean()  clas_loss = loss_f(b_c, gt_clas)  **return** loc_loss, clas_loss  **def** ssd_loss(pred,targ,print_it= **False** ):  lcs,lls = 0.,0.  **for** b_c,b_bb,bbox,clas **in** zip(*pred,*targ):  loc_loss,clas_loss = ssd_1_loss(b_c,b_bb,bbox,clas,print_it)  lls += loc_loss  lcs += clas_loss  **if** print_it: print(f'loc: **{lls.data[0]}** , clas: **{lcs.data[0]}** ')  **return** lls+lcs 
 ```
 
-A lot of code you find on the internet does not work with mini-batches. It only does one thing at a time which we don't want. In this case, all these functions ( `get_y` , `actn_to_bb` , `map_to_ground_truth` ) is working on, not exactly a mini-batch at a time, but a whole bunch of ground truth objects at a time. The data loader is being fed a mini-batch at a time to do the convolutional layers. Because we can have _different numbers of ground truth objects in each image_ but a tensor has to be the strict rectangular shape, fastai automatically pads it with zeros (any target values that are shorter) [ [1:11:08](https://youtu.be/0frKXR-2PBY%3Ft%3D1h11m8s) ]. This was something that was added recently and super handy, but that does mean that you then have to make sure that you get rid of those zeros. So `get_y` gets rid of any of the bounding boxes that are just padding.
+`ssd_loss`函数是我们设置的标准，它循环遍历小批量中的每个图像并调用`ssd_1_loss`函数（即一个图像的SSD丢失）。
 
-1.  Get rid of the padding
-2.  Turn the activations to bounding boxes
-3.  Do the Jaccard
-4.  Do map_to_ground_truth
-5.  Check that there is an overlap greater than something around 0.4~0.5 (different papers use different values for this)
-6.  Find the indices of things that matched
-7.  Assign background class for the ones that did not match
-8.  Then finally get L1 loss for the localization, binary cross entropy loss for the classification, and return them which gets added in `ssd_loss`
+`ssd_1_loss`就是它发生的全部。 它首先`bbox`和`clas` 。 让我们仔细看看`get_y` [ [1:10:38](https://youtu.be/0frKXR-2PBY%3Ft%3D1h10m38s) ]：
 
-#### Training [ [1:12:47](https://youtu.be/0frKXR-2PBY%3Ft%3D1h12m47s) ]
+```
+ **def** get_y(bbox,clas):  bbox = bbox.view(-1,4)/sz  bb_keep = ((bbox[:,2]-bbox[:,0])>0).nonzero()[:,0]  **return** bbox[bb_keep],clas[bb_keep] 
+```
+
+你在互联网上找到的许多代码都不适用于小批量。 它只做我们不想要的一件事。 在这种情况下，所有这些函数（ `get_y` ， `actn_to_bb` ， `map_to_ground_truth` ）都`actn_to_bb` ， `map_to_ground_truth`不是一个小批量，而是一次只有一大堆基础事件。 数据加载器一次被送入一个小批量进行卷积层。 因为我们可以_在每个图像中_具有_不同数量的地面实况对象，_但是张量必须是严格的矩形形状，fastai会自动用零填充它（任何更短的目标值）[ [1:11:08](https://youtu.be/0frKXR-2PBY%3Ft%3D1h11m8s) ]。 这是最近添加的，非常方便的东西，但这确实意味着你必须确保你摆脱那些零。 所以`get_y`摆脱了任何只是填充的边界框。
+
+1.  摆脱填充
+2.  将激活转到边界框
+3.  做Jaccard
+4.  做map_to_ground_truth
+5.  检查重叠是否大于0.4~0.5左右（不同的纸张使用不同的值）
+6.  找到匹配的东西的索引
+7.  为不匹配的背景类指定背景类
+8.  然后最终得到L1损失用于定位，二进制交叉熵损失用于分类，并返回它们在`ssd_loss`添加
+
+#### 训练[ [1:12:47](https://youtu.be/0frKXR-2PBY%3Ft%3D1h12m47s) ]
 
 ```
  learn.crit = ssd_loss  lr = 3e-3  lrs = np.array([lr/100,lr/10,lr]) 
@@ -769,38 +746,31 @@ A lot of code you find on the internet does not work with mini-batches. It only 
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 44.232681 21476.816406 
+ _epoch trn_loss val_loss_  _0 44.232681 21476.816406_ 
 ```
 
 ![](../img/1_V8J7FkreIVG7tKxGQQRV2Q.png)
 
 ```
- learn.lr_find(lrs/1000,1.)  learn.sched.plot(1) 
+learn.lr_find(lrs/1000,1.)  learn.sched.plot(1) 
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 86.852668 32587.789062 
+ _epoch trn_loss val_loss_  _0 86.852668 32587.789062_ 
 ```
 
 ![](../img/1_-q583mkIy-e3k6dz5HmkYw.png)
 
 ```
- learn.fit(lr, 1, cycle_len=5, use_clr=(20,10)) 
+learn.fit(lr, 1, cycle_len=5, use_clr=(20,10)) 
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 45.570843 37.099854 
- 1 37.165911 32.165031 
- 2 33.27844 30.990122 
- 3 31.12054 29.804482 
- 4 29.305789 28.943184 
+ _epoch trn_loss val_loss_  _0 45.570843 37.099854_  _1 37.165911 32.165031_  _2 33.27844 30.990122_  _3 31.12054 29.804482_  _4 29.305789 28.943184_ 
 ```
 
 ```
- [28.943184] 
+ _[28.943184]_ 
 ```
 
 ```
@@ -808,16 +778,11 @@ A lot of code you find on the internet does not work with mini-batches. It only 
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 43.726979 33.803085 
- 1 34.771754 29.012939 
- 2 30.591864 27.132868 
- 3 27.896905 26.151638 
- 4 25.907382 25.739273 
+ _epoch trn_loss val_loss_  _0 43.726979 33.803085_  _1 34.771754 29.012939_  _2 30.591864 27.132868_  _3 27.896905 26.151638_  _4 25.907382 25.739273_ 
 ```
 
 ```
- [25.739273] 
+ _[25.739273]_ 
 ```
 
 ```
@@ -828,97 +793,85 @@ A lot of code you find on the internet does not work with mini-batches. It only 
  learn.load('0') 
 ```
 
-#### Result [ [1:13:16](https://youtu.be/0frKXR-2PBY%3Ft%3D1h13m16s) ]
+#### 结果[ [1:13:16](https://youtu.be/0frKXR-2PBY%3Ft%3D1h13m16s) ]
 
 ![](../img/1_8azTUd1Ujf3FQSMBwIXgAw.png)
 
-In practice, we want to remove the background and also add some threshold for probabilities, but it is on the right track. The potted plant image, the result is not surprising as all of our anchor boxes were small (4x4 grid). To go from here to something that is going to be more accurate, all we are going to do is to create way more anchor boxes.
+在实践中，我们想要删除背景并为概率添加一些阈值，但它是在正确的轨道上。 盆栽植物图像，结果并不奇怪，因为我们所有的锚箱都很小（4x4网格）。 要从这里转到更准确的东西，我们要做的就是创造更多的锚箱。
 
-**Question** : For the multi-label classification, why aren't we multiplying the categorical loss by a constant like we did before [ [1:15:20](https://youtu.be/0frKXR-2PBY%3Ft%3D1h15m20s) ]? Great question. It is because later on it will turn out we do not need to.
+**问题** ：对于多标签分类，为什么我们不像我们在[ [1:15:20](https://youtu.be/0frKXR-2PBY%3Ft%3D1h15m20s) ]之前那样将分类损失乘以常数？ 好问题。 这是因为稍后它会变成我们不需要的。
 
-#### More anchors! [ [1:14:47](https://youtu.be/0frKXR-2PBY%3Ft%3D1h14m47s) ]
+#### 更多锚点！ [ [1:14:47](https://youtu.be/0frKXR-2PBY%3Ft%3D1h14m47s) ]
 
-There are 3 ways to do this:
+有3种方法可以做到这一点：
 
-1.  Create anchor boxes of different sizes (zoom):
+1.  创建不同大小的锚框（缩放）：
 
-![](../img/1_OtrTSJqBXyjeypKehik1CQ.png)
+![](../img/1_OtrTSJqBXyjeypKehik1CQ.png)![](../img/1_YG5bCP3O-jVhaQX_wuiSSg.png)![](../img/1_QCo0wOgJKXDBYNlmE7zUmA.png)
 
-![](../img/1_YG5bCP3O-jVhaQX_wuiSSg.png)
+<figcaption class="imageCaption" style="width: 301.205%; left: -201.205%;">从左边（1x1,2x2，4x4网格的锚箱）。 请注意，某些锚框比原始图像大。</figcaption>
 
-![](../img/1_QCo0wOgJKXDBYNlmE7zUmA.png)
+2.创建不同宽高比的锚框：![](../img/1_ko8vZK4RD8H2l4u1hXCQZQ.png)![](../img/1_3rvuvY6Fu2S6eoN3nK1QWg.png)![](../img/1_bWZwFqf2Bv-ZbW-KedNO0Q.png)
 
-From left (1x1, 2x2, 4x4 grids of anchor boxes). Notice that some of the anchor box is bigger than the original image.
-
-
-
-2\. Create anchor boxes of different aspect ratios:
-
-![](../img/1_ko8vZK4RD8H2l4u1hXCQZQ.png)
-
-![](../img/1_3rvuvY6Fu2S6eoN3nK1QWg.png)
-
-![](../img/1_bWZwFqf2Bv-ZbW-KedNO0Q.png)
-
-3\. Use more convolutional layers as sources of anchor boxes (the boxes are randomly jittered so that we can see ones that are overlapping [ [1:16:28](https://youtu.be/0frKXR-2PBY%3Ft%3D1h16m28s) ]):
+3.使用更多的卷积层作为锚箱的来源（这些框随机抖动，以便我们可以看到重叠的[ [1:16:28](https://youtu.be/0frKXR-2PBY%3Ft%3D1h16m28s) ]）：
 
 ![](../img/1_LwFOFtmawmpqp6VDc56RmA.png)
 
-Combining these approaches, you can create lots of anchor boxes (Jeremy said he wouldn't print it, but here it is):
+结合这些方法，你可以创建很多锚箱（杰里米说他不打印它，但在这里）：
 
 ![](../img/1_ymt8L0CCKMd9SG82SemdIA.png)
 
 ```
- anc_grids = [4, 2, 1]  anc_zooms = [0.75, 1., 1.3]  anc_ratios = [(1., 1.), (1., 0.5), (0.5, 1.)]  anchor_scales = [(anz*i,anz*j) for anz in anc_zooms  for (i,j) in anc_ratios]  k = len(anchor_scales)  anc_offsets = [1/(o*2) for o in anc_grids] 
+anc_grids = [4, 2, 1]  anc_zooms = [0.75, 1., 1.3]  anc_ratios = [(1., 1.), (1., 0.5), (0.5, 1.)]  anchor_scales = [(anz*i,anz*j) **for** anz **in** anc_zooms  **for** (i,j) **in** anc_ratios]  k = len(anchor_scales)  anc_offsets = [1/(o*2) **for** o **in** anc_grids] 
 ```
 
 ```
- anc_x = np.concatenate([np.repeat(np.linspace(ao, 1-ao, ag), ag)  for ao,ag in zip(anc_offsets,anc_grids)])  anc_y = np.concatenate([np.tile(np.linspace(ao, 1-ao, ag), ag)  for ao,ag in zip(anc_offsets,anc_grids)])  anc_ctrs = np.repeat(np.stack([anc_x,anc_y], axis=1), k, axis=0) 
+ anc_x = np.concatenate([np.repeat(np.linspace(ao, 1-ao, ag), ag)  **for** ao,ag **in** zip(anc_offsets,anc_grids)])  anc_y = np.concatenate([np.tile(np.linspace(ao, 1-ao, ag), ag)  **for** ao,ag **in** zip(anc_offsets,anc_grids)])  anc_ctrs = np.repeat(np.stack([anc_x,anc_y], axis=1), k, axis=0) 
 ```
 
 ```
- anc_sizes = np.concatenate([np.array([[o/ag,p/ag]  for i in range(ag*ag) for o,p in anchor_scales])  for ag in anc_grids])  grid_sizes = V(np.concatenate([np.array([ 1/ag  for i in range(ag*ag) for o,p in anchor_scales])  for ag in anc_grids]),  requires_grad= False ).unsqueeze(1)  anchors = V(np.concatenate([anc_ctrs, anc_sizes], axis=1),  requires_grad= False ).float()  anchor_cnr = hw2corners(anchors[:,:2], anchors[:,2:]) 
+ anc_sizes = np.concatenate([np.array([[o/ag,p/ag]  **for** i **in** range(ag*ag) **for** o,p **in** anchor_scales])  **for** ag **in** anc_grids])  grid_sizes = V(np.concatenate([np.array([ 1/ag  **for** i **in** range(ag*ag) **for** o,p **in** anchor_scales])  **for** ag **in** anc_grids]),  requires_grad= **False** ).unsqueeze(1)  anchors = V(np.concatenate([anc_ctrs, anc_sizes], axis=1),  requires_grad= **False** ).float()  anchor_cnr = hw2corners(anchors[:,:2], anchors[:,2:]) 
 ```
 
-`anchors` : middle and height, width
+`anchors` ：中间和高度，宽度
 
-`anchor_cnr` : top left and bottom right corners
+`anchor_cnr` ：左上角和右下角
 
-#### Review of key concept [ [1:18:00](https://youtu.be/0frKXR-2PBY%3Ft%3D1h18m) ]
+#### 审查关键概念[ [1:18:00](https://youtu.be/0frKXR-2PBY%3Ft%3D1h18m) ]
 
 ![](../img/1_C67J9RhTAiz9MCD-ebpp_w.png)
 
-*   We have a vector of ground truth (sets of 4 bounding box coordinates and a class)
-*   We have a neural net that takes some input and spits out some output activations
-*   Compare the activations and the ground truth, calculate a loss, find the derivative of that, and adjust weights according to the derivative times a learning rate.
-*   We need a loss function that can take ground truth and activation and spit out a number that says how good these activations are. To do this, we need to take each one of `m` ground truth objects and decide which set of `(4+c)` activations is responsible for that object [ [1:21:58](https://youtu.be/0frKXR-2PBY%3Ft%3D1h21m58s) ] — which one we should be comparing to decide whether the class is correct and bounding box is close or not (matching problem).
-*   Since we are using SSD approach, so it is not arbitrary which ones we match up [ [1:23:18](https://youtu.be/0frKXR-2PBY%3Ft%3D1h23m18s) ]. We want to match up the set of activations whose receptive field has the maximum density from where the real object is.
-*   The loss function needs to be some consistent task. If in the first image, the top left object corresponds with the first 4+c activations, and in the second image, we threw things around and suddenly it's now going with the last 4+c activations, the neural net doesn't know what to learn.
-*   Once matching problem is resolved, the rest is just the same as the single object detection.
+*   我们有一个地面实况的向量（4个边界框坐标和一个类的集合）
+*   我们有一个神经网络，需要一些输入并吐出一些输出激活
+*   比较激活和基本事实，计算损失，找出其衍生物，并根据学习率的微分时间调整权重。
+*   我们需要一个能够接受基本事实和激活的损失函数，并吐出一个数字，说明这些激活有多好。 要做到这一点，我们需要取`m`基础事实对象中的每一个，并决定哪一组`(4+c)`激活对该对象负责[ [1:21:58](https://youtu.be/0frKXR-2PBY%3Ft%3D1h21m58s) ] - 我们应该比较哪一个来决定是否该类是正确的，边界框是否接近（匹配问题）。
+*   由于我们使用的是SSD方法，所以我们匹配的不是任意的[ [1:23:18](https://youtu.be/0frKXR-2PBY%3Ft%3D1h23m18s) ]。 我们希望匹配一组激活，这些激活的感受野具有真实物体所在的最大密度。
+*   损失函数需要是一些一致的任务。 如果在第一个图像中，左上角的对象与前4 + c激活相对应，而在第二个图像中，我们扔掉了东西，突然它现在正在进行最后的4 + c激活，神经网络不知道是什么学习。
+*   解决匹配问题后，其余部分与单个对象检测相同。
 
-Architectures:
+体系结构：
 
-*   YOLO — the last layer is fully connected (no concept of geometry)
-*   SSD — the last layer is convolutional
+*   YOLO - 最后一层完全连接（没有几何概念）
+*   SSD - 最后一层是卷积的
 
-#### k (zooms x ratios)[ [1:29:39](https://youtu.be/0frKXR-2PBY%3Ft%3D1h29m39s) ]
+#### k（缩放x比率）[ [1:29:39](https://youtu.be/0frKXR-2PBY%3Ft%3D1h29m39s) ]
 
-For every grid cell which can be different sizes, we can have different orientations and zooms representing different anchor boxes which are just like conceptual ideas that every one of anchor boxes is associated with one set of `4+c` activations in our model. So however many anchor boxes we have, we need to have that times `(4+c)` activations. That does not mean that each convolutional layer needs that many activations. Because 4x4 convolutional layer already has 16 sets of activations, the 2x2 layer has 4 sets of activations, and finally 1x1 has one set. So we basically get 1 + 4 + 16 for free. So we only needs to know `k` where `k` is the number of zooms by the number of aspect ratios. Where else, the grids, we will get for free through our architecture.
+对于每个可以是不同大小的网格单元，我们可以有不同的方向和缩放代表不同的锚框，就像每个锚框与我们模型中的一组`4+c`激活相关联的概念性思想。 因此，无论我们拥有多少个锚箱，我们都需要进行那些时间`(4+c)`激活。 这并不意味着每个卷积层都需要许多激活。 因为4x4卷积层已经有16组激活，2x2层有4组激活，最后1x1有一组激活。 所以我们基本上可以免费获得1 + 4 + 16。 所以我们只需要知道`k`其中`k`是变焦数量乘以宽高比的数量。 在其他地方，网格，我们将通过我们的架构免费获得。
 
-#### Model Architecture [ [1:31:10](https://youtu.be/0frKXR-2PBY%3Ft%3D1h31m10s) ]
+#### 模型架构[ [1:31:10](https://youtu.be/0frKXR-2PBY%3Ft%3D1h31m10s) ]
 
 ```
- drop=0.4  class SSD_MultiHead (nn.Module):  def __init__(self, k, bias):  super().__init__()  self.drop = nn.Dropout(drop)  self.sconv0 = StdConv(512,256, stride=1, drop=drop)  self.sconv1 = StdConv(256,256, drop=drop)  self.sconv2 = StdConv(256,256, drop=drop)  self.sconv3 = StdConv(256,256, drop=drop)  self.out1 = OutConv(k, 256, bias)  self.out2 = OutConv(k, 256, bias)  self.out3 = OutConv(k, 256, bias)  def forward(self, x):  x = self.drop(F.relu(x))  x = self.sconv0(x)  x = self.sconv1(x)  o1c,o1l = self.out1(x)  x = self.sconv2(x)  o2c,o2l = self.out2(x)  x = self.sconv3(x)  o3c,o3l = self.out3(x)  return [torch.cat([o1c,o2c,o3c], dim=1),  torch.cat([o1l,o2l,o3l], dim=1)]  head_reg4 = SSD_MultiHead(k, -4.)  models = ConvnetBuilder(f_model, 0, 0, 0, custom_head=head_reg4)  learn = ConvLearner(md, models)  learn.opt_fn = optim.Adam 
+ drop=0.4  **class** **SSD_MultiHead** (nn.Module):  **def** __init__(self, k, bias):  super().__init__()  self.drop = nn.Dropout(drop)  self.sconv0 = StdConv(512,256, stride=1, drop=drop)  self.sconv1 = StdConv(256,256, drop=drop)  self.sconv2 = StdConv(256,256, drop=drop)  self.sconv3 = StdConv(256,256, drop=drop)  self.out1 = OutConv(k, 256, bias)  self.out2 = OutConv(k, 256, bias)  self.out3 = OutConv(k, 256, bias)  **def** forward(self, x):  x = self.drop(F.relu(x))  x = self.sconv0(x)  x = self.sconv1(x)  o1c,o1l = self.out1(x)  x = self.sconv2(x)  o2c,o2l = self.out2(x)  x = self.sconv3(x)  o3c,o3l = self.out3(x)  **return** [torch.cat([o1c,o2c,o3c], dim=1),  torch.cat([o1l,o2l,o3l], dim=1)]  head_reg4 = SSD_MultiHead(k, -4.)  models = ConvnetBuilder(f_model, 0, 0, 0, custom_head=head_reg4)  learn = ConvLearner(md, models)  learn.opt_fn = optim.Adam 
 ```
 
-The model is nearly identical to what we had before. But we have a number of stride 2 convolutions which is going to take us through to 4x4, 2x2, and 1x1 (each stride 2 convolution halves our grid size in both directions).
+该模型几乎与我们以前的模型相同。 但是我们有一些步幅2的旋转，它将把我们带到4x4,2x2和1x1（每个步幅2个卷积在两个方向上减半我们的网格尺寸）。
 
-*   After we do our first convolution to get to 4x4, we will grab a set of outputs from that because we want to save away the 4x4 anchors.
-*   Once we get to 2x2, we grab another set of now 2x2 anchors
-*   Then finally we get to 1x1
-*   We then concatenate them all together, which gives us the correct number of activations (one activation for every anchor box).
+*   在我们进行第一次卷积以获得4x4之后，我们将从中获取一组输出，因为我们想要省去4x4锚点。
+*   一旦我们达到2x2，我们就会抓住另一组现在的2x2锚点
+*   然后我们最终得到1x1
+*   然后我们将它们连接在一起，这为我们提供了正确的激活次数（每个锚盒激活一次）。
 
-#### Training [ [1:32:50](https://youtu.be/0frKXR-2PBY%3Ft%3D1h32m50s) ]
+#### 训练[ [1:32:50](https://youtu.be/0frKXR-2PBY%3Ft%3D1h32m50s) ]
 
 ```
  learn.crit = ssd_loss  lr = 1e-2  lrs = np.array([lr/100,lr/10,lr]) 
@@ -931,19 +884,15 @@ The model is nearly identical to what we had before. But we have a number of str
 ![](../img/1_jB_OxbaTmMXHbkeXE4G0SQ.png)
 
 ```
- learn.fit(lrs, 1, cycle_len=4, use_clr=(20,8)) 
+learn.fit(lrs, 1, cycle_len=4, use_clr=(20,8)) 
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 15.124349 15.015433 
- 1 13.091956 10.39855 
- 2 11.643629 9.4289 
- 3 10.532467 8.822998 
+ _epoch trn_loss val_loss_  _0 15.124349 15.015433_  _1 13.091956 10.39855_  _2 11.643629 9.4289_  _3 10.532467 8.822998_ 
 ```
 
 ```
- [8.822998] 
+ _[8.822998]_ 
 ```
 
 ```
@@ -955,92 +904,88 @@ The model is nearly identical to what we had before. But we have a number of str
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 9.821056 10.335152 
- 1 9.419633 11.834093 
- 2 8.78818 7.907762 
- 3 8.219976 7.456364 
+ _epoch trn_loss val_loss_  _0 9.821056 10.335152_  _1 9.419633 11.834093_  _2 8.78818 7.907762_  _3 8.219976 7.456364_ 
 ```
 
 ```
- [7.4563637] 
+ _[7.4563637]_ 
 ```
 
 ```
- x,y = next(iter(md.val_dl))  y = V(y)  batch = learn.model(V(x))  b_clas,b_bb = batch  x = to_np(x)  fig, axes = plt.subplots(3, 4, figsize=(16, 12))  for idx,ax in enumerate(axes.flat):  ima=md.val_ds.ds.denorm(x)[idx]  bbox,clas = get_y(y[0][idx], y[1][idx])  a_ic = actn_to_bb(b_bb[idx], anchors)  torch_gt(ax, ima, a_ic, b_clas[idx].max(1)[1],  b_clas[idx].max(1)[0].sigmoid(), 0.2 )  plt.tight_layout() 
+ x,y = next(iter(md.val_dl))  y = V(y)  batch = learn.model(V(x))  b_clas,b_bb = batch  x = to_np(x)  fig, axes = plt.subplots(3, 4, figsize=(16, 12))  **for** idx,ax **in** enumerate(axes.flat):  ima=md.val_ds.ds.denorm(x)[idx]  bbox,clas = get_y(y[0][idx], y[1][idx])  a_ic = actn_to_bb(b_bb[idx], anchors)  torch_gt(ax, ima, a_ic, b_clas[idx].max(1)[1],  b_clas[idx].max(1)[0].sigmoid(), **0.2** )  plt.tight_layout() 
 ```
 
-Here, we printed out those detections with at least probability of `0.2` . Some of them look pretty hopeful but others not so much.
+在这里，我们打印出这些检测的概率至少为`0.2` 。 他们中的一些人看起来很有希望，但其他人并没有那么多。
 
 ![](../img/1_l168j5d3fWBZLST3XLPD6A.png)
 
-### History of object detection [ [1:33:43](https://youtu.be/0frKXR-2PBY%3Ft%3D1h33m43s) ]
+### 物体检测的历史[ [1:33:43](https://youtu.be/0frKXR-2PBY%3Ft%3D1h33m43s) ]
 
 ![](../img/1_bQPvoI0soxtlBt1cEZlzcQ.png)
 
-[Scalable Object Detection using Deep Neural Networks](https://arxiv.org/abs/1312.2249)
+[使用深度神经网络的可扩展对象检测](https://arxiv.org/abs/1312.2249)
 
-*   When people refer to the multi-box method, they are talking about this paper.
-*   This was the paper that came up with the idea that we can have a loss function that has this matching process and then you can use that to do object detection. So everything since that time has been trying to figure out how to make this better.
+*   当人们提到多箱方法时，他们正在谈论这篇论文。
+*   这篇论文提出了我们可以使用具有此匹配过程的损失函数的想法，然后你可以使用它来进行对象检测。 所以从那时起一直在努力弄清楚如何让这更好。
 
-[Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](https://arxiv.org/abs/1506.01497)
+[更快的R-CNN：利用区域提案网络实现实时目标检测](https://arxiv.org/abs/1506.01497)
 
-*   In parallel, Ross Girshick was going down a totally different direction. He had these two-stage process where the first stage used the classical computer vision approaches to find edges and changes of gradients to guess which parts of the image may represent distinct objects. Then fit each of those into a convolutional neural network which was basically designed to figure out if that is the kind of object we are interested in.
-*   R-CNN and Fast R-CNN are hybrid of traditional computer vision and deep learning.
-*   What Ross and his team then did was they took the multibox idea and replaced the traditional non-deep learning computer vision part of their two stage process with the conv net. So now they have two conv nets: one for region proposals (all of the things that might be objects) and the second part was the same as his earlier work.
+*   与此同时，Ross Girshick正朝着一个完全不同的方向前进。 他有这两个阶段的过程，第一阶段使用经典的计算机视觉方法来找到渐变的边缘和变化，以猜测图像的哪些部分可能代表不同的对象。 然后将它们中的每一个装入一个卷积神经网络，该网络基本上是为了弄清楚这是否是我们感兴趣的对象。
+*   R-CNN和快速R-CNN是传统计算机视觉和深度学习的混合体。
+*   罗斯和他的团队接着做了什么，他们采用了multibox的想法，用conv网取代了传统的非深度学习计算机视觉部分。 所以现在他们有两个网络：一个用于区域提案（所有可能是对象的东西），第二个部分与他早期的工作相同。
 
-[You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640)
+[你只需查看一次：统一的实时对象检测](https://arxiv.org/abs/1506.02640)
 
-[SSD: Single Shot MultiBox Detector](https://arxiv.org/abs/1512.02325)
+[SSD：单发多盒检测器](https://arxiv.org/abs/1512.02325)
 
-*   At similar time these paper came out. Both of these did something pretty cool which is they achieved similar performance as the Faster R-CNN but with 1 stage.
-*   They took the multibox idea and they tried to figure out how to deal with messy outputs. The basic ideas were to use, for example, hard negative mining where they would go through and find all of the matches that did not look that good and throw them away, use very tricky and complex data augmentation methods, and all kind of hackery. But they got them to work pretty well.
+*   在同一时间，这些论文出来了。 这两个都做得非常酷，他们取得了与更快的R-CNN类似的性能但是有一个阶段。
+*   他们采用了multibox的想法，他们试图弄清楚如何处理凌乱的输出。 基本的想法是使用，例如，硬通过负面挖掘，他们会经历并发现所有看起来不那么好并将它们丢弃的匹配，使用非常棘手和复杂的数据增强方法，以及所有类型的hackery。 但他们让他们工作得很好。
 
-[Focal Loss for Dense Object Detection](https://arxiv.org/abs/1708.02002) (RetinaNet)
+[密集物体检测的焦点损失](https://arxiv.org/abs/1708.02002) （RetinaNet）
 
-*   Then something really cool happened late last year which is this thing called focal loss.
-*   They actually realized why this messy thing wasn't working. When we look at an image, there are 3 different granularities of convolutional grid (4x4, 2x2, 1x1) [ [1:37:28](https://youtu.be/0frKXR-2PBY%3Ft%3D1h37m28s) ]. The 1x1 is quite likely to have a reasonable overlap with some object because most photos have some kind of main subject. On the other hand, in the 4x4 grid cells, the most of 16 anchor boxes are not going to have a much of an overlap with anything. So if somebody was to say to you “$20 bet, what do you reckon this little clip is?” and you are not sure, you will say “background” because most of the time, it is the background.
+*   去年年底发生了一些非常酷的事情，这就是称为焦点损失。
+*   他们实际上意识到为什么这个混乱的东西不起作用。 当我们观察图像时，卷积网格有3种不同的粒度（ [4x4,2x2,1x1](https://youtu.be/0frKXR-2PBY%3Ft%3D1h37m28s) ）[ [1:37:28](https://youtu.be/0frKXR-2PBY%3Ft%3D1h37m28s) ]。 1x1很可能与某个对象有一个合理的重叠，因为大多数照片都有某种主要主题。 另一方面，在4x4网格单元中，16个锚箱中的大多数不会与任何东西重叠。 所以，如果有人对你说“20美元赌注，你认为这个小片段是什么？”你不确定，你会说“背景”，因为大多数时候，它是背景。
 
-**Question** : I understand why we have a 4x4 grid of receptive fields with 1 anchor box each to coarsely localize objects in the image. But what I think I'm missing is why we need multiple receptive fields at different sizes. The first version already included 16 receptive fields, each with a single anchor box associated. With the additions, there are now many more anchor boxes to consider. Is this because you constrained how much a receptive field could move or scale from its original size? Or is there another reason? [ [1:38:47](https://youtu.be/0frKXR-2PBY%3Ft%3D1h38m47s) ] It is kind of backwards. The reason Jeremy did the constraining was because he knew he was going to be adding more boxes later. But really, the reason is that the Jaccard overlap between one of those 4x4 grid cells and a picture where a single object that takes up most of the image is never going to be 0.5\. The intersection is much smaller than the union because the object is too big. So for this general idea to work where we are saying you are responsible for something that you have better than 50% overlap with, we need anchor boxes which will on a regular basis have a 50% or higher overlap which means we need to have a variety of sizes, shapes, and scales. This all happens in the loss function. The vast majority of the interesting stuff in all of the object detection is the loss function.
+**问题** ：我理解为什么我们有一个4x4的感知字段网格，每个字符框有1个锚点，用于粗略地定位图像中的对象。 但我认为我缺少的是为什么我们需要不同大小的多个感受野。 第一个版本已经包含16个感知字段，每个字段都有一个关联的锚箱。 随着增加，现在有更多的锚箱需要考虑。 这是因为你限制了感受野可以移动或缩小其原始大小的程度吗？ 还是有另一个原因吗？ [ [1:38:47](https://youtu.be/0frKXR-2PBY%3Ft%3D1h38m47s) ]这有点倒退。 杰里米做出限制的原因是因为他知道他以后会增加更多的盒子。 但实际上，原因在于Jaccard在这些4x4网格单元中的一个与图像之间重叠，其中占据大部分图像的单个对象永远不会是0.5。 交点比联合小得多，因为对象太大了。 因此，对于这个一般性的想法，我们说你负责的事情，你有超过50％的重叠，我们需要锚定框，定期有50％或更高的重叠，这意味着我们需要有一个各种尺寸，形状和尺度。 这一切都发生在损失函数中。 所有物体检测中绝大多数有趣的东西都是损失函数。
 
-#### Focal Loss [ [1:40:38](https://youtu.be/0frKXR-2PBY%3Ft%3D1h40m38s) ]
+#### 焦点损失[ [1:40:38](https://youtu.be/0frKXR-2PBY%3Ft%3D1h40m38s) ]
 
 ![](../img/1_6Bood7G6dUuhigy9cxkZ-Q.png)
 
-The key thing is this very first picture. The blue line is the binary cross entropy loss. If the answer is not a motorbike [ [1:41:46](https://youtu.be/0frKXR-2PBY%3Ft%3D1h41m46s) ], and I said “I think it's not a motorbike and I am 60% sure” with the blue line, the loss is still about 0.5 which is pretty bad. So if we want to get our loss down, then for all these things which are actually back ground, we have to be saying “I am sure that is background”, “I am sure it's not a motorbike, or a bus, or a person” — because if I don't say we are sure it is not any of these things, then we still get loss.
+关键是这是第一张照片。 蓝线是二元交叉熵损失。 如果答案不是摩托车[ [1:41:46](https://youtu.be/0frKXR-2PBY%3Ft%3D1h41m46s) ]，而且我说“我觉得这不是摩托车而我60％肯定”用蓝线，损失仍然是0.5左右，这是非常糟糕的。 因此，如果我们想要减少损失，那么对于所有这些实际上已经重新开始的事情，我们必须说“我确信这是背景”，“我确信它不是摩托车，公共汽车，或者是人“ - 因为如果我不说我们确定它不是这些东西中的任何一个，那么我们仍然会得到损失。
 
-That is why the motorbike example did not work [ [1:42:39](https://youtu.be/0frKXR-2PBY%3Ft%3D1h42m39s) ]. Because even when it gets to lower right corner and it wants to say “I think it's a motorbike”, there is no payoff for it to say so. If it is wrong, it gets killed. And the vast majority of the time, it is background. Even if it is not background, it is not enough just to say “it's not background” — you have to say which of the 20 things it is.
+这就是为什么摩托车的例子不起作用[ [1:42:39](https://youtu.be/0frKXR-2PBY%3Ft%3D1h42m39s) ]。 因为即使它到达右下角并且想要说“我认为它是一辆摩托车”，它也没有任何回报。 如果错了，就会被杀死。 而绝大多数时候，它是背景。 即使它不是背景，仅仅说“它不是背景”是不够的 - 你必须说它是20个中的哪一个。
 
-So the trick is to trying to find a different loss function [ [1:44:00](https://youtu.be/0frKXR-2PBY%3Ft%3D1h44m) ] that looks more like the purple line. Focal loss is literally just a scaled cross entropy loss. Now if we say “I'm .6 sure it's not a motorbike” then the loss function will say “good for you! no worries” [ [1:44:42](https://youtu.be/0frKXR-2PBY%3Ft%3D1h44m42s) ].
+所以诀窍是试图找到一个看起来更像紫色线的不同损失函数[ [1:44:00](https://youtu.be/0frKXR-2PBY%3Ft%3D1h44m) ]。 焦点损失实际上只是一个缩放的交叉熵损失。 现在，如果我们说“我确定它不是摩托车”，那么损失功能会说“对你有好处！ 不用担心“[ [1:44:42](https://youtu.be/0frKXR-2PBY%3Ft%3D1h44m42s) ]。
 
-The actual contribution of this paper is to add `(1 − pt)^γ` to the start of the equation [ [1:45:06](https://youtu.be/0frKXR-2PBY%3Ft%3D1h45m6s) ] which sounds like nothing but actually people have been trying to figure out this problem for years. When you come across a paper like this which is game-changing, you shouldn't assume you are going to have to write thousands of lines of code. Very often it is one line of code, or the change of a single constant, or adding log to a single place.
+本文的实际贡献是将`(1 − pt)^γ`加到等式[ [1:45:06](https://youtu.be/0frKXR-2PBY%3Ft%3D1h45m6s) ]的开头，这听起来像什么，但实际上人们多年来一直试图找出这个问题。 当你遇到像这样改变游戏规则的论文时，你不应该假设你将不得不写几千行代码。 通常它是一行代码，或单个常量的更改，或将日志添加到单个位置。
 
-A couple of terrific things about this paper [ [1:46:08](https://youtu.be/0frKXR-2PBY%3Ft%3D1h46m8s) ]:
+关于这篇论文的一些了不起的事[ [1:46:08](https://youtu.be/0frKXR-2PBY%3Ft%3D1h46m8s) ]：
 
-*   Equations are written in a simple manner
-*   They “refactor”
+*   方程式以简单的方式编写
+*   他们“重构”
 
-#### Implementing Focal Loss [ [1:49:27](https://youtu.be/0frKXR-2PBY%3Ft%3D1h49m27s) ]:
+#### 实施焦点损失[ [1:49:27](https://youtu.be/0frKXR-2PBY%3Ft%3D1h49m27s) ]：
 
 ![](../img/1_wIp0HYEWPnkiuxLeCfEiAg.png)
 
-Remember, -log(pt) is the cross entropy loss and focal loss is just a scaled version. When we defined the binomial cross entropy loss, you may have noticed that there was a weight which by default was none:
+请记住，-log（pt）是交叉熵损失，焦点损失只是一个缩放版本。 当我们定义二项式交叉熵损失时，你可能已经注意到有一个权重，默认情况下是无：
 
 ```
- class BCE_Loss (nn.Module):  def __init__(self, num_classes):  super().__init__()  self.num_classes = num_classes  def forward(self, pred, targ):  t = one_hot_embedding(targ, self.num_classes+1)  t = V(t[:,:-1].contiguous()) #.cpu()  x = pred[:,:-1]  w = self.get_weight(x,t)  return F.binary_cross_entropy_with_logits(x, t, w,  size_average= False )/self.num_classes  def get_weight(self,x,t): return None 
+ **class** **BCE_Loss** (nn.Module):  **def** __init__(self, num_classes):  super().__init__()  self.num_classes = num_classes  **def** forward(self, pred, targ):  t = one_hot_embedding(targ, self.num_classes+1)  t = V(t[:,:-1].contiguous()) _#.cpu()_  x = pred[:,:-1]  w = self.get_weight(x,t)  **return** F.binary_cross_entropy_with_logits(x, t, w,  size_average= **False** )/self.num_classes  **def** get_weight(self,x,t): **return** **None** 
 ```
 
-When you call `F.binary_cross_entropy_with_logits` , you can pass in the weight. Since we just wanted to multiply a cross entropy by something, we can just define `get_weight` . Here is the entirety of focal loss [ [1:50:23](https://youtu.be/0frKXR-2PBY%3Ft%3D1h50m23s) ]:
+当你调用`F.binary_cross_entropy_with_logits` ，你可以传递权重。 由于我们只是想通过某种东西来乘以交叉熵，我们可以定义`get_weight` 。 这是整个局部损失[ [1:50:23](https://youtu.be/0frKXR-2PBY%3Ft%3D1h50m23s) ]：
 
 ```
- class FocalLoss (BCE_Loss):  def get_weight(self,x,t):  alpha,gamma = 0.25,2\.  p = x.sigmoid()  pt = p*t + (1-p)*(1-t)  w = alpha*t + (1-alpha)*(1-t)  return w * (1-pt).pow(gamma) 
+ **class** **FocalLoss** (BCE_Loss):  **def** get_weight(self,x,t):  alpha,gamma = 0.25,2.  p = x.sigmoid()  pt = p*t + (1-p)*(1-t)  w = alpha*t + (1-alpha)*(1-t)  **return** w * (1-pt).pow(gamma) 
 ```
 
-If you were wondering why alpha and gamma are 0.25 and 2, here is another excellent thing about this paper, because they tried lots of different values and found that these work well:
+如果你想知道为什么alpha和gamma是0.25和2，这是本文的另一个优点，因为他们尝试了很多不同的值，并发现这些工作得很好：
 
 ![](../img/1_qFPRvFHQMQplSJGp3QLiNA.png)
 
-#### Training [ [1:51:25](https://youtu.be/0frKXR-2PBY%3Ft%3D1h51m25s) ]
+#### 训练[ [1:51:25](https://youtu.be/0frKXR-2PBY%3Ft%3D1h51m25s) ]
 
 ```
  learn.lr_find(lrs/1000,1.)  learn.sched.plot(n_skip_end=2) 
@@ -1049,25 +994,15 @@ If you were wondering why alpha and gamma are 0.25 and 2, here is another excell
 ![](../img/1_lQPSR3V2IXbxOpcgNE-U-Q.png)
 
 ```
- learn.fit(lrs, 1, cycle_len=10, use_clr=(20,10)) 
+learn.fit(lrs, 1, cycle_len=10, use_clr=(20,10)) 
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 24.263046 28.975235 
- 1 20.459562 16.362392 
- 2 17.880827 14.884829 
- 3 15.956896 13.676485 
- 4 14.521345 13.134197 
- 5 13.460941 12.594139 
- 6 12.651842 12.069849 
- 7 11.944972 11.956457 
- 8 11.385798 11.561226 
- 9 10.988802 11.362164 
+ _epoch trn_loss val_loss_  _0 24.263046 28.975235_  _1 20.459562 16.362392_  _2 17.880827 14.884829_  _3 15.956896 13.676485_  _4 14.521345 13.134197_  _5 13.460941 12.594139_  _6 12.651842 12.069849_  _7 11.944972 11.956457_  _8 11.385798 11.561226_  _9 10.988802 11.362164_ 
 ```
 
 ```
- [11.362164] 
+ _[11.362164]_ 
 ```
 
 ```
@@ -1079,21 +1014,11 @@ If you were wondering why alpha and gamma are 0.25 and 2, here is another excell
 ```
 
 ```
- _epoch trn_loss val_loss_ 
- 0 10.871668 11.615532 
- 1 10.908461 11.604334 
- 2 10.549796 11.486127 
- 3 10.130961 11.088478 
- 4 9.70691 10.72144 
- 5 9.319202 10.600481 
- 6 8.916653 10.358334 
- 7 8.579452 10.624706 
- 8 8.274838 10.163422 
- 9 7.994316 10.108068 
+ _epoch trn_loss val_loss_  _0 10.871668 11.615532_  _1 10.908461 11.604334_  _2 10.549796 11.486127_  _3 10.130961 11.088478_  _4 9.70691 10.72144_  _5 9.319202 10.600481_  _6 8.916653 10.358334_  _7 8.579452 10.624706_  _8 8.274838 10.163422_  _9 7.994316 10.108068_ 
 ```
 
 ```
- [10.108068] 
+ _[10.108068]_ 
 ```
 
 ```
@@ -1106,75 +1031,53 @@ If you were wondering why alpha and gamma are 0.25 and 2, here is another excell
 
 ![](../img/1_G4HCc1mpkvHFqbhrb5Uwpw.png)
 
-This time things are looking quite a bit better. So our last step, for now, is to basically figure out how to pull out just the interesting ones.
+这次事情看起来好多了。 所以我们现在的最后一步是基本弄清楚如何提取有趣的。
 
-#### Non Maximum Suppression [ [1:52:15](https://youtu.be/0frKXR-2PBY%3Ft%3D1h52m15s) ]
+#### 非最大抑制[ [1:52:15](https://youtu.be/0frKXR-2PBY%3Ft%3D1h52m15s) ]
 
-All we are going to do is we are going to go through every pair of these bounding boxes and if they overlap by more than some amount, say 0.5, using Jaccard and they are both predicting the same class, we are going to assume they are the same thing and we are going to pick the one with higher `p` value.
+我们要做的就是我们要经历每一对这些边界框，如果它们重叠超过一定数量，比如0.5，使用Jaccard并且它们都预测同一个类，我们将假设它们是同样的事情，我们将选择具有更高`p`值的那个。
 
-It is really boring code, Jeremy didn't write it himself and copied somebody else's. No reason particularly to go through it.
-
-```
- def nms(boxes, scores, overlap=0.5, top_k=100):  keep = scores.new(scores.size(0)).zero_().long()  if boxes.numel() == 0: return keep  x1 = boxes[:, 0]  y1 = boxes[:, 1]  x2 = boxes[:, 2]  y2 = boxes[:, 3]  area = torch.mul(x2 - x1, y2 - y1)  v, idx = scores.sort(0) # sort in ascending order  idx = idx[-top_k:] # indices of the top-k largest vals  xx1 = boxes.new()  yy1 = boxes.new()  xx2 = boxes.new()  yy2 = boxes.new()  w = boxes.new()  h = boxes.new()  count = 0  while idx.numel() > 0:  i = idx[-1] # index of current largest val  keep[count] = i  count += 1  if idx.size(0) == 1: break  idx = idx[:-1] # remove kept element from view  # load bboxes of next highest vals  torch.index_select(x1, 0, idx, out=xx1)  torch.index_select(y1, 0, idx, out=yy1)  torch.index_select(x2, 0, idx, out=xx2)  torch.index_select(y2, 0, idx, out=yy2)  # store element-wise max with next highest score  xx1 = torch.clamp(xx1, min=x1[i])  yy1 = torch.clamp(yy1, min=y1[i])  xx2 = torch.clamp(xx2, max=x2[i])  yy2 = torch.clamp(yy2, max=y2[i])  w.resize_as_(xx2)  h.resize_as_(yy2)  w = xx2 - xx1  h = yy2 - yy1  # check sizes of xx1 and xx2.. after each iteration  w = torch.clamp(w, min=0.0)  h = torch.clamp(h, min=0.0)  inter = w*h  # IoU = i / (area(a) + area(b) - i)  rem_areas = torch.index_select(area, 0, idx)  # load remaining areas)  union = (rem_areas - inter) + area[i]  IoU = inter/union # store result in iou  # keep only elements with an IoU <= overlap  idx = idx[IoU.le(overlap)]  return keep, count 
-```
+这是非常无聊的代码，杰里米自己没有写它并复制别人的。 没理由特别经历它。
 
 ```
- def show_nmf(idx):  ima=md.val_ds.ds.denorm(x)[idx]  bbox,clas = get_y(y[0][idx], y[1][idx])  a_ic = actn_to_bb(b_bb[idx], anchors)  clas_pr, clas_ids = b_clas[idx].max(1)  clas_pr = clas_pr.sigmoid()  conf_scores = b_clas[idx].sigmoid().t().data  out1,out2,cc = [],[],[]  for cl in range(0, len(conf_scores)-1):  c_mask = conf_scores[cl] > 0.25  if c_mask.sum() == 0: continue  scores = conf_scores[cl][c_mask]  l_mask = c_mask.unsqueeze(1).expand_as(a_ic)  boxes = a_ic[l_mask].view(-1, 4)  ids, count = nms(boxes.data, scores, 0.4, 50)  ids = ids[:count]  out1.append(scores[ids])  out2.append(boxes.data[ids])  cc.append([cl]*count)  cc = T(np.concatenate(cc))  out1 = torch.cat(out1)  out2 = torch.cat(out2)  fig, ax = plt.subplots(figsize=(8,8))  torch_gt(ax, ima, out2, cc, out1, 0.1) 
+ **def** nms(boxes, scores, overlap=0.5, top_k=100):  keep = scores.new(scores.size(0)).zero_().long()  **if** boxes.numel() == 0: **return** keep  x1 = boxes[:, 0]  y1 = boxes[:, 1]  x2 = boxes[:, 2]  y2 = boxes[:, 3]  area = torch.mul(x2 - x1, y2 - y1)  v, idx = scores.sort(0) _# sort in ascending order_  idx = idx[-top_k:] _# indices of the top-k largest vals_  xx1 = boxes.new()  yy1 = boxes.new()  xx2 = boxes.new()  yy2 = boxes.new()  w = boxes.new()  h = boxes.new()  count = 0  **while** idx.numel() > 0:  i = idx[-1] _# index of current largest val_  keep[count] = i  count += 1  **if** idx.size(0) == 1: **break**  idx = idx[:-1] _# remove kept element from view_  _# load bboxes of next highest vals_  torch.index_select(x1, 0, idx, out=xx1)  torch.index_select(y1, 0, idx, out=yy1)  torch.index_select(x2, 0, idx, out=xx2)  torch.index_select(y2, 0, idx, out=yy2)  _# store element-wise max with next highest score_  xx1 = torch.clamp(xx1, min=x1[i])  yy1 = torch.clamp(yy1, min=y1[i])  xx2 = torch.clamp(xx2, max=x2[i])  yy2 = torch.clamp(yy2, max=y2[i])  w.resize_as_(xx2)  h.resize_as_(yy2)  w = xx2 - xx1  h = yy2 - yy1  _# check sizes of xx1 and xx2.. after each iteration_  w = torch.clamp(w, min=0.0)  h = torch.clamp(h, min=0.0)  inter = w*h  _# IoU = i / (area(a) + area(b) - i)_  rem_areas = torch.index_select(area, 0, idx)  _# load remaining areas)_  union = (rem_areas - inter) + area[i]  IoU = inter/union _# store result in iou_  _# keep only elements with an IoU <= overlap_  idx = idx[IoU.le(overlap)]  **return** keep, count 
 ```
 
 ```
- for i in range(12): show_nmf(i) 
+ **def** show_nmf(idx):  ima=md.val_ds.ds.denorm(x)[idx]  bbox,clas = get_y(y[0][idx], y[1][idx])  a_ic = actn_to_bb(b_bb[idx], anchors)  clas_pr, clas_ids = b_clas[idx].max(1)  clas_pr = clas_pr.sigmoid()  conf_scores = b_clas[idx].sigmoid().t().data  out1,out2,cc = [],[],[]  **for** cl **in** range(0, len(conf_scores)-1):  c_mask = conf_scores[cl] > 0.25  **if** c_mask.sum() == 0: **continue**  scores = conf_scores[cl][c_mask]  l_mask = c_mask.unsqueeze(1).expand_as(a_ic)  boxes = a_ic[l_mask].view(-1, 4)  ids, count = nms(boxes.data, scores, 0.4, 50)  ids = ids[:count]  out1.append(scores[ids])  out2.append(boxes.data[ids])  cc.append([cl]*count)  cc = T(np.concatenate(cc))  out1 = torch.cat(out1)  out2 = torch.cat(out2)  fig, ax = plt.subplots(figsize=(8,8))  torch_gt(ax, ima, out2, cc, out1, 0.1) 
 ```
 
-![](../img/1_MXk2chJJEcjOz8hMn1ZsOQ.png)
+```
+ **for** i **in** range(12): show_nmf(i) 
+```
 
-![](../img/1_Fj9fK3G6iXBsGI_XJrxXyg.png)
+![](../img/1_MXk2chJJEcjOz8hMn1ZsOQ.png)![](../img/1_Fj9fK3G6iXBsGI_XJrxXyg.png)![](../img/1_6p3dm-i-YxC9QkxouHJdoA.png)![](../img/1_nkEpAd2_H4lG1vQfnCJn4Q.png)![](../img/1_THGq5C21NaP92vw5E_QNdA.png)![](../img/1_0wckbiUSax2JpBlgJxJ05g.png)![](../img/1_EWbNGEQFvYMgC4PSaLe8Ww.png)![](../img/1_vTRCVjln4vkma1R6eBeSwA.png)![](../img/1_3Q01FZuzfptkYrekJiGm1g.png)![](../img/1_-cD3LQIG9FnyJbt0cnpbNg.png)![](../img/1_Hkgs1u9PFH9ZrTKL8YBW2Q.png)![](../img/1_uyTNlp61jcyaW9knbnNSEw.png)
 
-![](../img/1_6p3dm-i-YxC9QkxouHJdoA.png)
+还有一些事情需要解决[ [1:53:43](https://youtu.be/0frKXR-2PBY%3Ft%3D1h53m43s) ]。 诀窍是使用一种叫做特征金字塔的东西。 这就是我们在第14课中要做的。
 
-![](../img/1_nkEpAd2_H4lG1vQfnCJn4Q.png)
+#### 再谈谈SSD纸[ [1:54:03](https://youtu.be/0frKXR-2PBY%3Ft%3D1h54m3s) ]
 
-![](../img/1_THGq5C21NaP92vw5E_QNdA.png)
+当这篇论文出来时，Jeremy很兴奋，因为这和YOLO是第一种出现的单程优质物体检测方法。 在深度学习世界中，历史不断重复，这是涉及多个不同部分的多次传递的事物，随着时间的推移，特别是在涉及一些非深度学习片段（如R-CNN所做的）的情况下，随着时间的推移，它们总是变成一个端到端的深度学习模型。 所以我倾向于忽略它们直到发生这种情况，因为这是人们已经想出如何将其展示为深度学习模型的点，一旦他们这样做，他们通常会以更快，更准确的方式结束。 因此SSD和YOLO非常重要。
 
-![](../img/1_0wckbiUSax2JpBlgJxJ05g.png)
+该模型是4段。 论文非常简洁，这意味着你需要仔细阅读它们。 但是，部分地，你需要知道要仔细阅读哪些位。 他们说“这里我们要证明这个模型上的错误界限”，你可以忽略它，因为你不关心证明错误界限。 但是这里说的是模型，你需要仔细阅读。
 
-![](../img/1_EWbNGEQFvYMgC4PSaLe8Ww.png)
+杰里米读了一节**2.1模型** [ [1:56:37](https://youtu.be/0frKXR-2PBY%3Ft%3D1h56m37s) ]
 
-![](../img/1_vTRCVjln4vkma1R6eBeSwA.png)
+如果你直接进入并阅读这样的论文，这4段可能没有意义。 但是现在我们已经完成了它，你读了那些，并希望能够“哦，这就是杰里米所说的，只有他们[伤害它比杰里米](https://youtu.be/0frKXR-2PBY%3Ft%3D2h37s)更好，而言语更少[ [2:00:37](https://youtu.be/0frKXR-2PBY%3Ft%3D2h37s) ]。 如果你开始读一篇论文然后“哎呀”，那么诀窍就是开始回读引文。
 
-![](../img/1_3Q01FZuzfptkYrekJiGm1g.png)
+Jeremy读取**匹配策略**和**训练目标** （又名丢失函数）[ [2:01:44](https://youtu.be/0frKXR-2PBY%3Ft%3D2h1m44s) ]
 
-![](../img/1_-cD3LQIG9FnyJbt0cnpbNg.png)
+#### 一些文章提示[ [2:02:34](https://youtu.be/0frKXR-2PBY%3Ft%3D2h2m34s) ]
 
-![](../img/1_Hkgs1u9PFH9ZrTKL8YBW2Q.png)
+[使用深度神经网络的可扩展对象检测](https://arxiv.org/pdf/1312.2249.pdf)
 
-![](../img/1_uyTNlp61jcyaW9knbnNSEw.png)
-
-There are some things still to fix here [ [1:53:43](https://youtu.be/0frKXR-2PBY%3Ft%3D1h53m43s) ]. The trick will be to use something called feature pyramid. That is what we are going to do in lesson 14\.
-
-#### Talking a little more about SSD paper [ [1:54:03](https://youtu.be/0frKXR-2PBY%3Ft%3D1h54m3s) ]
-
-When this paper came out, Jeremy was excited because this and YOLO were the first kind of single-pass good quality object detection method that come along. There has been this continuous repetition of history in the deep learning world which is things that involve multiple passes of multiple different pieces, over time, particularly where they involve some non-deep learning pieces (like R-CNN did), over time, they always get turned into a single end-to-end deep learning model. So I tend to ignore them until that happens because that's the point where people have figured out how to show this as a deep learning model, as soon as they do that they generally end up something much faster and much more accurate. So SSD and YOLO were really important.
-
-The model is 4 paragraphs. Papers are really concise which means you need to read them pretty carefully. Partly, though, you need to know which bits to read carefully. The bits where they say “here we are going to prove the error bounds on this model,” you could ignore that because you don't care about proving error bounds. But the bit which says here is what the model is, you need to read real carefully.
-
-Jeremy reads a section **2.1 Model** [ [1:56:37](https://youtu.be/0frKXR-2PBY%3Ft%3D1h56m37s) ]
-
-If you jump straight in and read a paper like this, these 4 paragraphs would probably make no sense. But now that we've gone through it, you read those and hopefully thinking “oh that's just what Jeremy said, only they sad it better than Jeremy and less words [ [2:00:37](https://youtu.be/0frKXR-2PBY%3Ft%3D2h37s) ]. If you start to read a paper and go “what the heck”, the trick is to then start reading back over the citations.
-
-Jeremy reads **Matching strategy** and **Training objective** (aka Loss function)[ [2:01:44](https://youtu.be/0frKXR-2PBY%3Ft%3D2h1m44s) ]
-
-#### Some paper tips [ [2:02:34](https://youtu.be/0frKXR-2PBY%3Ft%3D2h2m34s) ]
-
-[Scalable Object Detection using Deep Neural Networks](https://arxiv.org/pdf/1312.2249.pdf)
-
-*   “Training objective” is loss function
-*   Double bars and two 2's like this means Mean Squared Error
+*   “培养目标”是损失功能
+*   双条和两个2是这样的意思是均方误差
 
 ![](../img/1_LubBtX9ODFMBgI34bFHtdw.png)
 
-*   log(c) and log(1-c), and x and (1-x) they are all the pieces for binary cross entropy:
+*   log（c）和log（1-c），x和（1-x）它们都是二进制交叉熵的部分：
 
 ![](../img/1_3Xq3HB72jsVKI7uHOHzRDQ.png)
 
-This week, go through the code and go through the paper and see what is going on. Remember what Jeremy did to make it easier for you was he took that loss function, he copied it into a cell and split it up so that each bit was in a separate cell. Then after every sell, he printed or plotted that value. Hopefully this is a good starting point.
+本周，仔细阅读代码并查看论文，看看发生了什么。 记住Jeremy为你做的更容易做的事情是他把这个损失函数，他把它复制到一个单元格中并将其拆分，以便每个位都在一个单独的单元格中。 然后在每次出售后，他都会打印或绘制该值。 希望这是一个很好的起点。

@@ -9,7 +9,7 @@
 
 我们上周深入研究了协同过滤，最后我们在fast.ai库中重新创建了`EmbeddingDotBias`类（ `column_data.py` ）。 让我们看一下嵌入式的样子[ [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb) ]。
 
-在学习者`learn`内部，您可以通过调用`learn.model`来获取PyTorch模型。 `@property`看起来像常规函数，但在调用它时不需要括号。
+在学习者`learn`内部，你可以通过调用`learn.model`来获取PyTorch模型。 `@property`看起来像常规函数，但在调用它时不需要括号。
 
 ```
  @property  def model(self): return self.models.model 
@@ -29,7 +29,7 @@ PyTorch模型很好地打印出层，包括层名，这就是我们在代码中�
 
 ![](../img/1_4MrbqWktWz3oroYWn5Xh6w.png)
 
-`m.ib`是指项目偏差的嵌入层 - 在我们的例子中是电影偏见。 PyTorch模型和图层的好处是我们可以将它们称为函数。 因此，如果您想获得预测，则调用`m(...)`并传入变量。
+`m.ib`是指项目偏差的嵌入层 - 在我们的例子中是电影偏见。 PyTorch模型和图层的好处是我们可以将它们称为函数。 因此，如果你想获得预测，则调用`m(...)`并传入变量。
 
 图层需要变量而不是张量，因为它需要跟踪导数 - 这就是`V(...)`将张量转换为变量的原因。 PyTorch 0.4将摆脱变量，我们将能够直接使用张量。
 
@@ -39,7 +39,7 @@ PyTorch模型很好地打印出层，包括层名，这就是我们在代码中�
 
 `to_np`函数将采用变量或张量（无论是在CPU还是GPU上）并返回numpy数组。 Jeremy的方法[ [12:03](https://youtu.be/sHcLkfRrgoQ%3Ft%3D12m3s) ]是将numpy用于一切，除非他明确需要在GPU上运行某些东西或者需要它的衍生物 - 在这种情况下他使用PyTorch。 Numpy比PyTorch的使用时间更长，并且可以与OpenCV，Pandas等其他库一起使用。
 
-有关生产中CPU与GPU的问题。 建议的方法是对CPU进行推理，因为它更具可扩展性，您无需批量生产。 您可以通过键入`m.cpu()`将模型移动到CPU上，类似于键入`V(topMovieIndex).cpu()`的变量（从CPU到GPU将是`m.cuda()` ）。如果您的服务器没有GPU ，它会自动在CPU上运行推理。 要加载在GPU上训练过的已保存模型，请查看`torch_imports.py`以下代码`torch_imports.py` ：
+有关生产中CPU与GPU的问题。 建议的方法是对CPU进行推理，因为它更具可扩展性，你无需批量生产。 你可以通过键入`m.cpu()`将模型移动到CPU上，类似于键入`V(topMovieIndex).cpu()`的变量（从CPU到GPU将是`m.cuda()` ）。如果你的服务器没有GPU ，它会自动在CPU上运行推理。 要加载在GPU上训练过的已保存模型，请查看`torch_imports.py`以下代码`torch_imports.py` ：
 
 ```
  def load_model(m, p): m.load_state_dict(torch.load(p, map_location=lambda storage, loc: storage)) 
@@ -51,7 +51,7 @@ PyTorch模型很好地打印出层，包括层名，这就是我们在代码中�
  movie_ratings = [(b[0], movie_names[i]) **for** i,b **in** zip(topMovies,movie_bias)] 
 ```
 
-`zip`将允许您同时迭代多个列表。
+`zip`将允许你同时迭代多个列表。
 
 #### 最糟糕的电影
 
@@ -155,7 +155,7 @@ PyTorch模型很好地打印出层，包括层名，这就是我们在代码中�
 
 ![](../img/1_BgBtlqi7Ja6aQ8wGvWQbgQ.png)
 
-他们做的有趣的事情是，他们采用由神经网络训练的实体嵌入，用学习的实体嵌入替换每个分类变量，然后将其输入到梯度增强机（GBM），随机森林（RF）和KNN中 - 这减少了这个错误几乎与神经网络（NN）一样好。 这是一种很好的方式，可以在您的组织中提供神经网络的强大功能，而不必强迫其他人学习深度学习，因为他们可以继续使用他们当前使用的东西并使用嵌入作为输入。 GBM和RF列车比NN快得多。
+他们做的有趣的事情是，他们采用由神经网络训练的实体嵌入，用学习的实体嵌入替换每个分类变量，然后将其输入到梯度增强机（GBM），随机森林（RF）和KNN中 - 这减少了这个错误几乎与神经网络（NN）一样好。 这是一种很好的方式，可以在你的组织中提供神经网络的强大功能，而不必强迫其他人学习深度学习，因为他们可以继续使用他们当前使用的东西并使用嵌入作为输入。 GBM和RF列车比NN快得多。
 
 ![](../img/1_XYcNx7NmTyblDXa5diFMbg.png)
 
@@ -163,13 +163,13 @@ PyTorch模型很好地打印出层，包括层名，这就是我们在代码中�
 
 他们还绘制了物理空间和嵌入空间中商店的距离 - 这显示出美丽而清晰的相关性。
 
-一周的天数或一年中的几个月之间似乎也存在相关性。 可视化嵌入可能很有趣，因为它向您显示您期望看到的内容或您未看到的内容。
+一周的天数或一年中的几个月之间似乎也存在相关性。 可视化嵌入可能很有趣，因为它向你显示你期望看到的内容或你未看到的内容。
 
 #### 关于Skip-Gram生成嵌入的问题[ [31:31](https://youtu.be/sHcLkfRrgoQ%3Ft%3D31m31s) ]
 
 Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法是“发明”标签。 Word2Vec的方法是采用11个单词的句子，删除中间单词，并用随机单词替换它。 然后他们在原句中给出了标签1; 0到假一个，并建立了一个机器学习模型来查找假句子。 因此，他们现在可以将嵌入物用于其他目的。 如果你将它作为单个矩阵乘数（浅模型）而不是深度神经网络，你可以非常快速地训练 - 缺点是它是一个预测性较低的模型，但优点是你可以训练一个非常大的数据集更重要的是，最终的嵌入具有_线性特征_ ，允许我们很好地加，减或绘制。 在NLP中，我们应该超越Word2Vec和Glove（即基于线性的方法），因为这些嵌入不太具有预测性。 最先进的语言模型使用深度RNN。
 
-#### 要学习任何类型的特征空间，您需要标记数据或者需要发明虚假任务[ [35:45](https://youtu.be/sHcLkfRrgoQ%3Ft%3D35m45s) ]
+#### 要学习任何类型的特征空间，你需要标记数据或者需要发明虚假任务[ [35:45](https://youtu.be/sHcLkfRrgoQ%3Ft%3D35m45s) ]
 
 *   一个假的任务比另一个好吗？ 还没有很好的研究。
 *   直观地说，我们想要一个帮助机器学习你关心的各种关系的任务。
@@ -177,7 +177,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 *   如果你不能提出很棒的假任务，那就去使用糟糕的任务 - 你需要的很少，这通常是令人惊讶的。
 *   **自动编码器** [ [38:10](https://youtu.be/sHcLkfRrgoQ%3Ft%3D38m10s) ] - 它最近赢得了[保险索赔竞赛](https://www.kaggle.com/c/porto-seguro-safe-driver-prediction/discussion/44629) 。 采取单一策略，通过神经网络运行，并让它重建自己（确保中间层的激活少于输入变量）。 基本上，这是一个任务，其输入=输出作为一个假任务令人惊讶地工作。
 
-在计算机视觉中，您可以对猫和狗进行训练并将其用于CT扫描。 也许它可能适用于语言/ NLP！ （未来的研究）
+在计算机视觉中，你可以对猫和狗进行训练并将其用于CT扫描。 也许它可能适用于语言/ NLP！ （未来的研究）
 
 #### [罗斯曼](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson3-rossman.ipynb) [ [41:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D41m4s) ]
 
@@ -185,7 +185,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 *   有关更详细的说明，请参阅机器学习课程。
 *   `apply_cats(joined_test, joined)`用于确保测试集和训练集具有相同的分类代码。
 *   跟踪包含每个连续列的平均值和标准差的`mapper` ，并将相同的`mapper`应用于测试集。
-*   不要依赖Kaggle公共董事会 - 依靠您自己精心设计的验证集。
+*   不要依赖Kaggle公共董事会 - 依靠你自己精心设计的验证集。
 
 #### 为罗斯曼寻找一个好的[核心](https://www.kaggle.com/thie1e/exploratory-analysis-rossmann)
 
@@ -197,19 +197,19 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 #### Vim技巧[ [49:12](https://youtu.be/sHcLkfRrgoQ%3Ft%3D49m12s) ]
 
-*   `:tag ColumnarModelData`将带您进入类定义
-*   `ctrl + ]`将带您定义光标下的内容
+*   `:tag ColumnarModelData`将带你进入类定义
+*   `ctrl + ]`将带你定义光标下的内容
 *   `ctrl + t`回去
 *   `*`找到光标下的内容的用法
-*   您可以使用`:tabn`选项在选项卡之间切换`:tabn`和`:tabp` ，使用`:tabe &lt;filepath&gt;`可以添加新选项卡; 并使用常规`:q`或`:wq`你关闭一个标签。 如果将`:tabn`和`:tabp`到F7 / F8键，则可以轻松地在文件之间切换。
+*   你可以使用`:tabn`选项在选项卡之间切换`:tabn`和`:tabp` ，使用`:tabe &lt;filepath&gt;`可以添加新选项卡; 并使用常规`:q`或`:wq`你关闭一个标签。 如果将`:tabn`和`:tabp`到F7 / F8键，则可以轻松地在文件之间切换。
 
 #### [ColumnarModelData](https://youtu.be/sHcLkfRrgoQ%3Ft%3D51m1s)内部[ [51:01](https://youtu.be/sHcLkfRrgoQ%3Ft%3D51m1s) ]
 
-慢慢但肯定地，过去只是“神奇”的东西开始看起来很熟悉。 如您所见， `get_learner`返回`Learner` ，它是包装数据和PyTorch模型的fast.ai概念：
+慢慢但肯定地，过去只是“神奇”的东西开始看起来很熟悉。 如你所见， `get_learner`返回`Learner` ，它是包装数据和PyTorch模型的fast.ai概念：
 
 ![](../img/1_Fda8NgH2L9m3d_UIdNsKCQ.png)
 
-在`MixedInputModel`内部，您可以看到它是如何创建我们现在更了解的`Embedding` 。 `nn.ModuleList`用于注册层列表。 我们将在下周讨论`BatchNorm` ，但我们之前已经看过了休息。
+在`MixedInputModel`内部，你可以看到它是如何创建我们现在更了解的`Embedding` 。 `nn.ModuleList`用于注册层列表。 我们将在下周讨论`BatchNorm` ，但我们之前已经看过了休息。
 
 ![](../img/1_7E46VmEHXatQWNY2s7D9-g.png)
 
@@ -273,7 +273,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 *   不时（每1000个时期），打印出损失
 *   `loss.backward()`将使用`requires_grad=True`计算所有变量的渐变，并填写`.grad`属性
 *   将`a`更新为减去LR * `grad` （ `.data`访问变量内部的张量）
-*   当有多个损失函数或许多输出层对渐变有贡献时，PyTorch会将它们加在一起。 因此，您需要告诉何时将渐变设置回零（ `_`中的`zero_()`表示变量就地更改）。
+*   当有多个损失函数或许多输出层对渐变有贡献时，PyTorch会将它们加在一起。 因此，你需要告诉何时将渐变设置回零（ `_`中的`zero_()`表示变量就地更改）。
 *   最后4行代码包含在`optim.SGD.step`函数中
 
 #### 让我们只用Numpy（没有PyTorch）[ [1:07:01](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h7m1s) ]
@@ -292,7 +292,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
  lr=0.01  **def** **upd** ():  **global** a_guess, b_guess  y_pred = lin(a_guess, b_guess, x)  dydb = 2 * (y_pred - y)  dyda = x*dydb  a_guess -= lr*dyda.mean()  b_guess -= lr*dydb.mean() 
 ```
 
-只是为了好玩，您可以使用`matplotlib.animation.FuncAnimation`来制作动画：
+只是为了好玩，你可以使用`matplotlib.animation.FuncAnimation`来制作动画：
 
 ![](../img/1_yGWe-bn7PoDqx0pZc2fjtg.png)
 
@@ -385,8 +385,8 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 #### 问题：基于字符的模型与基于单词的模型[ [1:22:30](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h22m30s) ]
 
-*   通常，您希望将字符级别模型和字级别模型组合在一起（例如，用于翻译）。
-*   当词汇表包含不常用的单词时，字符级别模型很有用 - 单词级别模型将仅视为“未知”。 当您看到之前没有见过的单词时，可以使用字符级模型。
+*   通常，你希望将字符级别模型和字级别模型组合在一起（例如，用于翻译）。
+*   当词汇表包含不常用的单词时，字符级别模型很有用 - 单词级别模型将仅视为“未知”。 当你看到之前没有见过的单词时，可以使用字符级模型。
 *   在它们之间还有一种称为字节对编码（BPE）的东西，它查看n-gram字符。
 
 #### 创建输入[ [1:23:48](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h23m48s) ]
@@ -542,7 +542,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
  **class** **CharLoopModel** (nn.Module):  _# This is an RNN!_  **def** __init__(self, vocab_size, n_fac):  super().__init__()  self.e = nn.Embedding(vocab_size, n_fac)  self.l_in = nn.Linear(n_fac, n_hidden)  self.l_hidden = nn.Linear(n_hidden, n_hidden)  self.l_out = nn.Linear(n_hidden, vocab_size)  **def** forward(self, *cs):  bs = cs[0].size(0)  h = V(torch.zeros(bs, n_hidden).cuda())  **for** c **in** cs:  inp = F.relu(self.l_in(self.e(c)))  h = F.tanh(self.l_hidden(h+inp))  **return** F.log_softmax(self.l_out(h), dim=-1) 
 ```
 
-大多数代码与以前相同。 您会注意到`forward`功能中有一个`for`循环。
+大多数代码与以前相同。 你会注意到`forward`功能中有一个`for`循环。
 
 > 双曲正切（Tanh）[ [1:43:43](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h43m43s) ]
 
@@ -585,7 +585,7 @@ PyTorch将自动为我们和线性输入层编写`for`循环。
  ht = V(torch.zeros(1, 512,n_hidden))  outp, hn = m.rnn(t, ht)  outp.size(), hn.size()  _(torch.Size([8, 512, 256]), torch.Size([1, 512, 256]))_ 
 ```
 
-在PyTorch版本中，隐藏状态是等级3张量`h = V(torch.zeros(1, bs, n_hidden))` （在我们的版本中，它是等级2张量）[ [1:51:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h51m58s) ]。 我们稍后会详细了解这一点，但事实证明你可以拥有倒退的第二个RNN。 我们的想法是找到倒退的关系会更好 - 它被称为“双向RNN”。 您也可以向RNN提供RNN馈送，称为“多层RNN”。 对于这些RNN，您将需要张量中的附加轴来跟踪隐藏状态的其他层。 现在，我们只有1，然后回来1。
+在PyTorch版本中，隐藏状态是等级3张量`h = V(torch.zeros(1, bs, n_hidden))` （在我们的版本中，它是等级2张量）[ [1:51:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h51m58s) ]。 我们稍后会详细了解这一点，但事实证明你可以拥有倒退的第二个RNN。 我们的想法是找到倒退的关系会更好 - 它被称为“双向RNN”。 你也可以向RNN提供RNN馈送，称为“多层RNN”。 对于这些RNN，你将需要张量中的附加轴来跟踪隐藏状态的其他层。 现在，我们只有1，然后回来1。
 
 #### 测试模型
 
@@ -607,7 +607,7 @@ PyTorch将自动为我们和线性输入层编写`for`循环。
 
 #### 多输出[ [1:55:31](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h55m31s) ]
 
-从上一个图中，我们可以通过将char 1与char 2相同地处理为n-1来进一步简化。 您注意到三角形（输出）也在循环内移动，换句话说，我们在每个字符后创建一个预测。
+从上一个图中，我们可以通过将char 1与char 2相同地处理为n-1来进一步简化。 你注意到三角形（输出）也在循环内移动，换句话说，我们在每个字符后创建一个预测。
 
 ![](../img/1_0-XkFkCIatPvenvKPfe2_g.png)
 
@@ -656,7 +656,7 @@ PyTorch将自动为我们和线性输入层编写`for`循环。
 *   `F.nll_loss`是PyTorch损失函数。
 *   展平我们的投入和目标。
 *   转置前两个轴，因为PyTorch期望1.序列长度（多少时间步长），2。批量大小，3。隐藏状态本身。 `yt.size()`是512乘8，而`sl, bs`是8乘512。
-*   当您执行“转置”之类的操作时，PyTorch通常不会实际调整内存顺序，而是保留一些内部元数据来将其视为转置。 当您转置矩阵时，PyTorch只会更新元数据。 如果您看到一个错误“此张量不连续”，请在其后添加`.contiguous()`并且错误消失。
+*   当你执行“转置”之类的操作时，PyTorch通常不会实际调整内存顺序，而是保留一些内部元数据来将其视为转置。 当你转置矩阵时，PyTorch只会更新元数据。 如果你看到一个错误“此张量不连续”，请在其后添加`.contiguous()`并且错误消失。
 *   `.view`与`np.reshape`相同。 `-1`表示只要它需要。
 
 ```

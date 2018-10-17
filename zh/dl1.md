@@ -9,7 +9,7 @@
 
 #### [Jupyter笔记本和狗与猫的介绍](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson1.ipynb) [ [12:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D12m39s) ]
 
-*   您可以通过选择它并按下`shift+enter`来运行单元格（您可以按住`shift`并多次按`enter`键以继续按下单元格），或者您可以单击顶部的“运行”按钮。 单元格可以包含代码，文本，图片，视频等。
+*   你可以通过选择它并按下`shift+enter`来运行单元格（你可以按住`shift`并多次按`enter`键以继续按下单元格），或者你可以单击顶部的“运行”按钮。 单元格可以包含代码，文本，图片，视频等。
 *   Fast.ai需要Python 3
 
 ```py
@@ -48,7 +48,7 @@ models sample test1 tmp train valid
 ```
 
 *   `!` 告诉使用bash（shell）而不是python
-*   如果您不熟悉训练集和验证集，请查看Practical Machine Learning课程（或阅读[Rachel的博客](http://www.fast.ai/2017/11/13/validation-sets/) ）
+*   如果你不熟悉训练集和验证集，请查看Practical Machine Learning课程（或阅读[Rachel的博客](http://www.fast.ai/2017/11/13/validation-sets/) ）
 
 ```py
 !ls {PATH}valid 
@@ -66,7 +66,7 @@ files = !ls {PATH}valid/cats | head  files
 ['cat.10016.jpg',  'cat.1001.jpg',  'cat.10026.jpg',  'cat.10048.jpg',  'cat.10050.jpg',  'cat.10064.jpg',  'cat.10071.jpg',  'cat.10091.jpg',  'cat.10103.jpg',  'cat.10104.jpg'] 
 ```
 
-*   此文件夹结构是共享和提供图像分类数据集的最常用方法。 每个文件夹都会告诉您标签（例如`dogs`或`cats` ）。
+*   此文件夹结构是共享和提供图像分类数据集的最常用方法。 每个文件夹都会告诉你标签（例如`dogs`或`cats` ）。
 
 ```py
 img = plt.imread(f' {PATH} valid/cats/ {files[0]} ')  plt.imshow(img); 
@@ -133,10 +133,10 @@ learn.fit (0.01, 3)
 #### Fast.ai图书馆[ [22:24](https://youtu.be/IPBSB1HLNLo%3Ft%3D22m24s) ]
 
 *   该库采用了他们可以找到的所有最佳实践和方法 - 每次出现看起来很有趣的论文时，他们会对其进行测试，如果它适用于各种数据集，并且他们可以弄清楚如何调整它，它会得到它在库中实现它。
-*   Fast.ai策划所有这些最佳实践并为您打包，并且大部分时间都会找出自动处理事物的最佳方法。
+*   Fast.ai策划所有这些最佳实践并为你打包，并且大部分时间都会找出自动处理事物的最佳方法。
 *   Fast.ai位于名为PyTorch的库之上，这是一个非常灵活的深度学习，机器学习和由Facebook编写的GPU计算库。
 *   大多数人比PyTorch更熟悉TensorFlow，但Jeremy现在知道的大多数顶级研究人员已经转向PyTorch。
-*   Fast.ai非常灵活，您可以根据需要尽可能多地使用所有这些策划的最佳实践。 在任何时候都很容易挂钩并编写自己的数据增强，丢失功能，网络架构等，我们将在本课程中学习所有内容。
+*   Fast.ai非常灵活，你可以根据需要尽可能多地使用所有这些策划的最佳实践。 在任何时候都很容易挂钩并编写自己的数据增强，丢失功能，网络架构等，我们将在本课程中学习所有内容。
 
 #### 分析结果[ [24:21](https://youtu.be/IPBSB1HLNLo%3Ft%3D24m12s) ]
 
@@ -246,12 +246,12 @@ plot_val_with_title(most_uncertain, "Most uncertain predictions")
 
 *   为什么看这些图像很重要？ Jeremy在构建模型后所做的第一件事就是找到一种可视化其构建方式的方法。 因为如果他想让模型变得更好，那么他需要利用做得好的事情来解决那些做得很糟糕的事情。
 *   在这种情况下，我们已经了解了有关数据集本身的一些信息，即这里有一些可能不应该存在的图像。 但同样清楚的是，这种模式还有改进的余地（例如数据增强 - 我们将在后面介绍）。
-*   现在您已准备好构建自己的图像分类器（对于常规照片 - 可能不是CT扫描）！ 例如， [这](https://towardsdatascience.com/fun-with-small-image-data-sets-8c83d95d0159)是其中一个学生所做的。
+*   现在你已准备好构建自己的图像分类器（对于常规照片 - 可能不是CT扫描）！ 例如， [这](https://towardsdatascience.com/fun-with-small-image-data-sets-8c83d95d0159)是其中一个学生所做的。
 *   查看[此论坛帖子](http://forums.fast.ai/t/understanding-softmax-probabilities-output-on-a-multi-class-classification-problem/8194) ，了解可视化结果的不同方式（例如，当有超过2个类别时等）
 
 #### 自上而下与自下而上[ [30:52](https://youtu.be/IPBSB1HLNLo%3Ft%3D30m52s) ]
 
-自下而上：了解您需要的每个构建块，并最终将它们组合在一起
+自下而上：了解你需要的每个构建块，并最终将它们组合在一起
 
 *   很难保持动力
 *   很难知道“大局”
@@ -298,7 +298,7 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 ![](../img/1_0YOpyzGWkrS4VW3ntJRQ5Q.png)
 
-*   您现在需要知道的是，它由许多简单的线性层组成，其中散布着许多简单的非线性层。 当你散布这些层时，你会得到一种称为通用逼近定理的东西。 通用近似定理所说的是，只要添加足够的参数，这种函数就可以解决任何给定的问题，任意精度。
+*   你现在需要知道的是，它由许多简单的线性层组成，其中散布着许多简单的非线性层。 当你散布这些层时，你会得到一种称为通用逼近定理的东西。 通用近似定理所说的是，只要添加足够的参数，这种函数就可以解决任何给定的问题，任意精度。
 
 #### 通用参数拟合：梯度下降[ [49:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D49m39s) ]
 
@@ -378,8 +378,8 @@ learn.fit(0.01, 3)
 ```
 
 *   第一个数字`0.01`是学习率。
-*   _学习率_决定了您想要更新_权重_ （或_参数_ ）的速度或速度。 学习率是设置最困难的参数之一，因为它会显着影响模型性能。
-*   方法`learn.lr_find()`可帮助您找到最佳学习率。 它使用2015年论文“ [循环学习率训练神经网络”中](http://arxiv.org/abs/1506.01186)开发的技术，我们只需将学习率从非常小的值提高，直到损失停止下降。 我们可以绘制不同批次的学习率，看看它是什么样的。
+*   _学习率_决定了你想要更新_权重_ （或_参数_ ）的速度或速度。 学习率是设置最困难的参数之一，因为它会显着影响模型性能。
+*   方法`learn.lr_find()`可帮助你找到最佳学习率。 它使用2015年论文“ [循环学习率训练神经网络”中](http://arxiv.org/abs/1506.01186)开发的技术，我们只需将学习率从非常小的值提高，直到损失停止下降。 我们可以绘制不同批次的学习率，看看它是什么样的。
 
 ```py
 learn = ConvLearner.pretrained(arch, data, precompute=True)  learn.lr_find() 
@@ -412,11 +412,11 @@ learn.sched.plot()
 ```
 
 *   尽可能多的人，但如果你运行太久，准确性可能会变得更糟。 它被称为“过拟合”，我们稍后会详细了解它。
-*   另一个考虑因素是您可以使用的时间。
+*   另一个考虑因素是你可以使用的时间。
 
 #### 提示与技巧[ [1:21:40](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h21m40s) ]
 
-**1.** `Tab` - 当您忘记功能名称时，它将自动完成
+**1.** `Tab` - 当你忘记功能名称时，它将自动完成
 
 ![](../img/1_g5JpxoRhb-rIPeaXlrII1w.png)
 

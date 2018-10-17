@@ -9,7 +9,7 @@
 [**结构化深度学习**](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848 "https://towardsdatascience.com/structured-deep-learning-b8ca4138b848")[
 ](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848 "https://towardsdatascience.com/structured-deep-learning-b8ca4138b848")[_作者：Kerem Turgutlu_朝向datascience.com](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848 "https://towardsdatascience.com/structured-deep-learning-b8ca4138b848")[](https://towardsdatascience.com/structured-deep-learning-b8ca4138b848)
 
-您可以使用[此工具](https://github.com/hardikvasa/google-images-download)从Google下载图片并解决自己的问题：
+你可以使用[此工具](https://github.com/hardikvasa/google-images-download)从Google下载图片并解决自己的问题：
 
 [**小图像数据集的乐趣（第2部分）**](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96 "https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96")[
 ](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96 "https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96")[_作者：Nikhil B_ towardsdatascience.com](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96 "https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96")[](https://towardsdatascience.com/fun-with-small-image-data-sets-part-2-54d683ca8c96)
@@ -69,7 +69,7 @@
 
 ![](../img/1_2SeWMcKe9VCLkVQVuCvU8g.png)
 
-然后我们使用Gradient Descent来减少损失。 Microsoft Excel在加载项中有一个“求解器”，可以通过更改所选单元格来最小化变量（ `GRG Nonlinear`是您要使用的方法）。
+然后我们使用Gradient Descent来减少损失。 Microsoft Excel在加载项中有一个“求解器”，可以通过更改所选单元格来最小化变量（ `GRG Nonlinear`是你要使用的方法）。
 
 这可称为“浅学习”（与深度学习相反），因为没有非线性层或第二线性层。 那么我们直觉上做了什么呢？ 每部电影的五个数字称为“嵌入”（潜在因素） - 第一个数字可能代表科幻和幻想的数量，第二个数字可能是电影使用了多少特效，第三个可能是如何类似地，每个用户还有5个数字，例如，表示用户喜欢幻想幻想，特效和电影中的对话驱动多少。 我们的预测是这些载体的交叉产物。 由于我们没有针对每个用户进行所有电影评论，因此我们试图找出哪些电影与这部电影相似，以及其他用户如何评价与此用户类似的其他电影为此电影评分（因此称为“协作”）。
 
@@ -105,7 +105,7 @@
 
 
 
-由于输出是Mean Squared Error，您可以通过以下方式获取RMSE：
+由于输出是Mean Squared Error，你可以通过以下方式获取RMSE：
 
 ```
  math.sqrt(0.765) 
@@ -113,7 +113,7 @@
 
 产量约为0.88，优于0.91的基准。
 
-您可以通过常规方式获得预测：
+你可以通过常规方式获得预测：
 
 ```
  preds = learn.predict() 
@@ -214,7 +214,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
  fit(model, data, 3, opt, F.mse_loss) 
 ```
 
-这个函数来自fast.ai库[ [54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s) ]并且比我们一直在使用的`learner.fit()`更接近常规的PyTorch方法。 它不会为您提供诸如“重启的随机梯度下降”或开箱即用的“差分学习率”等功能。
+这个函数来自fast.ai库[ [54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s) ]并且比我们一直在使用的`learner.fit()`更接近常规的PyTorch方法。 它不会为你提供诸如“重启的随机梯度下降”或开箱即用的“差分学习率”等功能。
 
 #### **让我们改进我们的模型**
 
@@ -332,7 +332,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 *   “在线”训练 - 规模为1的小批量训练
 
-这就是你如何使用excel表格进行SGD。 如果您要使用CNN电子表格的输出更改预测值，我们可以使用SGD训练CNN。
+这就是你如何使用excel表格进行SGD。 如果你要使用CNN电子表格的输出更改预测值，我们可以使用SGD训练CNN。
 
 #### 动量[ [1:53:47](https://youtu.be/J99NV9Cr75I%3Ft%3D1h53m47s) ]
 
@@ -379,4 +379,4 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 当参数多于数据点时，正则化变得很重要。 我们以前见过辍学，体重衰退是另一种正规化。 权重衰减（L2正则化）通过将平方权重（权重衰减乘数乘以）加到损失中来惩罚大权重。 现在损失函数想要保持较小的权重，因为增加权重会增加损失; 因此，只有当损失提高超过罚款时才这样做。
 
-问题在于，由于我们将平方权重添加到损失函数，这会影响梯度的移动平均值和Adam的平方梯度的移动平均值。 这导致当梯度变化很大时减少重量衰减量，并且当变化很小时增加重量衰减量。 换句话说，“惩罚大重量，除非渐变变化很大”，这不是我们想要的。 AdamW从损失函数中删除了重量衰减，并在更新权重时直接添加它。
+问题在于，由于我们将平方权重添加到损失函数，这会影响梯度的移动平均值和Adam的平方梯度的移动平均值。 这导致当梯度变化很大时减少权重衰减量，并且当变化很小时增加权重衰减量。 换句话说，“惩罚大权重，除非渐变变化很大”，这不是我们想要的。 AdamW从损失函数中删除了权重衰减，并在更新权重时直接添加它。

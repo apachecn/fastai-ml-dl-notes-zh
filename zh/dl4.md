@@ -63,19 +63,19 @@
 *   `p=0.01`将丢弃1％的激活。 它根本不会改变任何东西，也不会阻止过拟合（不是一般化）。
 *   `p=0.99`将抛弃99％的激活。 不会过度适应并且非常适合概括，但会破坏你的准确性。
 *   默认情况下，第一层为`0.25` ，第二层为`0.5` [17:54]。 如果你发现它过拟合，就开始碰撞它 - 尝试将全部设置为`0.5` ，仍然过拟合，尝试`0.7`等。如果你不合适，你可以尝试降低它，但你不太可能需要降低它。
-*   ResNet34具有较少的参数，因此它不会过度匹配，但对于像ResNet50这样的更大的架构，您通常需要增加丢失。
+*   ResNet34具有较少的参数，因此它不会过度匹配，但对于像ResNet50这样的更大的架构，你通常需要增加丢失。
 
 你有没有想过为什么验证损失比训练早期的训练损失更好？ [ [12:32](https://youtu.be/gbceqO8PpBg%3Ft%3D12m32s) ]这是因为我们在验证集上运行推理（即进行预测）时关闭了丢失。 我们希望尽可能使用最好的模型。
 
 **问题** ：你是否必须采取任何措施来适应你正在放弃激活的事实？ [ [13:26](https://youtu.be/gbceqO8PpBg%3Ft%3D13m26s) ]我们没有，但是当你说`p=0.5`时，PyTorch会做两件事。 它抛弃了一半的激活，并且它已经存在的所有激活加倍，因此平均激活不会改变。
 
-在Fast.ai中，您可以传入`ps` ，这是所有添加的图层的`p`值。 它不会改变预训练网络中的辍学率，因为它应该已经训练过一些适当的辍学水平：
+在Fast.ai中，你可以传入`ps` ，这是所有添加的图层的`p`值。 它不会改变预训练网络中的辍学率，因为它应该已经训练过一些适当的辍学水平：
 
 ```
  learn = ConvLearner.pretrained(arch, data, **ps=0.5** , precompute=True) 
 ```
 
-您可以通过设置`ps=0.`来删除dropout `ps=0.` 但即使在几个时代之后，我们开始大规模过拟合（训练损失«验证损失）：
+你可以通过设置`ps=0.`来删除dropout `ps=0.` 但即使在几个时代之后，我们开始大规模过拟合（训练损失«验证损失）：
 
 ```
  [2. **0.3521** **0.55247** 0.84189] 
@@ -87,7 +87,7 @@
  Sequential(  (0): BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True)  (1): Linear(in_features=4096, out_features=512)  (2): ReLU()  (3): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True)  (4): Linear(in_features=512, out_features=120)  (5): LogSoftmax()  ) 
 ```
 
-你可能已经注意到，它已经添加了两个`Linear`层[ [16:19](https://youtu.be/gbceqO8PpBg%3Ft%3D16m19s) ]。 我们不必这样做。 您可以设置`xtra_fc`参数。 注意：您至少需要一个获取卷积层输出（本例中为4096）并将其转换为类数（120个品种）的一个：
+你可能已经注意到，它已经添加了两个`Linear`层[ [16:19](https://youtu.be/gbceqO8PpBg%3Ft%3D16m19s) ]。 我们不必这样做。 你可以设置`xtra_fc`参数。 注意：你至少需要一个获取卷积层输出（本例中为4096）并将其转换为类数（120个品种）的一个：
 
 ```
  learn = ConvLearner.pretrained(arch, data, ps=0., precompute=True,  **xtra_fc=[]** ); learn 
@@ -105,7 +105,7 @@
  _Sequential(_  _(0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True)_  _(1): Linear(in_features=1024, out_features=_ **_700_** _)_  _(2): ReLU()_  _(3): BatchNorm1d(700, eps=1e-05, momentum=0.1, affine=True)_  _(4): Linear(in_features=700, out_features=_ **_300_** _)_  _(5): ReLU()_  _(6): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True)_  _(7): Linear(in_features=300, out_features=120)_  _(8): LogSoftmax()_  _)_ 
 ```
 
-**问题** ：有没有特定的方法可以确定它是否过度装配？ [ [19:53](https://youtu.be/gbceqO8PpBg%3Ft%3D19m53s) ]。 是的，您可以看到训练损失远低于验证损失。 你无法判断它是否_过度_装修。 零过拟合通常不是最佳的。 您要做的唯一事情就是降低验证损失，因此您需要尝试一些事情，看看是什么导致验证损失很低。 对于你的特殊问题，你会有一种过度加工的感觉。
+**问题** ：有没有特定的方法可以确定它是否过度装配？ [ [19:53](https://youtu.be/gbceqO8PpBg%3Ft%3D19m53s) ]。 是的，你可以看到训练损失远低于验证损失。 你无法判断它是否_过度_装修。 零过拟合通常不是最佳的。 你要做的唯一事情就是降低验证损失，因此你需要尝试一些事情，看看是什么导致验证损失很低。 对于你的特殊问题，你会有一种过度加工的感觉。
 
 **问题** ：为什么平均激活很重要？ [ [21:15](https://youtu.be/gbceqO8PpBg%3Ft%3D21m15s) ]如果我们刚刚删除了一半的激活，那么将它们作为输入的下一次激活也将减半，之后的所有内容。 例如，如果蓬松的耳朵大于0.6，则蓬松的耳朵会蓬松，现在如果它大于0.3则只是蓬松 - 这改变了意义。 这里的目标是删除激活而不改变含义。
 
@@ -151,12 +151,12 @@
 ```
 
 *   数字，如`Year` ， `Month` ，虽然我们可以将它们视为连续的，但我们没有必要。 如果我们决定将`Year`作为一个分类变量，我们告诉我们的神经网络，对于`Year` （2000,2001,2002）的每个不同“级别”，你可以完全不同地对待它; 在哪里 - 如果我们说它是连续的，它必须提出某种平滑的功能来适应它们。 通常情况下，实际上是连续的但没有很多不同的级别（例如`Year` ， `DayOfWeek` ），通常将它们视为分类更好。
-*   选择分类变量和连续变量是您要做出的建模决策。 总之，如果它在数据中是分类的，则必须是分类的。 如果它在数据中是连续的，您可以选择是在模型中使其连续还是分类。
+*   选择分类变量和连续变量是你要做出的建模决策。 总之，如果它在数据中是分类的，则必须是分类的。 如果它在数据中是连续的，你可以选择是在模型中使其连续还是分类。
 *   一般来说，浮点数难以分类，因为有很多级别（我们将级别数称为“ **基数** ” - 例如，星期几变量的基数为7）。
 
 **问题** ：你有没有对连续变量进行分类？[ [31:02](https://youtu.be/gbceqO8PpBg%3Ft%3D31m2s) ] Jeremy不会对变量进行分类，但我们可以做的一件事，比如最高温度，分为0-10,10-20,20-30，然后调用分类。 有趣的是，上周刚发表一篇论文，其中一组研究人员发现有时候分组可能会有所帮助。
 
-**问题** ：如果您将年份作为一个类别，当模型遇到一个前所未有的年份时会发生什么？ [ [31:47](https://youtu.be/gbceqO8PpBg%3Ft%3D31m47s) ]我们会到达那里，但简短的回答是，它将被视为一个未知类别。 熊猫有一个特殊的类别叫做未知，如果它看到一个以前没见过的类别，它会被视为未知。
+**问题** ：如果你将年份作为一个类别，当模型遇到一个前所未有的年份时会发生什么？ [ [31:47](https://youtu.be/gbceqO8PpBg%3Ft%3D31m47s) ]我们会到达那里，但简短的回答是，它将被视为一个未知类别。 熊猫有一个特殊的类别叫做未知，如果它看到一个以前没见过的类别，它会被视为未知。
 
 ```
  for v in cat_vars:  joined[v] = joined[v].astype('category').cat.as_ordered() 
@@ -190,7 +190,7 @@
 `proc_df` （进程数据框） - Fast.ai中的一个函数，它执行以下操作：
 
 1.  拉出因变量，将其放入单独的变量中，并从原始数据框中删除它。 换句话说， `df`没有`Sales`列， `y`只包含`Sales`列。
-2.  `do_scale` ：神经网络真的希望所有输入数据都在零左右，标准偏差大约为1.因此，我们取数据，减去均值，然后除以标准偏差即可。 它返回一个特殊对象，用于跟踪它用于该规范化的均值和标准偏差，因此您可以稍后对测试集执行相同操作（ `mapper` ）。
+2.  `do_scale` ：神经网络真的希望所有输入数据都在零左右，标准偏差大约为1.因此，我们取数据，减去均值，然后除以标准偏差即可。 它返回一个特殊对象，用于跟踪它用于该规范化的均值和标准偏差，因此你可以稍后对测试集执行相同操作（ `mapper` ）。
 3.  它还处理缺失值 - 对于分类变量，它变为ID：0，其他类别变为1,2,3等。 对于连续变量，它用中位数替换缺失值，并创建一个新的布尔列，说明它是否丢失。
 
 ![](../img/1_Zs6ASJF8iaAe3cduCmLYKw.png)
@@ -207,7 +207,7 @@
 
 #### 让我们直接进入深度学习行动[ [39:48](https://youtu.be/gbceqO8PpBg%3Ft%3D39m48s) ]
 
-对于任何Kaggle比赛，重要的是您要充分了解您的指标 - 您将如何评判。 在[本次比赛中](https://www.kaggle.com/c/rossmann-store-sales) ，我们将根据均方根百分比误差（RMSPE）进行判断。
+对于任何Kaggle比赛，重要的是你要充分了解你的指标 - 你将如何评判。 在[本次比赛中](https://www.kaggle.com/c/rossmann-store-sales) ，我们将根据均方根百分比误差（RMSPE）进行判断。
 
 ![](../img/1_a7mJ5VCeuAxagGrHOq6ekQ.png)
 
@@ -223,7 +223,7 @@
  max_log_y = np.max(yl)  y_range = (0, max_log_y*1.2) 
 ```
 
-*   当您获取数据的日志时，获得均方根误差实际上会得到均方根百分比误差。
+*   当你获取数据的日志时，获得均方根误差实际上会得到均方根百分比误差。
 
 ```
  md = **ColumnarModelData.from_data_frame** (PATH, val_idx, df,  yl.astype(np.float32), cat_flds=cat_vars, bs=128,  test_df=df_test) 
@@ -254,13 +254,13 @@
 
 ![](../img/1_T604NRtHHBkBWFvWoovlUw.png)
 
-请记住，您永远不想将ReLU放在最后一层，因为softmax需要负数来创建低概率。
+请记住，你永远不想将ReLU放在最后一层，因为softmax需要负数来创建低概率。
 
 #### **完全连接神经网络的简单视图[** [**49:13**](https://youtu.be/gbceqO8PpBg%3Ft%3D49m13s) **]：**
 
 ![](../img/1_5D0_nDy0K0QLKFHTD07gcQ.png)
 
-对于回归问题（不是分类），您甚至可以跳过softmax图层。
+对于回归问题（不是分类），你甚至可以跳过softmax图层。
 
 #### 分类变量[ [50:49](https://youtu.be/gbceqO8PpBg%3Ft%3D50m49s) ]
 
@@ -272,7 +272,7 @@
 
 **问题** ：这4个数字代表什么？[ [55:12](https://youtu.be/gbceqO8PpBg%3Ft%3D55m12s) ]当我们看协同过滤时，我们会更多地了解这一点，但就目前而言，它们只是我们正在学习的参数，最终会给我们带来很大的损失。 我们稍后会发现这些特定的参数通常是人类可解释的并且非常有趣，但这是副作用。
 
-**问题** ：您对嵌入矩阵的维数有很好的启发式吗？ [ [55:57](https://youtu.be/gbceqO8PpBg%3Ft%3D55m57s) ]我确实做到了！ 让我们来看看。
+**问题** ：你对嵌入矩阵的维数有很好的启发式吗？ [ [55:57](https://youtu.be/gbceqO8PpBg%3Ft%3D55m57s) ]我确实做到了！ 让我们来看看。
 
 ```
  cat_sz = [(c, len(joined_samp[c].cat.categories)+1)  **for** c **in** cat_vars]  cat_sz 
@@ -283,7 +283,7 @@
 ```
 
 *   以下是每个分类变量及其基数的列表。
-*   即使原始数据中没有缺失值，您仍然应该留出一个未知的，以防万一。
+*   即使原始数据中没有缺失值，你仍然应该留出一个未知的，以防万一。
 *   确定嵌入大小的经验法则是基数大小除以2，但不大于50。
 
 ```
@@ -302,13 +302,13 @@
 
 **问题** ：有没有办法初始化嵌入矩阵除了随机？ [ [58:14](https://youtu.be/gbceqO8PpBg%3Ft%3D58m14s) ]我们可能会在课程的后期讨论预训练，但基本的想法是，如果罗斯曼的其他人已经训练了一个神经网络来预测奶酪销售，你也可以从他们的嵌入矩阵开始商店预测酒类销售。 例如，在Pinterest和Instacart就会发生这种情况。 Instacart使用这种技术来路由他们的购物者，Pinterest使用它来决定在网页上显示什么。 他们嵌入了在组织中共享的产品/商店矩阵，因此人们无需训练新的产品/商店。
 
-**问题** ：使用嵌入矩阵优于单热编码有什么好处？ [ [59:23](https://youtu.be/gbceqO8PpBg%3Ft%3D59m23s) ]对于上面一周的例子，我们可以很容易地传递7个数字（例如星期日的[ [0,1,0,0,0,0,0](https://youtu.be/gbceqO8PpBg%3Ft%3D59m23s) ]），而不是4个数字。 这也是一个浮动列表，这将完全起作用 - 这就是一般来说，分类变量多年来一直用于统计（称为“虚拟变量”）。 问题是，星期日的概念只能与单个浮点数相关联。 所以它得到了这种线性行为 - 它说周日或多或少只是一件事。 通过嵌入，星期日是四维空间的概念。 我们倾向于发现的是这些嵌入向量倾向于获得这些丰富的语义概念。 例如，如果事实证明周末有不同的行为，您往往会看到周六和周日会有更高的特定数字。
+**问题** ：使用嵌入矩阵优于单热编码有什么好处？ [ [59:23](https://youtu.be/gbceqO8PpBg%3Ft%3D59m23s) ]对于上面一周的例子，我们可以很容易地传递7个数字（例如星期日的[ [0,1,0,0,0,0,0](https://youtu.be/gbceqO8PpBg%3Ft%3D59m23s) ]），而不是4个数字。 这也是一个浮动列表，这将完全起作用 - 这就是一般来说，分类变量多年来一直用于统计（称为“虚拟变量”）。 问题是，星期日的概念只能与单个浮点数相关联。 所以它得到了这种线性行为 - 它说周日或多或少只是一件事。 通过嵌入，星期日是四维空间的概念。 我们倾向于发现的是这些嵌入向量倾向于获得这些丰富的语义概念。 例如，如果事实证明周末有不同的行为，你往往会看到周六和周日会有更高的特定数字。
 
 > 通过具有更高的维度向量而不仅仅是单个数字，它为深度学习网络提供了学习这些丰富表示的机会。
 
 嵌入的想法是所谓的“分布式表示” - 神经网络的最基本概念。 这就是神经网络中的概念具有很难解释的高维表示的想法。 这个向量中的这些数字甚至不必只有一个含义。 它可能意味着一件事，如果这个是低的，一个是高的，如果那个是高的那个，而另一个是低的，因为它正在经历这个丰富的非线性函数。 正是这种丰富的表现形式使它能够学习这种有趣的关系。
 
-**问题** ：嵌入是否适合某些类型的变量？ [ [01:02:45](https://youtu.be/gbceqO8PpBg%3Ft%3D1h2m45s) ]嵌入适用于任何分类变量。 它唯一不能很好地工作的是基数太高的东西。 如果您有600,000行且变量有600,000个级别，那么这不是一个有用的分类变量。 但总的来说，本次比赛的第三名获胜者确实认为所有基因都不是太高，他们都把它们都视为绝对的。 好的经验法则是，如果你可以创建一个分类变量，你也可以这样，因为它可以学习这种丰富的分布式表示; 如果你把它留在连续的地方，它最能做的就是试着找到一个适合它的单一功能形式。
+**问题** ：嵌入是否适合某些类型的变量？ [ [01:02:45](https://youtu.be/gbceqO8PpBg%3Ft%3D1h2m45s) ]嵌入适用于任何分类变量。 它唯一不能很好地工作的是基数太高的东西。 如果你有600,000行且变量有600,000个级别，那么这不是一个有用的分类变量。 但总的来说，本次比赛的第三名获胜者确实认为所有基因都不是太高，他们都把它们都视为绝对的。 好的经验法则是，如果你可以创建一个分类变量，你也可以这样，因为它可以学习这种丰富的分布式表示; 如果你把它留在连续的地方，它最能做的就是试着找到一个适合它的单一功能形式。
 
 #### 场景背后的矩阵代数[ [01:04:47](https://youtu.be/gbceqO8PpBg%3Ft%3D1h4m47s) ]
 
@@ -316,7 +316,7 @@
 
 ![](../img/1_psxpwtr5bw55lKxVV_y81w.png)
 
-**问题** ：您能否触及使用日期和时间作为分类以及它如何影响季节性？ [ [01:06:59](https://youtu.be/gbceqO8PpBg%3Ft%3D1h6m59s) ]有一个名为`add_datepart`的Fast.ai函数，它接受数据框和列名。 它可以选择从数据框中删除该列，并将其替换为代表该日期的所有有用信息的大量列，例如星期几，日期，月份等等（基本上是Pandas给我们的所有内容）。
+**问题** ：你能否触及使用日期和时间作为分类以及它如何影响季节性？ [ [01:06:59](https://youtu.be/gbceqO8PpBg%3Ft%3D1h6m59s) ]有一个名为`add_datepart`的Fast.ai函数，它接受数据框和列名。 它可以选择从数据框中删除该列，并将其替换为代表该日期的所有有用信息的大量列，例如星期几，日期，月份等等（基本上是Pandas给我们的所有内容）。
 
 ```
  add_datepart(weather, "Date", drop=False)  add_datepart(googletrend, "Date", drop=False)  add_datepart(train, "Date", drop=False)  add_datepart(test, "Date", drop=False) 
@@ -324,7 +324,7 @@
 
 ![](../img/1_OJQ53sO6WXh0C-rzw1QyJg.png)
 
-因此，例如，星期几现在变为八行四列嵌入矩阵。 从概念上讲，这允许我们的模型创建一些有趣的时间序列模型。 如果有一个七天周期的周期在周一和周三上升，但仅限于每天和仅在柏林，它可以完全这样做 - 它拥有它需要的所有信息。 这是处理时间序列的绝佳方式。 您只需确保时间序列中的循环指示符作为列存在。 如果你没有一个名为day of week的列，那么神经网络很难学会做mod 7并在嵌入矩阵中查找。 这不是不可能，但真的很难。 如果你预测旧金山的饮料销售，你可能想要一个AT＆T公园球赛开始时的清单，因为这会影响到SoMa有多少人在喝啤酒。 因此，您需要确保基本指标或周期性在您的数据中，并且只要它们在那里，神经网络将学会使用它们。
+因此，例如，星期几现在变为八行四列嵌入矩阵。 从概念上讲，这允许我们的模型创建一些有趣的时间序列模型。 如果有一个七天周期的周期在周一和周三上升，但仅限于每天和仅在柏林，它可以完全这样做 - 它拥有它需要的所有信息。 这是处理时间序列的绝佳方式。 你只需确保时间序列中的循环指示符作为列存在。 如果你没有一个名为day of week的列，那么神经网络很难学会做mod 7并在嵌入矩阵中查找。 这不是不可能，但真的很难。 如果你预测旧金山的饮料销售，你可能想要一个AT＆T公园球赛开始时的清单，因为这会影响到SoMa有多少人在喝啤酒。 因此，你需要确保基本指标或周期性在你的数据中，并且只要它们在那里，神经网络将学会使用它们。
 
 #### 学习者[ [01:10:13](https://youtu.be/gbceqO8PpBg%3Ft%3D1h10m13s) ]
 
@@ -364,7 +364,7 @@
 
 通过使用所有训练数据，我们实现了大约0.09711的RMSPE。 公共领导委员会和私人领导委员会之间存在很大差异，但我们肯定是本次竞赛的最高端。
 
-所以这是一种处理时间序列和结构化数据的技术。 有趣的是，与使用这种技术的组（ [分类变量的实体嵌入](https://arxiv.org/abs/1604.06737) ）相比，第二名获胜者做了更多的特征工程。 本次比赛的获胜者实际上是物流销售预测的主题专家，因此他们有自己的代码来创建大量的功能。 Pinterest的人们为建议建立了一个非常相似的模型也表示，当他们从梯度增强机器转向深度学习时，他们的功能工程设计更少，而且模型更简单，需要的维护更少。 因此，这是使用这种深度学习方法的一大好处 - 您可以获得最先进的结果，但工作量却少得多。
+所以这是一种处理时间序列和结构化数据的技术。 有趣的是，与使用这种技术的组（ [分类变量的实体嵌入](https://arxiv.org/abs/1604.06737) ）相比，第二名获胜者做了更多的特征工程。 本次比赛的获胜者实际上是物流销售预测的主题专家，因此他们有自己的代码来创建大量的功能。 Pinterest的人们为建议建立了一个非常相似的模型也表示，当他们从梯度增强机器转向深度学习时，他们的功能工程设计更少，而且模型更简单，需要的维护更少。 因此，这是使用这种深度学习方法的一大好处 - 你可以获得最先进的结果，但工作量却少得多。
 
 **问题** ：我们是否正在使用任何时间序列？ [ [01:15:01](https://youtu.be/gbceqO8PpBg%3Ft%3D1h15m1s) ]间接地，是的。 正如我们刚刚看到的那样，我们的列中有一周中的一周，一年中的一些等，其中大多数都被视为类别，因此我们正在构建一月，周日等的分布式表示。 我们没有使用任何经典的时间序列技术，我们所做的只是在神经网络中真正完全连接的层。 嵌入矩阵能够以比任何标准时间序列技术更丰富的方式处理诸如星期几周期性之类的事情。
 
@@ -394,7 +394,7 @@
 
 **第4步** 。 创建一个列表，列出每个嵌入矩阵的大小
 
-**第5步** 。 调用`get_learner` - 您可以使用这些确切的参数开头：
+**第5步** 。 调用`get_learner` - 你可以使用这些确切的参数开头：
 
 ```
  m = md.get_learner(emb_szs, len(df.columns)-len(cat_vars), 0.04, 1,  [1000,500], [0.001,0.01], y_range=y_range) 
@@ -404,11 +404,11 @@
 
 **问题** ：如何对此类数据使用数据增强，以及丢失如何工作？ [ [01:18:59](https://youtu.be/gbceqO8PpBg%3Ft%3D1h18m59s) ]不知道。 Jeremy认为它必须是针对特定领域的，但他从未见过任何论文或业内任何人使用结构化数据和深度学习进行数据增强。 他认为可以做到但没有看到它完成。 辍学者正在做什么与以前完全一样。
 
-**问题** ：缺点是什么？ 几乎没有人使用这个。 为什么不？ [ [01:20:41](https://youtu.be/gbceqO8PpBg%3Ft%3D1h20m41s) ]基本上答案就像我们之前讨论过的那样，学术界没有人差不多正在研究这个问题，因为这不是人们发表的内容。 结果，人们可以看到的并没有很好的例子，并且说“哦，这是一种运作良好的技术，让我们的公司实施它”。 但也许同样重要的是，到目前为止，使用这个Fast.ai库，还没有任何方法可以方便地进行。 如果您想要实现其中一个模型，则必须自己编写所有自定义代码。 有很多大的商业和科学机会来使用它并解决以前未能很好解决的问题。
+**问题** ：缺点是什么？ 几乎没有人使用这个。 为什么不？ [ [01:20:41](https://youtu.be/gbceqO8PpBg%3Ft%3D1h20m41s) ]基本上答案就像我们之前讨论过的那样，学术界没有人差不多正在研究这个问题，因为这不是人们发表的内容。 结果，人们可以看到的并没有很好的例子，并且说“哦，这是一种运作良好的技术，让我们的公司实施它”。 但也许同样重要的是，到目前为止，使用这个Fast.ai库，还没有任何方法可以方便地进行。 如果你想要实现其中一个模型，则必须自己编写所有自定义代码。 有很多大的商业和科学机会来使用它并解决以前未能很好解决的问题。
 
 ### 自然语言处理[ [01:23:37](https://youtu.be/gbceqO8PpBg%3Ft%3D1h23m37s) ]
 
-最具前瞻性的深度学习领域，它落后于计算机视觉两三年。 软件的状态和一些概念远没有计算机视觉那么成熟。 您在NLP中找到的一件事是您可以解决的特殊问题，并且它们具有特定的名称。 NLP中存在一种称为“语言建模”的特殊问题，它有一个非常具体的定义 - 它意味着建立一个模型，只要给出一个句子的几个单词，你能预测下一个单词将会是什么。
+最具前瞻性的深度学习领域，它落后于计算机视觉两三年。 软件的状态和一些概念远没有计算机视觉那么成熟。 你在NLP中找到的一件事是你可以解决的特殊问题，并且它们具有特定的名称。 NLP中存在一种称为“语言建模”的特殊问题，它有一个非常具体的定义 - 它意味着建立一个模型，只要给出一个句子的几个单词，你能预测下一个单词将会是什么。
 
 #### 语言建模[ [01:25:48](https://youtu.be/gbceqO8PpBg%3Ft%3D1h25m48s) ]
 
@@ -483,25 +483,25 @@
  ...a new approach to the analysis of wireless networks <eos> 
 ```
 
-A language model can be incredibly deep and subtle, so we are going to try and build that — not because we care about this at all, but because we are trying to create a pre-trained model which is used to do some other tasks. For example, given an IMDB movie review, we will figure out whether they are positive or negative. It is a lot like cats vs. dogs — a classification problem. So we would really like to use a pre-trained network which at least knows how to read English. So we will train a model that predicts a next word of a sentence (ie language model), and just like in computer vision, stick some new layers on the end and ask it to predict whether something is positive or negative.
+语言模型可以非常深刻和微妙，所以我们将尝试构建它 - 不是因为我们关心这一点，而是因为我们正在尝试创建一个用于执行其他任务的预训练模型。 例如，鉴于IMDB电影评论，我们将确定它们是正面还是负面。 这很像猫与狗 - 分类问题。 所以我们真的想使用预先训练好的网络，至少知道如何阅读英语。 因此，我们将训练一个模型来预测句子的下一个单词（即语言模型），就像在计算机视觉中一样，在最后粘贴一些新的层并要求它预测某些东西是正面的还是负面的。
 
-#### IMDB [ [1:31:11](https://youtu.be/gbceqO8PpBg%3Ft%3D1h31m11s) ]
+#### IMDB [ [1:31:11](https://youtu.be/gbceqO8PpBg?t=1h31m11s) ]
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson4-imdb.ipynb)
 
-What we are going to do is to train a language model, making that the pre-trained model for a classification model. In other words, we are trying to leverage exactly what we learned in our computer vision which is how to do fine-tuning to create powerful classification models.
+我们要做的是训练语言模型，使其成为分类模型的预训练模型。 换句话说，我们正在努力充分利用我们在计算机视觉中学到的知识，即如何进行微调以创建强大的分类模型。
 
-**Question** : why would doing directly what you want to do not work? [ [01:31:34](https://youtu.be/gbceqO8PpBg%3Ft%3D1h31m34s) ] It just turns out it doesn't empirically. There are several reasons. First of all, we know fine-tuning a pre-trained network is really powerful. So if we can get it to learn some related tasks first, then we can use all that information to try and help it on the second task. The other is IMDB movie reviews are up to a thousands words long. So after reading a thousands words knowing nothing about how English is structured or concept of a word or punctuation, all you get is a 1 or a 0 (positive or negative). Trying to learn the entire structure of English and then how it expresses positive and negative sentiments from a single number is just too much to expect.
+**问题** ：为什么直接做你想做的不行？ [ [01:31:34](https://youtu.be/gbceqO8PpBg?t=1h31m34s) ]事实证明它不是凭经验。 有几个原因。 首先，我们知道对预先训练好的网络进行微调非常强大。 因此，如果我们首先可以让它学习一些相关的任务，那么我们可以使用所有这些信息来尝试并帮助它完成第二项任务。 另一个是IMDB电影评论长达数千字。 因此，在阅读了几千个单词后，对英语的结构或单词或标点符号的概念一无所知，所得到的只是1或0（正面或负面）。 试图学习整个英语结构，然后从一个数字表达积极和消极的情绪，这太过于期待了。
 
-**Question** : Is this similar to Char-RNN by Karpathy? [ [01:33:09](https://youtu.be/gbceqO8PpBg%3Ft%3D1h33m9s) ] This is somewhat similar to Char-RNN which predicts the next letter given a number of previous letters. Language model generally work at a word level (but they do not have to), and we will focus on word level modeling in this course.
+**问题** ：这与卡尔帕西的Char-RNN相似吗？ [ [01:33:09](https://youtu.be/gbceqO8PpBg?t=1h33m9s) ]这有点类似于Char-RNN，它预测下一个字母给出了许多以前的字母。 语言模型通常在单词级别工作（但他们没有必要），我们将在本课程中专注于单词级别建模。
 
-**Question** : To what extent are these generated words/sentences actual copies of what it found in the training set? [ [01:33:44](https://youtu.be/gbceqO8PpBg%3Ft%3D1h33m44s) ] Words are definitely words it has seen before because it is not a character level so it can only give us the word it has seen before. Sentences, there are rigorous ways of doing it but the easiest would be by looking at examples like above, you get a sense of it. Most importantly, when we train the language model, we will have a validation set so that we are trying to predict the next word of something that has never seen before. There are tricks to using language models to generate text like [beam search](http://forums.fast.ai/t/tricks-for-using-language-models-to-generate-text/8127/2) .
+**问题** ：这些生成的单词/句子在多大程度上是在训练集中找到的实际副本？ [ [01:33:44](https://youtu.be/gbceqO8PpBg?t=1h33m44s) ]单词肯定是它之前看过的单词，因为它不是一个字符级别所以它只能给我们之前看过的单词。 句子，有严格的方法，但最简单的方法是通过查看上面的例子，你会感觉到它。 最重要的是，当我们训练语言模型时，我们将有一个验证集，以便我们试图预测下一个从未见过的东西。 使用语言模型生成像[波束搜索](http://forums.fast.ai/t/tricks-for-using-language-models-to-generate-text/8127/2)这样的文本有一些技巧。
 
-Use cases of text classification:
+文本分类用例：
 
-*   For hedge fund, identify things in articles or Twitter that caused massive market drops in the past.
-*   Identify customer service queries which tend to be associated with people who cancel their contracts in the next month
-*   Organize documents into whether they are part of legal discovery or not.
+*   对于对冲基金，确定过去导致大量市场下跌的文章或Twitter中的内容。
+*   确定客户服务查询，这些查询往往与下个月取消合同的人员相关联
+*   将文档组织成是否属于法律发现的一部分。
 
 ```
  from fastai.learner import * 
@@ -519,11 +519,11 @@ Use cases of text classification:
  import dill as pickle 
 ```
 
-*   `torchtext` — PyTorch's NLP library
+*   `torchtext` - PyTorch的NLP库
 
-#### Data [ [01:37:05](https://youtu.be/gbceqO8PpBg%3Ft%3D1h37m5s) ]
+#### 数据[ [01:37:05](https://youtu.be/gbceqO8PpBg?t=1h37m5s) ]
 
-IMDB [Large Movie Review Dataset](http://ai.stanford.edu/~amaas/data/sentiment/)
+IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/)
 
 ```
  PATH = 'data/aclImdb/' 
@@ -538,22 +538,13 @@ IMDB [Large Movie Review Dataset](http://ai.stanford.edu/~amaas/data/sentiment/)
 ```
 
 ```
- imdbEr.txt imdb.vocab models/ README test/ tmp/ train/ 
+ _imdbEr.txt imdb.vocab models/ README test/ tmp/ train/_ 
 ```
 
-We do not have separate test and validation in this case. Just like in vision, the training directory has bunch of files in it:
+在这种情况下，我们没有单独的测试和验证。 就像在视觉中一样，训练目录中包含大量文件：
 
 ```
- trn_files = !ls {TRN}  trn_files[:10]  ['0_0.txt', 
- '0_3.txt', 
- '0_9.txt', 
- '10000_0.txt', 
- '10000_4.txt', 
- '10000_8.txt', 
- '1000_0.txt', 
- '10001_0.txt', 
- '10001_10.txt', 
- '10001_4.txt'] 
+ trn_files = !ls {TRN}  trn_files[:10]  _['0_0.txt',_  _'0_3.txt',_  _'0_9.txt',_  _'10000_0.txt',_  _'10000_4.txt',_  _'10000_8.txt',_  _'1000_0.txt',_  _'10001_0.txt',_  _'10001_10.txt',_  _'10001_4.txt']_ 
 ```
 
 ```
@@ -561,17 +552,17 @@ We do not have separate test and validation in this case. Just like in vision, t
 ```
 
 ```
- "I have to say when a name like Zombiegeddon and an atom bomb on the front cover I was expecting a flat out chop-socky fung-ku, but what I got instead was a comedy. So, it wasn't quite was I was expecting, but I really liked it anyway! The best scene ever was the main cop dude pulling those kids over and pulling a Bad Lieutenant on them!! I was laughing my ass off. I mean, the cops were just so bad! And when I say bad, I mean The Shield Vic Macky bad. But unlike that show I was laughing when they shot people and smoked dope.<br /><br />Felissa Rose...man, oh man. What can you say about that hottie. She was great and put those other actresses to shame. She should work more often!!!!! I also really liked the fight scene outside of the building. That was done really well. Lots of fighting and people getting their heads banged up. FUN! Last, but not least Joe Estevez and William Smith were great as the...well, I wasn't sure what they were, but they seemed to be having fun and throwing out lines. I mean, some of it didn't make sense with the rest of the flick, but who cares when you're laughing so hard! All in all the film wasn't the greatest thing since sliced bread, but I wasn't expecting that. It was a Troma flick so I figured it would totally suck. It's nice when something surprises you but not totally sucking.<br /><br />Rent it if you want to get stoned on a Friday night and laugh with your buddies. Don't rent it if you are an uptight weenie or want a zombie movie with lots of flesh eating.<br /><br />PS Uwe Boil was a nice touch." 
+ _"I have to say when a name like Zombiegeddon and an atom bomb on the front cover I was expecting a flat out chop-socky fung-ku, but what I got instead was a comedy. So, it wasn't quite was I was expecting, but I really liked it anyway! The best scene ever was the main cop dude pulling those kids over and pulling a Bad Lieutenant on them!! I was laughing my ass off. I mean, the cops were just so bad! And when I say bad, I mean The Shield Vic Macky bad. But unlike that show I was laughing when they shot people and smoked dope.<br /><br />Felissa Rose...man, oh man. What can you say about that hottie. She was great and put those other actresses to shame. She should work more often!!!!! I also really liked the fight scene outside of the building. That was done really well. Lots of fighting and people getting their heads banged up. FUN! Last, but not least Joe Estevez and William Smith were great as the...well, I wasn't sure what they were, but they seemed to be having fun and throwing out_  _lines._ _I mean, some of it didn't make sense with the rest of the flick, but who cares when you're laughing so hard!_ _All in all the film wasn't the greatest thing since sliced bread, but I wasn't expecting that._ _It was a Troma flick so I_  _It's nice when something surprises you but not totally sucking.<br /><br />Rent it if you want to get stoned on a Friday night and laugh with your buddies._ _Don't rent it if you are an uptight weenie or want a zombie movie with lots of flesh eating.<br /><br />PS Uwe Boil was a nice touch."_ 
 ```
 
-Now we will check how many words are in the dataset:
+现在我们将检查数据集中有多少个单词：
 
 ```
  !find {TRN} -name '*.txt' | xargs cat | wc -w 
 ```
 
 ```
- 17486581 
+ _17486581_ 
 ```
 
 ```
@@ -579,23 +570,23 @@ Now we will check how many words are in the dataset:
 ```
 
 ```
- 5686719 
+ _5686719_ 
 ```
 
-Before we can do anything with text, we have to turn it into a list of tokens. Token is basically like a word. Eventually we will turn them into a list of numbers, but the first step is to turn it into a list of words — this is called “tokenization” in NLP. A good tokenizer will do a good job of recognizing pieces in your sentence. Each separated piece of punctuation will be separated, and each part of multi-part word will be separated as appropriate. Spacy does a lot of NLP stuff, and it has the best tokenizer Jeremy knows. So Fast.ai library is designed to work well with the Spacey tokenizer as with torchtext.
+在我们可以对文本执行任何操作之前，我们必须将其转换为令牌列表。 令牌基本上就像一个单词。 最终我们将它们变成一个数字列表，但第一步是将它变成一个单词列表 - 这在NLP中称为“标记化”。 一个好的标记器可以很好地识别句子中的碎片。 每个分隔的标点符号将被分开，并且多部分单词的每个部分将被适当地分开。 Spacy做了很多NLP的东西，它拥有Jeremy所知道的最好的标记器。 因此，Fast.ai库可以与Spacech tokenizer一起使用，就像使用torchtext一样。
 
-#### Creating a field [ [01:41:01](https://youtu.be/gbceqO8PpBg%3Ft%3D1h41m1s) ]
+#### 创建一个领域[ [01:41:01](https://youtu.be/gbceqO8PpBg?t=1h41m1s) ]
 
-A field is a definition of how to pre-process some text.
+字段是如何预处理某些文本的定义。
 
 ```
- TEXT = data.Field(lower= True , tokenize=spacy_tok) 
+ TEXT = data.Field(lower= **True** , tokenize=spacy_tok) 
 ```
 
-*   `lower=True` — lowercase the text
-*   `tokenize=spacy_tok` — tokenize with `spacy_tok`
+*   `lower=True` - 小写文本
+*   `tokenize=spacy_tok` - 使用`spacy_tok`标记
 
-Now we create the usual Fast.ai model data object:
+现在我们创建通常的Fast.ai模型数据对象：
 
 ```
  bs=64; bptt=70 
@@ -605,50 +596,39 @@ Now we create the usual Fast.ai model data object:
  FILES = dict(train=TRN_PATH, validation=VAL_PATH, test=VAL_PATH)  md = LanguageModelData.from_text_files(PATH, TEXT, **FILES, bs=bs,  bptt=bptt, min_freq=10) 
 ```
 
-*   `PATH` : as per usual where the data is, where to save models, etc
-*   `TEXT` : torchtext's Field definition
-*   `**FILES` : list of all of the files we have: training, validation, and test (to keep things simple, we do not have a separate validation and test set, so both points to validation folder)
-*   `bs` : batch size
-*   `bptt` : Back Prop Through Time. It means how long a sentence we will stick on the GPU at once
-*   `min_freq=10` : In a moment, we are going to be replacing words with integers (a unique index for every word). If there are any words that occur less than 10 times, just call it unknown.
+*   `PATH` ：按照通常的数据，保存模型的位置等
+*   `TEXT` ：torchtext的字段定义
+*   `**FILES` ：我们拥有的所有`**FILES`列表：训练，验证和测试（为了简单起见，我们没有单独的验证和测试集，因此两者都指向验证文件夹）
+*   `bs` ：批量大小
+*   `bptt` ：通过时间回到道具。 这意味着我们将立刻在GPU上坚持多长时间
+*   `min_freq=10` ： `min_freq=10` ，我们将用整数替换单词（每个单词的唯一索引）。 如果有任何单词少于10次，请将其称为未知。
 
-After building our `ModelData` object, it automatically fills the `TEXT` object with a very important attribute: `TEXT.vocab` . This is a _vocabulary_ , which stores which unique words (or _tokens_ ) have been seen in the text, and how each word will be mapped to a unique integer id.
-
-```
- # 'itos': 'int-to-string'  TEXT.vocab.itos[:12] 
-```
+在构建`ModelData`对象之后，它会自动使用一个非常重要的属性`TEXT.vocab`填充`TEXT`对象。 这是一个_词汇表_ ，它存储文本中看到的唯一单词（或_标记_ ），以及每个单词如何映射到唯一的整数id。
 
 ```
- ['<unk>', '<pad>', 'the', ',', '.', 'and', 'a', 'of', 'to', 'is', 'it', 'in'] 
+ _# 'itos': 'int-to-string'_  TEXT.vocab.itos[:12] 
 ```
 
 ```
- # 'stoi': 'string to int'  TEXT.vocab.stoi['the'] 
+ _['<unk>', '<pad>', 'the', ',', '.', 'and', 'a', 'of', 'to', 'is', 'it', 'in']_ 
+```
+
+```
+ _# 'stoi': 'string to int'_  TEXT.vocab.stoi['the'] 
 ```
 
 ```
  _2_ 
 ```
 
-`itos` is sorted by frequency except for the first two special ones. Using `vocab` , torchtext will turn words into integer IDs for us :
+`itos`按频率排序，前两个特殊的除外。 使用`vocab` ，torchtext会将单词转换为整数ID给我们：
 
 ```
  md.trn_ds[0].text[:12] 
 ```
 
 ```
- ['i', 
- 'have', 
- 'always', 
- 'loved', 
- 'this', 
- 'story', 
- '-', 
- 'the', 
- 'hopeful', 
- 'theme', 
- ',', 
- 'the'] 
+ _['i',_  _'have',_  _'always',_  _'loved',_  _'this',_  _'story',_  _'-',_  _'the',_  _'hopeful',_  _'theme',_  _',',_  _'the']_ 
 ```
 
 ```
@@ -656,108 +636,90 @@ After building our `ModelData` object, it automatically fills the `TEXT` object 
 ```
 
 ```
- Variable containing: 
- _12_  _35_  _227_  _480_  _13_  _76_  _17_  _2_ 
- 7319 
- _769_  _3_  _2_ 
- [torch.cuda.LongTensor of size 12x1 (GPU 0)] 
+ _Variable containing:_  _12_  _35_  _227_  _480_  _13_  _76_  _17_  _2_  _7319_  _769_  _3_  _2_  _[torch.cuda.LongTensor of size 12x1 (GPU 0)]_ 
 ```
 
-**Question** : Is it common to do any stemming or lemma-tizing? [ [01:45:47](https://youtu.be/gbceqO8PpBg%3Ft%3D1h45m47s) ] Not really, no. Generally tokenization is what we want. To keep it as general as possible, we want to know what is coming next so whether it is future tense or past tense or plural or singular, we don't really know which things are going to be interesting and which are not, so it seems that it is generally best to leave it alone as much as possible.
+**问题** ：做任何词干或引理调整是否常见？ [ [01:45:47](https://youtu.be/gbceqO8PpBg?t=1h45m47s) ]不是，不。 通常，标记化是我们想要的。 为了保持尽可能通用，我们想知道接下来会发生什么，所以无论是将来时态还是过去时，复数还是单数，我们都不知道哪些东西会有趣，哪些不是，所以它似乎通常最好尽量不让它。
 
-**Question** : When dealing with natural language, isn't context important? Why are we tokenizing and looking at individual word? [ [01:46:38](https://youtu.be/gbceqO8PpBg%3Ft%3D1h46m38s) ] No, we are not looking at individual word — they are still in order. Just because we replaced I with a number 12, they are still in that order. There is a different way of dealing with natural language called “bag of words” and they do throw away the order and context. In the Machine Learning course, we will be learning about working with bag of words representations but my belief is that they are no longer useful or in the verge of becoming no longer useful. We are starting to learn how to use deep learning to use context properly.
+**问题** ：处理自然语言时，上下文不重要吗？ 我们为什么要对单词进行标记和查看？ [ [01:46:38](https://youtu.be/gbceqO8PpBg?t=1h46m38s) ]不，我们不是在看单个词 - 它们仍然是有序的。 仅仅因为我们用12号替换了我，他们仍然按照这个顺序。 处理称为“词袋”的自然语言有一种不同的方式，它们会丢弃秩序和背景。 在机器学习课程中，我们将学习如何使用词语表示，但我相信它们不再有用或者不再有用。 我们开始学习如何使用深度学习来正确使用上下文。
 
-#### Batch size and BPTT [ [01:47:40](https://youtu.be/gbceqO8PpBg%3Ft%3D1h47m40s) ]
+#### 批量大小和BPTT [ [01:47:40](https://youtu.be/gbceqO8PpBg?t=1h47m40s) ]
 
-What happens in a language model is even though we have lots of movie reviews, they all get concatenated together into one big block of text. So we predict the next word in this huge long thing which is all of the IMDB movie reviews concatenated together.
+在语言模型中发生的事情即使我们有很多电影评论，它们都会被连接成一个大块的文本。 因此，我们预测这个巨大的长篇内容中的下一个词是所有IMDB电影评论连接在一起。
 
 ![](../img/1_O-Kq1qtgZmrShbKhaN3fTg.png)
 
-*   We split up the concatenated reviews into batches. In this case, we will split it to 64 sections
-*   We then move each section underneath the previous one, and transpose it.
-*   We end up with a matrix which is 1 million by 64\.
-*   We then grab a little chunk at time and those chunk lengths are **approximately** equal to BPTT. Here, we grab a little 70 long section and that is the first thing we chuck into our GPU (ie the batch).
+*   我们将连锁评论分成几批。 在这种情况下，我们将其拆分为64个部分
+*   然后，我们将每个部分移动到前一部分之下，然后转置它。
+*   我们最终得到一个100万乘64的矩阵。
+*   然后我们抓住一小块时间，那些块长度**大约**等于BPTT。 在这里，我们抓住了一个70长的部分，这是我们第一次看到我们的GPU（即批处理）。
 
 ```
  next(iter(md.trn_dl)) 
 ```
 
 ```
- (Variable containing: 
- 12 567 3 ... 2118 4 2399 
-  _35 7 33_  ... 6 148 55 
- 227 103 533 ... 4892 31 10 
- ... ⋱ ... 
- 19 8879 33 ... 41 24 733 
- 552 8250 57 ... 219 57 1777 
- 5 19 2 ... 3099 8 48 
- [torch.cuda.LongTensor of size 75x64 (GPU 0)], Variable containing: 
- **_35_**  **_7_**  **_33_** 
- ⋮ 
- _22_ 
- 3885 
- 21587 
- [torch.cuda.LongTensor of size 4800 (GPU 0)]) 
+ _(Variable containing:_  _12 567 3 ... 2118 4 2399_  **_35 7 33_** _ ... 6 148 55_  _227 103 533 ... 4892 31 10_  _... ⋱ ..._  _19 8879 33 ... 41 24 733_  _552 8250 57 ... 219 57 1777_  _5 19 2 ... 3099 8 48_  _[torch.cuda.LongTensor of size 75x64 (GPU 0)], Variable containing:_  **_35_**  **_7_**  **_33_**  _⋮_  _22_  _3885_  _21587_  _[torch.cuda.LongTensor of size 4800 (GPU 0)])_ 
 ```
 
-*   We grab our first training batch by wrapping data loader with `iter` then calling `next` .
-*   We got back a 75 by 64 tensor (approximately 70 rows but not exactly)
-*   A neat trick torchtext does is to randomly change the `bptt` number every time so each epoch it is getting slightly different bits of text — similar to shuffling images in computer vision. We cannot randomly shuffle the words because they need to be in the right order, so instead, we randomly move their breakpoints a little bit.
-*   The target value is also 75 by 64 but for minor technical reasons it is flattened out into a single vector.
+*   我们通过使用`iter`包装数据加载器然后调用`next`获取我们的第一个训练批。
+*   我们得到了一个75乘64张（约70行但不完全）
+*   一个巧妙的技巧torchtext做的是每次随机改变`bptt`数，所以每个时代它的文本略有不同 - 类似于计算机视觉中的洗牌图像。 我们不能随意改变这些词，因为它们需要按正确的顺序排列，所以我们会随机移动它们的断点。
+*   目标值也是75乘64但由于技术上的原因，它被展平为单个矢量。
 
-**Question** : Why not split by a sentence? [ [01:53:40](https://youtu.be/gbceqO8PpBg%3Ft%3D1h53m40s) ] Not really. Remember, we are using columns. So each of our column is of length about 1 million, so although it is true that those columns are not always exactly finishing on a full stop, they are so darn long we do not care. Each column contains multiple sentences.
+**问题** ：为什么不用句子分开？ [ [01:53:40](https://youtu.be/gbceqO8PpBg?t=1h53m40s) ]不是真的 请记住，我们正在使用列。 因此，我们每个专栏的长度都在100万左右，所以尽管这些专栏并不总是完全停止完成，但我们并不关心它们。 每列包含多个句子。
 
-Pertaining to this question, Jeremy found what is in this language model matrix a little mind-bending for quite a while, so do not worry if it takes a while and you have to ask a thousands questions.
+关于这个问题，Jeremy在这个语言模型矩阵中发现了一段时间有点令人费解的东西，所以不要担心，如果需要一段时间，你必须问几千个问题。
 
-#### Create a model [ [01:55:46](https://youtu.be/gbceqO8PpBg%3Ft%3D1h55m46s) ]
+#### 创建模型[ [01:55:46](https://youtu.be/gbceqO8PpBg?t=1h55m46s) ]
 
-Now that we have a model data object that can fee d us batches, we can create a model. First, we are going to create an embedding matrix.
+现在我们有了一个模型数据对象可以为我们批量生产，我们可以创建一个模型。 首先，我们将创建一个嵌入矩阵。
 
-Here are the: # batches; # unique tokens in the vocab; length of the dataset; # of words
+这是：＃批次; #vocab中的唯一标记; 数据集的长度; 单词数量
 
 ```
  len(md.trn_dl), md.nt, len(md.trn_ds), len(md.trn_ds[0].text) 
 ```
 
 ```
- (4602, 34945, 1, 20621966) 
+ _(4602, 34945, 1, 20621966)_ 
 ```
 
-This is our embedding matrix looks like:
+这是我们的嵌入矩阵看起来像：
 
 ![](../img/1_6EHxqeSYMioiLEQ5ufrf_g.png)
 
-*   It is a high cardinality categorical variable and furthermore, it is the only variable — this is typical in NLP
-*   The embedding size is 200 which is much bigger than our previous embedding vectors. Not surprising because a word has a lot more nuance to it than the concept of Sunday. **Generally, an embedding size for a word will be somewhere between 50 and 600.**
+*   它是一个高基数的分类变量，而且，它是唯一的变量 - 这在NLP中是典型的
+*   嵌入大小为200，比我们以前的嵌入向量大得多。 这并不奇怪，因为一个词比星期日的概念有更多的细微差别。 **通常，单词的嵌入大小将介于50和600之间。**
 
 ```
- em_sz = 200 # size of each embedding vector  nh = 500 # number of hidden activations per layer  nl = 3 # number of layers 
+ em_sz = 200 _# size of each embedding vector_  nh = 500 _# number of hidden activations per layer_  nl = 3 _# number of layers_ 
 ```
 
-Researchers have found that large amounts of _momentum_ (which we'll learn about later) don't work well with these kinds of _RNN_ models, so we create a version of the _Adam_ optimizer with less momentum than its default of `0.9` . Any time you are doing NLP, you should probably include this line:
+研究人员发现，大量的_动量_ （我们将在后面了解）对这些类型的_RNN_模型不能很好地工作，因此我们创建了一个版本的_Adam_优化器，其动量小于其默认值`0.9` 。 每次你做NLP时，你应该包括这一行：
 
 ```
  opt_fn = partial(optim.Adam, betas=(0.7, 0.99)) 
 ```
 
-Fast.ai uses a variant of the state of the art [AWD LSTM Language Model](https://arxiv.org/abs/1708.02182) developed by Stephen Merity. A key feature of this model is that it provides excellent regularization through [Dropout](https://en.wikipedia.org/wiki/Convolutional_neural_network) . There is no simple way known (yet!) to find the best values of the dropout parameters below — you just have to experiment…
+Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https://arxiv.org/abs/1708.02182)的变体。 该模型的一个关键特性是它通过[Dropout](https://en.wikipedia.org/wiki/Convolutional_neural_network#Dropout)提供出色的正则化。 没有简单的方法（但是！）找到下面的辍学参数的最佳值 - 你只需要试验......
 
-However, the other parameters ( `alpha` , `beta` , and `clip` ) shouldn't generally need tuning.
+但是，其他参数（ `alpha` ， `beta`和`clip` ）通常不需要调整。
 
 ```
  learner = md.get_model(opt_fn, em_sz, nh, nl, dropouti=0.05,  dropout=0.05, wdrop=0.1, dropoute=0.02,  dropouth=0.05)  learner.reg_fn = partial(seq2seq_reg, alpha=2, beta=1)  learner.clip=0.3 
 ```
 
-*   In the last lecture, we will learn what the architecture is and what all these dropouts are. For now, just know it is the same as per usual, if you try to build an NLP model and you are under-fitting, then decrease all these dropouts, if overfitting, then increase all these dropouts in roughly this ratio. Since this is such a recent paper so there is not a lot of guidance but these ratios worked well — it is what Stephen has been using as well.
-*   There is another kind of way we can avoid overfitting that we will talk about in the last class. For now, `learner.reg_fn = partial(seq2seq_reg, alpha=2, beta=1)` works reliably so all of your NLP models probably want this particular line.
-*   `learner.clip=0.3` : when you look at your gradients and you multiply them by the learning rate to decide how much to update your weights by, this will not allow them be more than 0.3\. This is a cool little trick to prevent us from taking too big of a step.
-*   Details do not matter too much right now, so you can use them as they are.
+*   在上一讲中，我们将了解架构是什么以及所有这些辍学者是什么。 现在，只要知道它与平常一样，如果你试图建立一个NLP模型并且你不合适，那么减少所有这些辍学，如果过度拟合，然后以大致这个比率增加所有这些辍学。 由于这是最近的一篇论文，所以没有很多指导，但这些比率运作良好 - 这也是斯蒂芬一直在使用的。
+*   还有另一种我们可以避免过度拟合的方法，我们将在最后一堂课中讨论。 目前， `learner.reg_fn = partial(seq2seq_reg, alpha=2, beta=1)`可靠地运行，因此你的所有NLP模型可能都需要此特定行。
+*   `learner.clip=0.3` ：当你查看你的渐变并将它们乘以学习率来决定更新你的权重多少时，这将不允许它们超过0.3。 这是一个很酷的小技巧，可以防止我们采取太大的措施。
+*   现在细节并不重要，所以你可以按原样使用它们。
 
-**Question** : There are word embedding out there such as Word2vec or GloVe. How are they different from this? And why not initialize the weights with those initially? [ [02:02:29](https://youtu.be/gbceqO8PpBg%3Ft%3D2h2m29s) ] People have pre-trained these embedding matrices before to do various other tasks. They are not called pre-trained models; they are just a pre-trained embedding matrix and you can download them. There is no reason we could not download them. I found that building a whole pre-trained model in this way did not seem to benefit much if at all from using pre-trained word vectors; where else using a whole pre-trained language model made a much bigger difference. Maybe we can combine both to make them a little better still.
+**问题** ：Word2vec或GloVe中存在单词嵌入。 它们与此有何不同？ 为什么不用那些初始化权重？ [ [02:02:29](https://youtu.be/gbceqO8PpBg?t=2h2m29s) ]人们在进行各种其他任务之前已经预先训练了这些嵌入矩阵。 它们不称为预训练模型; 它们只是一个预先训练好的嵌入矩阵，你可以下载它们。 没有理由我们无法下载它们。 我发现以这种方式构建一个完整的预训练模型似乎并没有从使用预训练的单词向量中获益多少; 使用整个预训练语言模型的其他地方产生了更大的差异。 也许我们可以将两者结合起来，使它们更好一些。
 
-**Question:** What is the architecture of the model? [ [02:03:55](https://youtu.be/gbceqO8PpBg%3Ft%3D2h3m55s) ] We will be learning about the model architecture in the last lesson but for now, it is a recurrent neural network using something called LSTM (Long Short Term Memory).
+**问题：**模型的架构是什么？ [ [02:03:55](https://youtu.be/gbceqO8PpBg?t=2h3m55s) ]我们将在[上一课](https://youtu.be/gbceqO8PpBg?t=2h3m55s)中学习模型架构，但目前，它是一个使用LSTM（长期短期记忆）的反复神经网络。
 
-#### Fitting [ [02:04:24](https://youtu.be/gbceqO8PpBg%3Ft%3D2h4m24s) ]
+#### 适合[ [02:04:24](https://youtu.be/gbceqO8PpBg?t=2h4m24s) ]
 
 ```
  learner.fit(3e-3, 4, wds=1e-6, cycle_len=1, cycle_mult=2) 
@@ -783,7 +745,7 @@ However, the other parameters ( `alpha` , `beta` , and `clip` ) shouldn't genera
  learner.load_cycle('adam3_20',0) 
 ```
 
-In the sentiment analysis section, we'll just need half of the language model - the _encoder_ , so we save that part.
+在情绪分析部分，我们只需要一半的语言模型 - _编码器_ ，所以我们保存那部分。
 
 ```
  learner.save_encoder('adam3_20_enc') 
@@ -793,23 +755,23 @@ In the sentiment analysis section, we'll just need half of the language model - 
  learner.load_encoder('adam3_20_enc') 
 ```
 
-Language modeling accuracy is generally measured using the metric _perplexity_ , which is simply `exp()` of the loss function we used.
+语言建模的准确性通常使用度量_复杂_度来度量，这只是我们使用的损失函数的`exp()` 。
 
 ```
  math.exp(4.165) 
 ```
 
 ```
- 64.3926824434624 
+ _64.3926824434624_ 
 ```
 
 ```
- pickle.dump(TEXT, open(f' {PATH} models/TEXT.pkl','wb')) 
+ pickle.dump(TEXT, open(f' **{PATH}** models/TEXT.pkl','wb')) 
 ```
 
-#### Testing [ [02:04:53](https://youtu.be/gbceqO8PpBg%3Ft%3D2h4m53s) ]
+#### 测试[ [02:04:53](https://youtu.be/gbceqO8PpBg?t=2h4m53s) ]
 
-We can play around with our language model a bit to check it seems to be working OK. First, let's create a short bit of text to 'prime' a set of predictions. We'll use our torchtext field to numericalize it so we can feed it to our language model.
+我们可以使用我们的语言模型来检查它似乎工作正常。 首先，让我们创建一小段文本来“填充”一组预测。 我们将使用我们的torchtext字段对其进行数值化，以便我们可以将其提供给我们的语言模型。
 
 ```
  m=learner.model  ss=""". So, it wasn't quite was I was expecting, but I really liked it anyway! The best""" 
@@ -820,70 +782,61 @@ We can play around with our language model a bit to check it seems to be working
 ```
 
 ```
- ". So , it was n't quite was I was expecting , but I really liked it anyway ! The best" 
+ _". So , it was n't quite was I was expecting , but I really liked it anyway ! The best"_ 
 ```
 
-We haven't yet added methods to make it easy to test a language model, so we'll need to manually go through the steps.
+我们还没有添加方法来简化测试语言模型，因此我们需要手动完成这些步骤。
 
 ```
- # Set batch size to 1  m[0].bs=1  # Turn off dropout  m.eval()  # Reset hidden state  m.reset()  # Get predictions from model  res,*_ = m(t)  # Put the batch size back to what it was  m[0].bs=bs 
+ _# Set batch size to 1_  m[0].bs=1  _# Turn off dropout_  m.eval()  _# Reset hidden state_  m.reset()  _# Get predictions from model_  res,*_ = m(t)  _# Put the batch size back to what it was_  m[0].bs=bs 
 ```
 
-Let's see what the top 10 predictions were for the next word after our short text:
+让我们看看在我们的简短文本之后的下一个单词的前10个预测：
 
 ```
- nexts = torch.topk(res[-1], 10)[1]  [TEXT.vocab.itos[o] for o in to_np(nexts)] 
-```
-
-```
- ['film', 
- 'movie', 
- 'of', 
- 'thing', 
- 'part', 
- '<unk>', 
- 'performance', 
- 'scene', 
- ',', 
- 'actor'] 
-```
-
-…and let's see if our model can generate a bit more text all by itself!
-
-```
- print(ss," \n ")  for i in range(50):  n=res[-1].topk(2)[1]  n = n[1] if n.data[0]==0 else n[0]  print(TEXT.vocab.itos[n.data[0]], end=' ')  res,*_ = m(n[0].unsqueeze(0))  print('...') 
+ nexts = torch.topk(res[-1], 10)[1]  [TEXT.vocab.itos[o] **for** o **in** to_np(nexts)] 
 ```
 
 ```
- _._ So, it wasn't quite was I was expecting, but I really liked it anyway! The best 
+ _['film',_  _'movie',_  _'of',_  _'thing',_  _'part',_  _'<unk>',_  _'performance',_  _'scene',_  _',',_  _'actor']_ 
+```
+
+...让我们看看我们的模型是否可以自己生成更多的文本！
+
+```
+ print(ss," **\n** ")  **for** i **in** range(50):  n=res[-1].topk(2)[1]  n = n[1] **if** n.data[0]==0 **else** n[0]  print(TEXT.vocab.itos[n.data[0]], end=' ')  res,*_ = m(n[0].unsqueeze(0))  print('...') 
 ```
 
 ```
- film ever ! <eos> i saw this movie at the toronto international film festival . i was very impressed . i was very impressed with the acting . i was very impressed with the acting . i was surprised to see that the actors were not in the movie . _..._ 
+ _._ _So, it wasn't quite was I was expecting, but I really liked it anyway!_ _The best_ 
 ```
 
-#### Sentiment [ [02:05:09](https://youtu.be/gbceqO8PpBg%3Ft%3D2h5m9s) ]
-
-So we had pre-trained a language model and now we want to fine-tune it to do sentiment classification.
-
-To use a pre-trained model, we will need to the saved vocab from the language model, since we need to ensure the same words map to the same IDs.
-
 ```
- TEXT = pickle.load(open(f' {PATH} models/TEXT.pkl','rb')) 
+ _film ever !_ _<eos> i saw this movie at the toronto international film festival ._ _i was very impressed ._ _i was very impressed with the acting ._ _i was very impressed with the acting ._ _i was surprised to see that the actors were not in the movie ._ _..._ 
 ```
 
-`sequential=False` tells torchtext that a text field should be tokenized (in this case, we just want to store the 'positive' or 'negative' single label).
+#### 情绪[ [02:05:09](https://youtu.be/gbceqO8PpBg?t=2h5m9s) ]
+
+所以我们预先训练了一种语言模型，现在我们想对其进行微调以进行情感分类。
+
+要使用预先训练的模型，我们需要从语言模型中保存的词汇，因为我们需要确保相同的单词映射到相同的ID。
 
 ```
- IMDB_LABEL = data.Field(sequential= False ) 
+ TEXT = pickle.load(open(f' **{PATH}** models/TEXT.pkl','rb')) 
 ```
 
-This time, we need to not treat the whole thing as one big piece of text but every review is separate because each one has a different sentiment attached to it.
-
-`splits` is a torchtext method that creates train, test, and validation sets. The IMDB dataset is built into torchtext, so we can take advantage of that. Take a look at `lang_model-arxiv.ipynb` to see how to define your own fastai/torchtext datasets.
+`sequential=False`告诉torchtext文本字段应该被标记化（在这种情况下，我们只想存储'正'或'负'单个标签）。
 
 ```
- splits = torchtext.datasets.IMDB.splits(TEXT, IMDB_LABEL, 'data/') 
+ IMDB_LABEL = data.Field(sequential= **False** ) 
+```
+
+这一次，我们不需要将整个事物视为一大块文本，但每个评论都是分开的，因为每个评论都有不同的情感。
+
+`splits`是一种创建训练集，测试集和验证集的torchtext方法。 IMDB数据集内置于torchtext中，因此我们可以利用它。 看看`lang_model-arxiv.ipynb` ，看看如何定义自己的fastai / torchtext数据集。
+
+```
+ **splits** = torchtext.datasets.IMDB.splits(TEXT, IMDB_LABEL, 'data/') 
 ```
 
 ```
@@ -895,16 +848,16 @@ This time, we need to not treat the whole thing as one big piece of text but eve
 ```
 
 ```
- ('pos', 'ashanti is a very 70s sort of film ( 1979 , to be precise ) .') 
+ _('pos', 'ashanti is a very 70s sort of film ( 1979 , to be precise ) .')_ 
 ```
 
-fastai can create a `ModelData` object directly from torchtext `splits` .
+fastai可以直接从torchtext `splits`创建`ModelData`对象。
 
 ```
  md2 = TextData.from_splits(PATH, splits, bs) 
 ```
 
-Now you can go ahead and call `get_model` that gets us our learner. Then we can load into it the pre-trained language model ( `load_encoder` ).
+现在你可以继续调用`get_model`来获取我们的学习者。 然后我们可以加载预训练的语言模型（ `load_encoder` ）。
 
 ```
  m3 = md2.get_model(opt_fn, 1500, bptt, emb_sz=em_sz, n_hid=nh,  n_layers=nl, dropout=0.1, dropouti=0.4,  wdrop=0.5, dropoute=0.05, dropouth=0.3) 
@@ -915,13 +868,13 @@ Now you can go ahead and call `get_model` that gets us our learner. Then we can 
 ```
 
 ```
- m3\. load_encoder (f'adam3_20_enc') 
+ m3. **load_encoder** (f'adam3_20_enc') 
 ```
 
-Because we're fine-tuning a pretrained model, we'll use differential learning rates, and also increase the max gradient for clipping, to allow the SGDR to work better.
+因为我们正在对预训练模型进行微调，所以我们将使用差分学习速率，并且还增加剪裁的最大梯度，以使SGDR更好地工作。
 
 ```
- m3.clip=25\.  lrs=np.array([1e-4,1e-3,1e-2]) 
+ m3.clip=25.  lrs=np.array([1e-4,1e-3,1e-2]) 
 ```
 
 ```
@@ -929,14 +882,14 @@ Because we're fine-tuning a pretrained model, we'll use differential learning ra
 ```
 
 ```
- [ 0\. 0.45074 0.28424 0.88458] 
+ _[ 0\. 0.45074 0.28424 0.88458]_ 
 ```
 
 ```
- [ 0\. 0.29202 0.19023 0.92768] 
+ _[ 0\. 0.29202 0.19023 0.92768]_ 
 ```
 
-We make sure all except the last layer is frozen. Then we train a bit, unfreeze it, train it a bit. The nice thing is once you have got a pre-trained language model, it actually trains really fast.
+我们确保冻结最后一层以外的所有图层。 然后我们训练一下，解冻它，训练一下。 好的一点是，一旦你有一个预先训练好的语言模型，它实际上训练得非常快。
 
 ```
  m3.fit(lrs, 7, metrics=[accuracy], cycle_len=2,  cycle_save_name='imdb2') 
@@ -955,28 +908,28 @@ We make sure all except the last layer is frozen. Then we train a bit, unfreeze 
 ```
 
 ```
- 0.94310897435897434 
+ _0.94310897435897434_ 
 ```
 
-A recent paper from Bradbury et al, [Learned in translation: contextualized word vectors](https://einstein.ai/research/learned-in-translation-contextualized-word-vectors) , has a handy summary of the latest academic research in solving this IMDB sentiment analysis problem. Many of the latest algorithms shown are tuned for this specific problem.
+Bradbury等人最近的一篇论文， [学习翻译：语境化词汇向量](https://einstein.ai/research/learned-in-translation-contextualized-word-vectors) ，有一个方便的总结，解决了这个IMDB情绪分析问题的最新学术研究。 显示的许多最新算法都针对此特定问题进行了调整。
 
 ![](../img/1_PotEPJjvS-R4C5OCMbw7Vw.png)
 
-As you see, we just got a new state of the art result in sentiment analysis, decreasing the error from 5.9% to 5.5%! You should be able to get similarly world-class results on other NLP classification problems using the same basic steps.
+如你所见，我们在情绪分析中获得了新的最新结果，将误差从5.9％降低到5.5％！ 你应该能够使用相同的基本步骤获得类似的其他NLP分类问题的世界级结果。
 
-There are many opportunities to further improve this, although we won't be able to get to them until part 2 of this course.
+有很多机会可以进一步改善这一点，尽管我们无法在本课程的第2部分之前找到它们。
 
-*   For example we could start training language models that look at lots of medical journals and then we could make a downloadable medical language model that then anybody could use to fine-tune on a prostate cancer subset of medical literature.
-*   We could also combine this with pre-trained word vectors
-*   We could have pre-trained a Wikipedia corpus language model and then fine-tuned it into an IMDB language model, and then fine-tune that into an IMDB sentiment analysis model and we would have gotten something better than this.
+*   例如，我们可以开始训练查看大量医学期刊的语言模型，然后我们可以制作一个可下载的医学语言模型，然后任何人都可以使用它来微调医学文献的前列腺癌子集。
+*   我们还可以将它与预先训练的单词向量相结合
+*   我们可以预先训练一个维基百科语料库语言模型，然后将其微调成IMDB语言模型，然后将其微调成IMDB情绪分析模型，我们会得到比这更好的东西。
 
-There is a really fantastic researcher called Sebastian Ruder who is the only NLP researcher who has been really writing a lot about pre-training, fine-tuning, and transfer learning in NLP. Jeremy was asking him why this is not happening more, and his view was it is because there is not a software to make it easy. Hopefully Fast.ai will change that.
+有一位名叫塞巴斯蒂安·鲁德（Sebastian Ruder）的非常出色的研究员，他是唯一一位真正在NLP中进行预训练，微调和转学习的NLP研究员。 Jeremy问他为什么这不会发生更多，他的观点是因为没有软件可以让它变得简单。 希望Fast.ai会改变这一点。
 
-#### Collaborative Filtering Introduction [ [02:11:38](https://youtu.be/gbceqO8PpBg%3Ft%3D2h11m38s) ]
+#### 协同过滤介绍[ [02:11:38](https://youtu.be/gbceqO8PpBg?t=2h11m38s) ]
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb)
 
-Data available from [http://files.grouplens.org/datasets/movielens/ml-latest-small.zip](http://files.grouplens.org/datasets/movielens/ml-latest-small.zip)
+数据来自[http://files.grouplens.org/datasets/movielens/ml-latest-small.zip](http://files.grouplens.org/datasets/movielens/ml-latest-small.zip)
 
 ```
  path='data/ml-latest-small/' 
@@ -986,11 +939,11 @@ Data available from [http://files.grouplens.org/datasets/movielens/ml-latest-sma
  ratings = pd.read_csv(path+'ratings.csv')  ratings.head() 
 ```
 
-The dataset looks like this:
+数据集如下所示：
 
 ![](../img/1_Ev47i52AF-qIRHtYTOYm2Q.png)
 
-It contains ratings by users. Our goal will be for some user-movie combination we have not seen before, we have to predict a rating.
+它包含用户的评级。 我们的目标将是一些我们以前从未见过的用户 - 电影组合，我们必须预测评级。
 
 ```
  movies = pd.read_csv(path+'movies.csv')  movies.head() 
@@ -998,7 +951,7 @@ It contains ratings by users. Our goal will be for some user-movie combination w
 
 ![](../img/1_cl9JWMSKPsrYf4hHsxNq-Q.png)
 
-To make it more interesting, we will also actually download a list of movies so that we can interpret what is actually in these embedding matrices.
+为了使它更有趣，我们还将实际下载电影列表，以便我们可以解释这些嵌入矩阵中的实际内容。
 
 ```
  g=ratings.groupby('userId')['rating'].count()  topUsers=g.sort_values(ascending=False)[:15] 
@@ -1018,6 +971,6 @@ To make it more interesting, we will also actually download a list of movies so 
 
 ![](../img/1_f50pUlwGbsu85fVI-n9-MA.png)
 
-This is what we are creating — this kind of cross tab of users by movies.
+这就是我们正在创造的 - 电影用户的这种交叉标签。
 
-Feel free to look ahead and you will find that most of the steps are familiar to you already.
+你可以随意向前看，你会发现大多数步骤已经为你所熟悉。
