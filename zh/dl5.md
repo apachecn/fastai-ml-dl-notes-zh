@@ -157,7 +157,7 @@
  class DotProduct (nn.Module):  def forward(self, u, m): return (u*m).sum(1) 
 ```
 
-现在我们可以调用它并得到预期的结果（注意我们不需要说`model.forward(a, b)`来调用`forward`函数 - 它是PyTorch魔法。）[ [40:14](https://youtu.be/J99NV9Cr75I%3Ft%3D40m14s) ]：
+现在我们可以调用它并得到预期的结果（注意我们不需要说`model.forward(a, b)`来调用`forward`函数 - 它是PyTorch魔法。） [[40:14](https://youtu.be/J99NV9Cr75I%3Ft%3D40m14s)] ：
 
 ```
  model = DotProduct()  **model(a,b)** 
@@ -194,7 +194,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
  class EmbeddingDot(nn.Module):  def __init__(self, n_users, n_movies):  super().__init__()  self.u = nn.Embedding(n_users, n_factors)  self.m = nn.Embedding(n_movies, n_factors)  self.u.weight.data.uniform_(0,0.05)  self.m.weight.data.uniform_(0,0.05)  def forward(self, cats, conts):  users,movies = cats[:,0],cats[:,1]  u,m = self.u(users),self.m(movies)  return (u*m).sum(1) 
 ```
 
-请注意， `__init__`是一个现在需要的构造函数，因为我们的类需要跟踪“状态”（多少部电影，多少用户，多少因素等）。 我们将权重初始化为0到0.05之间的随机数，你可以在这里找到关于权重初始化的标准算法的更多信息，“Kaiming Initialization”（PyTorch有He初始化实用函数，但是我们试图从头开始做事）[ [46 ：58](https://youtu.be/J99NV9Cr75I%3Ft%3D46m58s) ]。
+请注意， `__init__`是一个现在需要的构造函数，因为我们的类需要跟踪“状态”（多少部电影，多少用户，多少因素等）。 我们将权重初始化为0到0.05之间的随机数，你可以在这里找到关于权重初始化的标准算法的更多信息，“Kaiming Initialization”（PyTorch有He初始化实用函数，但是我们试图从头开始做事） [[46 ：58](https://youtu.be/J99NV9Cr75I%3Ft%3D46m58s)] 。
 
 `Embedding`不是张量而是**变量** 。 变量执行与张量完全相同的操作，但它也可以自动区分。 要从变量中拉出张量，请调用`data`属性。 所有张量函数都有一个变量，尾随下划线（例如`uniform_` ）将就地执行。
 
@@ -202,7 +202,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
  x = ratings.drop(['rating', 'timestamp'],axis=1)  y = ratings['rating'].astype(np.float32)  data = ColumnarModelData.from_data_frame(path, val_idxs, x, y, ['userId', 'movieId'], 64) 
 ```
 
-我们正在重用Rossmann笔记本中的ColumnarModelData（来自fast.ai库），这也是为什么在`EmbeddingDot`类[ [50:20](https://youtu.be/J99NV9Cr75I%3Ft%3D50m20s) ]中为`def forward(self, cats, conts)`函数存在分类和连续变量的原因。 由于在这种情况下我们没有连续变量，我们将忽略`conts`并使用`cats`的第一和第二列作为`users`和`movies` 。 请注意，它们是小批量的用户和电影。 重要的是不要手动循环小批量，因为你不会获得GPU加速，而是一次处理整个小批量，正如你在上面的`forward`功能的第3和第4行看到的那样[ [51](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ： [00-52](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ：05 ]。
+我们正在重用Rossmann笔记本中的ColumnarModelData（来自fast.ai库），这也是为什么在`EmbeddingDot`类 [[50:20](https://youtu.be/J99NV9Cr75I%3Ft%3D50m20s)] 中为`def forward(self, cats, conts)`函数存在分类和连续变量的原因。 由于在这种情况下我们没有连续变量，我们将忽略`conts`并使用`cats`的第一和第二列作为`users`和`movies` 。 请注意，它们是小批量的用户和电影。 重要的是不要手动循环小批量，因为你不会获得GPU加速，而是一次处理整个小批量，正如你在上面的`forward`功能的第3和第4行看到的那样 [[51](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ： [00-52](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ：05 ]。
 
 ```
  wd=1e-5  model = EmbeddingDot(n_users, n_movies).cuda()  opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9) 
@@ -214,7 +214,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
  fit(model, data, 3, opt, F.mse_loss) 
 ```
 
-这个函数来自fast.ai库[ [54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s) ]并且比我们一直在使用的`learner.fit()`更接近常规的PyTorch方法。 它不会为你提供诸如“重启的随机梯度下降”或开箱即用的“差分学习率”等功能。
+这个函数来自fast.ai库 [[54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s)] 并且比我们一直在使用的`learner.fit()`更接近常规的PyTorch方法。 它不会为你提供诸如“重启的随机梯度下降”或开箱即用的“差分学习率”等功能。
 
 #### **让我们改进我们的模型**
 
@@ -232,7 +232,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
  class EmbeddingDotBias(nn.Module):  def __init__(self, n_users, n_movies):  super().__init__()  (self.u, self.m, **self.ub** , **self.mb** ) = [get_emb(*o) for o in [  (n_users, n_factors), (n_movies, n_factors), (n_users,1), (n_movies,1)  ]]  def forward(self, cats, conts):  users,movies = cats[:,0],cats[:,1]  um = (self.u(users)* self.m(movies)).sum(1)  res = um + ** self.ub(users)** .squeeze() + **self.mb(movies)** .squeeze()  res = F.sigmoid(res) * (max_rating-min_rating) + min_rating  return res 
 ```
 
-`squeeze`是PyTorch版本的_广播_ [ [1:04:11](https://youtu.be/J99NV9Cr75I%3Ft%3D1h4m11s) ]以获取更多信息，请参阅机器学习课程或[numpy文档](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html) 。
+`squeeze`是PyTorch版本的_广播_  [[1:04:11](https://youtu.be/J99NV9Cr75I%3Ft%3D1h4m11s)] 以获取更多信息，请参阅机器学习课程或[numpy文档](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html) 。
 
 我们可以压缩评级，使其在1到5之间吗？ 是! 通过sigmoid函数进行预测将导致数字介于1和0之间。因此，在我们的情况下，我们可以将其乘以4并加1 - 这将导致1到5之间的数字。
 
@@ -248,9 +248,9 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
  fit(model, data, 3, opt, F.mse_loss)  [ 0\. 0.85056 0.83742]  [ 1\. 0.79628 0.81775]  [ 2\. 0.8012 0.80994] 
 ```
 
-让我们来看看我们在**Simple Python版本中**使用的fast.ai代码[ [1:13:44](https://youtu.be/J99NV9Cr75I%3Ft%3D1h13m44s) ] **。** 在`column_data.py`文件中， `CollabFilterDataSet.get_leaner`调用`get_model`函数，该函数创建与我们创建的相同的`EmbeddingDotBias`类。
+让我们来看看我们在**Simple Python版本中**使用的fast.ai代码 [[1:13:44](https://youtu.be/J99NV9Cr75I%3Ft%3D1h13m44s)]  **。** 在`column_data.py`文件中， `CollabFilterDataSet.get_leaner`调用`get_model`函数，该函数创建与我们创建的相同的`EmbeddingDotBias`类。
 
-#### 神经网络版[ [1:17:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h17m21s) ]
+#### 神经网络版 [[1:17:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h17m21s)] 
 
 我们回到excel表来理解直觉。 请注意，我们创建user_idx以查找嵌入，就像我们之前在python代码中所做的那样。 如果我们对user_idx进行单热编码并将其乘以用户嵌入，我们将为用户获取适用的行。 如果它只是矩阵乘法，为什么我们需要嵌入？ 它用于计算性能优化目的。
 
@@ -290,7 +290,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 *   增加/减少隐藏层数和激活次数
 *   增加/减少正规化
 
-#### **训练循环中发生了什么？** [ [1:33:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h33m21s) ]
+#### **训练循环中发生了什么？**  [[1:33:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h33m21s)] 
 
 目前，我们正在将权重更新传递给PyTorch的优化器。 优化器有什么作用？ 什么是`momentum` ？
 
@@ -312,11 +312,11 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 ![](../img/1_Z2NHeXo8RFIOwhCyuQb7oQ.jpeg)
 
-有限差分在高维空间中变得复杂[ [1:41:46](https://youtu.be/J99NV9Cr75I%3Ft%3D1h41m46s) ]，并且它变得非常耗费内存并且需要很长时间。 所以我们想找到一些方法来更快地完成这项工作。 查找Jacobian和Hessian之类的东西是值得的（深度学习书： [第84页第4.3.1节](http://www.deeplearningbook.org/contents/numerical.html) ）。
+有限差分在高维空间中变得复杂 [[1:41:46](https://youtu.be/J99NV9Cr75I%3Ft%3D1h41m46s)] ，并且它变得非常耗费内存并且需要很长时间。 所以我们想找到一些方法来更快地完成这项工作。 查找Jacobian和Hessian之类的东西是值得的（深度学习书： [第84页第4.3.1节](http://www.deeplearningbook.org/contents/numerical.html) ）。
 
 #### 链规则和反向传播
 
-更快的方法是分析地做到这一点[ [1:45:27](https://youtu.be/J99NV9Cr75I%3Ft%3D1h45m27s) ]。 为此，我们需要一个链规则：
+更快的方法是分析地做到这一点 [[1:45:27](https://youtu.be/J99NV9Cr75I%3Ft%3D1h45m27s)] 。 为此，我们需要一个链规则：
 
 ![](../img/1_DS4ZfpUfsseOBayQMqS4Yw.png)
 
@@ -334,7 +334,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 这就是你如何使用excel表格进行SGD。 如果你要使用CNN电子表格的输出更改预测值，我们可以使用SGD训练CNN。
 
-#### 动量[ [1:53:47](https://youtu.be/J99NV9Cr75I%3Ft%3D1h53m47s) ]
+#### 动量 [[1:53:47](https://youtu.be/J99NV9Cr75I%3Ft%3D1h53m47s)] 
 
 > 来吧，采取一些暗示 - 这是一个很好的方向。 请继续这样做，但更多。
 
@@ -344,7 +344,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 与其符号（+/-）是随机的_de_ / _db_相比，具有动量的那个将继续向同一方向移动一点点直到某一点。 这将减少训练所需的一些时期。
 
-####  Adam [ [1:59:04](https://youtu.be/J99NV9Cr75I%3Ft%3D1h59m4s) ]
+####  Adam  [[1:59:04](https://youtu.be/J99NV9Cr75I%3Ft%3D1h59m4s)] 
 
  Adam 的速度要快得多，但问题在于最终的预测并不像SGD那样有动力。 似乎这是由于 Adam 和体重衰减的联合使用。 解决此问题的新版本称为**AdamW** 。
 
@@ -375,7 +375,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 *   **自适应学习率** - 跟踪梯度平方的平均值，并使用它来调整学习率。 因此，只有一种学习风格，但如果梯度是恒定的，每个时期的每个参数都会得到更大的跳跃; 否则会跳得更小。
 *   有两个瞬间 - 一个用于渐变，另一个用于渐变平方（在PyTorch中，它被称为beta，它是两个数字的元组）
 
-#### AdamW [ [2:11:18](https://youtu.be/J99NV9Cr75I%3Ft%3D2h11m18s) ]
+#### AdamW  [[2:11:18](https://youtu.be/J99NV9Cr75I%3Ft%3D2h11m18s)] 
 
 当参数多于数据点时，正则化变得很重要。 我们以前见过辍学，体重衰退是另一种正规化。 权重衰减（L2正则化）通过将平方权重（权重衰减乘数乘以）加到损失中来惩罚大权重。 现在损失函数想要保持较小的权重，因为增加权重会增加损失; 因此，只有当损失提高超过罚款时才这样做。
 

@@ -13,7 +13,7 @@
 *   重点是生成建模，这意味着预测“很多事情” - 例如，创建一个句子，如在神经翻译，图像字幕或问题回答中创建图像，如风格转移，超分辨率，分割等。
 *   不是最好的做法，而是从最近可能没有经过全面测试的论文中获得更多的推测。
 
-#### 审查Char3Model [ [02:49](https://youtu.be/H3g26EVADgY%3Ft%3D2m49s) ]
+#### 审查Char3Model  [[02:49](https://youtu.be/H3g26EVADgY%3Ft%3D2m49s)] 
 
 提醒：RNN没有任何不同或异常或神奇 - 只是一个标准的完全连接网络。
 
@@ -55,14 +55,14 @@
 
 *   在这种方法中，我们在处理每个部分后开始抛弃我们的`h`激活并开始一个新的激活。 为了使用下一节中的第一个字符预测第二个字符，它没有任何内容可以继续，而是默认激活。 我们不要扔掉。
 
-#### 有状态的RNN [ [08:52](https://youtu.be/H3g26EVADgY%3Ft%3D8m52s) ]
+#### 有状态的RNN  [[08:52](https://youtu.be/H3g26EVADgY%3Ft%3D8m52s)] 
 
 ```
  **class** **CharSeqStatefulRnn** (nn.Module):  **def** __init__(self, vocab_size, n_fac, bs):  self.vocab_size = vocab_size  super().__init__()  self.e = nn.Embedding(vocab_size, n_fac)  self.rnn = nn.RNN(n_fac, n_hidden)  self.l_out = nn.Linear(n_hidden, vocab_size)  **self.init_hidden(bs)**  **def** forward(self, cs):  bs = cs[0].size(0)  **if** self.h.size(1) != bs: self.init_hidden(bs)  outp,h = self.rnn(self.e(cs), self.h)  **self.h = repackage_var(h)**  **return** F.log_softmax(self.l_out(outp), dim=-1).view(-1, self.vocab_size)  **def** init_hidden(self, bs): self.h = V(torch.zeros(1, bs, n_hidden)) 
 ```
 
 *   构造函数中的另一行。 `self.init_hidden(bs)`将`self.h`设置为一堆零。
-*   **Wrinkle＃1** [ [10:51](https://youtu.be/H3g26EVADgY%3Ft%3D10m51s) ] - 如果我们只是做`self.h = h` ，并且我们训练了一个长度为一百万字符的文档，那么RNN的展开版本的大小有一百万层（省略号） 。 一百万层完全连接的网络将占用大量内存，因为为了实现链规则，我们必须增加一百万个层，同时记住每批100万个梯度。
+*   **Wrinkle＃1**  [[10:51](https://youtu.be/H3g26EVADgY%3Ft%3D10m51s)]  - 如果我们只是做`self.h = h` ，并且我们训练了一个长度为一百万字符的文档，那么RNN的展开版本的大小有一百万层（省略号） 。 一百万层完全连接的网络将占用大量内存，因为为了实现链规则，我们必须增加一百万个层，同时记住每批100万个梯度。
 *   为避免这种情况，我们会不时地忘记它的历史。 我们仍然可以记住状态（隐藏矩阵中的值）而不记得我们如何到达那里的一切。
 
 ```
@@ -74,7 +74,7 @@
 *   换句话说，在`for`循环之后，只需丢弃操作历史并重新开始。 所以我们保持隐藏的状态，但我们没有保持隐藏的状态历史。
 *   不通过太多层反向传播的另一个好理由是，如果你有任何类型的梯度不稳定性（例如梯度爆炸或梯度消失），你拥有的层数越多，网络训练越难（速度越慢，弹性越小） 。
 *   另一方面，较长的`bptt`意味着你可以显式捕获更长的内存和更多的状态。
-*   **Wrinkle＃2** [ [16:00](https://youtu.be/H3g26EVADgY%3Ft%3D16m) ] - 如何创建迷你批次。 我们不希望一次处理一个部分，而是一次并行处理一个部分。
+*   **Wrinkle＃2**  [[16:00](https://youtu.be/H3g26EVADgY%3Ft%3D16m)]  - 如何创建迷你批次。 我们不希望一次处理一个部分，而是一次并行处理一个部分。
 *   当我们第一次开始关注TorchText时，我们谈到了它如何创建这些迷你批次。
 *   Jeremy说我们整整一份长文件，包括Nietzsche的整个作品或所有IMDB评论连在一起，我们把它分成64个相同大小的块（不是64块大小的块）。
 
@@ -83,20 +83,20 @@
 *   对于长度为6400万个字符的文档，每个“块”将是100万个字符。 我们将它们堆叠在一起，现在用`bptt`分割它们 - 1个mini-bach由64个`bptt`矩阵组成。
 *   第二个块（第1,000,001个字符）的第一个字符可能位于句子的中间。 但它没关系，因为它每百万个字符只发生一次。
 
-#### 问题：此类数据集的数据增强？ [ [20:34](https://youtu.be/H3g26EVADgY%3Ft%3D20m34s) ]
+#### 问题：此类数据集的数据增强？  [[20:34](https://youtu.be/H3g26EVADgY%3Ft%3D20m34s)] 
 
 没有已知的好方法。 有人最近通过数据增强赢得了Kaggle比赛，随机插入了不同行的部分 - 这样的东西可能会有用。 但是，最近没有任何最新的NLP论文正在进行这种数据增强。
 
-#### 问题：我们如何选择bptt的大小？ [ [21:36](https://youtu.be/H3g26EVADgY%3Ft%3D21m36s) ]
+#### 问题：我们如何选择bptt的大小？  [[21:36](https://youtu.be/H3g26EVADgY%3Ft%3D21m36s)] 
 
 有几件事要考虑：
 
 *   首先，迷你批量矩阵的大小为`bptt` （块数＃），因此你的GPU RAM必须能够通过嵌入矩阵拟合。 因此，如果你得到CUDA内存不足错误，你需要减少其中一个。
 *   如果你的训练不稳定（例如你的`bptt`突然向NaN射击），那么你可以尝试减少你的`bptt`因为你有更少的层来渐变爆炸。
-*   如果它太慢[ [22:44](https://youtu.be/H3g26EVADgY%3Ft%3D22m44s) ]，请尝试减少你的`bptt`因为它会一次执行其中一个步骤。 `for`循环无法并行化（对于当前版本）。 最近有一种称为QRNN（准递归神经网络）的东西，它将它并行化，我们希望在第2部分中介绍。
+*   如果它太慢 [[22:44](https://youtu.be/H3g26EVADgY%3Ft%3D22m44s)] ，请尝试减少你的`bptt`因为它会一次执行其中一个步骤。 `for`循环无法并行化（对于当前版本）。 最近有一种称为QRNN（准递归神经网络）的东西，它将它并行化，我们希望在第2部分中介绍。
 *   所以选择满足所有这些的最高数字。
 
-#### 有状态的RNN和TorchText [ [23:23](https://youtu.be/H3g26EVADgY%3Ft%3D23m23s) ]
+#### 有状态的RNN和TorchText  [[23:23](https://youtu.be/H3g26EVADgY%3Ft%3D23m23s)] 
 
 当使用希望数据为特定格式的现有API时，你可以更改数据以适合该格式，也可以编写自己的数据集子类来处理数据已经存在的格式。要么很好，要么在这种情况下，我们将以TorchText格式提供我们的数据。 围绕TorchText的Fast.ai包装器已经具有可以具有训练路径和验证路径的东西，并且每个路径中的一个或多个文本文件包含为你的语言模型连接在一起的一堆文本。
 
@@ -124,7 +124,7 @@
  %ls {PATH}trn  _trn.txt_ 
 ```
 
-*   制作了Nietzsche文件的副本，粘贴到训练和验证目录中。 然后从训练集中删除了最后20％的行，并删除了验证集[ [25:15](https://youtu.be/H3g26EVADgY%3Ft%3D25m15s) ]中除最后20％之外的所有行。
+*   制作了Nietzsche文件的副本，粘贴到训练和验证目录中。 然后从训练集中删除了最后20％的行，并删除了验证集 [[25:15](https://youtu.be/H3g26EVADgY%3Ft%3D25m15s)] 中除最后20％之外的所有行。
 *   这样做的另一个好处是，拥有一个不是随机混乱的文本行集的验证集似乎更为现实，但它完全是语料库的一部分。
 *   在进行语言模型时，实际上并不需要单独的文件。 你可以拥有多个文件，但无论如何它们只是连在一起。
 
@@ -138,7 +138,7 @@
 *   `bs` ：批量大小， `bptt` ：我们重命名为`cs` ， `n_fac` ：嵌入的大小， `n_hidden` ：隐藏状态的大小
 *   我们没有单独的测试集，所以我们只使用验证集进行测试
 *   TorchText每次将bptt的长度随机化一点。 它并不总能给我们准确的8个字符; 5％的时间，它会将它减少一半并加上一个小的标准偏差，使其略大于或小于8.我们无法对数据进行混洗，因为它需要连续，所以这是一种引入一些随机性的方法。
-*   问题[ [31:46](https://youtu.be/H3g26EVADgY%3Ft%3D31m46s) ]：每个小批量的尺寸是否保持不变？ 是的，我们需要使用`h`权重矩阵进行矩阵乘法，因此小批量大小必须保持不变。 但序列长度可以改变没有问题。
+*   问题 [[31:46](https://youtu.be/H3g26EVADgY%3Ft%3D31m46s)] ：每个小批量的尺寸是否保持不变？ 是的，我们需要使用`h`权重矩阵进行矩阵乘法，因此小批量大小必须保持不变。 但序列长度可以改变没有问题。
 *   `len(md.trn_dl)` ：数据加载器的长度（即多少`md.nt`批量）， `md.nt` ：令牌数量（即词汇表中有多少独特的东西）
 *   一旦运行`LanguageModelData.from_text_files` ， `TEXT`将包含一个名为`vocab`的额外属性。 `TEXT.vocab.itos`词汇表中的唯一项目列表， `TEXT.vocab.stoi`是从每个项目到数字的反向映射。
 
@@ -146,8 +146,8 @@
  **class** **CharSeqStatefulRnn** (nn.Module):  **def** __init__(self, vocab_size, n_fac, bs):  self.vocab_size = vocab_size  super().__init__()  self.e = nn.Embedding(vocab_size, n_fac)  self.rnn = nn.RNN(n_fac, n_hidden)  self.l_out = nn.Linear(n_hidden, vocab_size)  self.init_hidden(bs)  **def** forward(self, cs):  bs = cs[0].size(0)  **if self.h.size(1) != bs: self.init_hidden(bs)**  outp,h = self.rnn(self.e(cs), self.h)  self.h = repackage_var(h)  **return** **F.log_softmax(self.l_out(outp), dim=-1).view(-1, self.vocab_size)**  **def** init_hidden(self, bs): self.h = V(torch.zeros(1, bs, n_hidden)) 
 ```
 
-*   **皱纹＃3** [ [33:51](https://youtu.be/H3g26EVADgY%3Ft%3D33m51s) ]：Jeremy说他们说小批量的尺寸保持不变。 除非数据集完全被`bptt`乘以`bs`整除，否则最后一个小批量很可能比其他小批量短。 这就是为什么我们检查`self.h`的第二个维度是否与输入的`bs`相同。 如果不相同，请使用输入的`bs`将其设置为零。 这发生在纪元的末尾和纪元的开始（设置回完整的批量大小）。
-*   **Wrinkle＃4** [ [35:44](https://youtu.be/H3g26EVADgY%3Ft%3D35m44s) ]：最后的皱纹对于PyTorch来说有点糟糕，也许有人可以用PR来修复它。 损失函数不满意接收秩3张量（即三维阵列）。 没有特别的原因他们应该不乐意接受等级3张量（按结果的批量大小的序列长度 - 所以你可以只计算两个初始轴中每一个的损失）。 适用于等级2或4，但不适用于3。
+*   **皱纹＃3**  [[33:51](https://youtu.be/H3g26EVADgY%3Ft%3D33m51s)] ：Jeremy说他们说小批量的尺寸保持不变。 除非数据集完全被`bptt`乘以`bs`整除，否则最后一个小批量很可能比其他小批量短。 这就是为什么我们检查`self.h`的第二个维度是否与输入的`bs`相同。 如果不相同，请使用输入的`bs`将其设置为零。 这发生在纪元的末尾和纪元的开始（设置回完整的批量大小）。
+*   **Wrinkle＃4**  [[35:44](https://youtu.be/H3g26EVADgY%3Ft%3D35m44s)] ：最后的皱纹对于PyTorch来说有点糟糕，也许有人可以用PR来修复它。 损失函数不满意接收秩3张量（即三维阵列）。 没有特别的原因他们应该不乐意接受等级3张量（按结果的批量大小的序列长度 - 所以你可以只计算两个初始轴中每一个的损失）。 适用于等级2或4，但不适用于3。
 *   `.view`将通过`vocab_size`将等级3张量重塑为`-1`等级2（无论多么大）。 TorchText会自动更改**目标**以使其变平，因此我们不需要为实际值执行此操作（当我们在第4课中查看小批量时，我们注意到它已被展平。杰里米说我们将了解为什么以后，所以后来现在。）
 *   PyTorch（截至0.3）， `log_softmax`要求我们指定我们想要在哪个轴上执行softmax（即我们想要总和为哪个轴）。 在这种情况下，我们希望在最后一个轴上进行`dim = -1` 。
 
@@ -159,7 +159,7 @@
  fit(m, md, 4, opt, F.nll_loss) 
 ```
 
-#### 让我们通过拆包RNN获得更多洞察力[ [42:48](https://youtu.be/H3g26EVADgY%3Ft%3D42m48s) ]
+#### 让我们通过拆包RNN获得更多洞察力 [[42:48](https://youtu.be/H3g26EVADgY%3Ft%3D42m48s)] 
 
 我们删除了`nn.RNN`的使用并用`nn.RNNCell`替换它。 PyTorch源代码如下所示。 你应该能够阅读和理解（注意：它们不会连接输入和隐藏状态，但是它们将它们加在一起 ​​- 这是我们的第一种方法）：
 
@@ -167,7 +167,7 @@
  **def** RNNCell(input, hidden, w_ih, w_hh, b_ih, b_hh):  **return** F.tanh(F.linear(input, w_ih, b_ih) + F.linear(hidden, w_hh, b_hh)) 
 ```
 
-关于`tanh`问题[ [44:06](https://youtu.be/H3g26EVADgY%3Ft%3D44m6s) ]：正如我们上周看到的那样， `tanh`强迫值在-1和1之间。由于我们一次又一次地乘以这个权重矩阵，我们会担心`relu` （因为它是无界）可能有更多的梯度爆炸问题。 话虽如此，你可以指定`RNNCell`使用默认为`tanh`不同`nonlineality` ，并要求它使用`relu`如果你愿意）。
+关于`tanh`问题 [[44:06](https://youtu.be/H3g26EVADgY%3Ft%3D44m6s)] ：正如我们上周看到的那样， `tanh`强迫值在-1和1之间。由于我们一次又一次地乘以这个权重矩阵，我们会担心`relu` （因为它是无界）可能有更多的梯度爆炸问题。 话虽如此，你可以指定`RNNCell`使用默认为`tanh`不同`nonlineality` ，并要求它使用`relu`如果你愿意）。
 
 ```
  **class** **CharSeqStatefulRnn2** (nn.Module):  **def** __init__(self, vocab_size, n_fac, bs):  super().__init__()  self.vocab_size = vocab_size  self.e = nn.Embedding(vocab_size, n_fac)  self.rnn = **nn.RNNCell** (n_fac, n_hidden)  self.l_out = nn.Linear(n_hidden, vocab_size)  self.init_hidden(bs)  **def** forward(self, cs):  bs = cs[0].size(0)  **if** self.h.size(1) != bs: self.init_hidden(bs)  outp = []  o = self.h  **for** c **in** cs:  o = self.rnn(self.e(c), o)  outp.append(o)  outp = self.l_out(torch.stack(outp))  self.h = repackage_var(o)  **return** F.log_softmax(outp, dim=-1).view(-1, self.vocab_size)  **def** init_hidden(self, bs): self.h = V(torch.zeros(1, bs, n_hidden)) 
@@ -176,7 +176,7 @@
 *   `for`循环返回并将线性函数的结果附加到列表中 - 最终将它们堆叠在一起。
 *   fast.ai库实际上正是为了使用PyTorch不支持的正则化方法。
 
-#### 门控经常性单位（GRU）[ [46:44](https://youtu.be/H3g26EVADgY%3Ft%3D46m44s) ]
+#### 门控经常性单位（GRU） [[46:44](https://youtu.be/H3g26EVADgY%3Ft%3D46m44s)] 
 
 在实践中，没有人真正使用`RNNCell`因为即使是`tanh` ，梯度爆炸仍然是一个问题，我们需要使用低学习率和小`bptt`来让他们训练。 所以我们要做的是用`RNNCell`替换`GRUCell` 。
 
@@ -213,7 +213,7 @@
 
 结果，我们可以将损失降低到1.36（ `RNNCell`一个是1.54）。 在实践中，GRU和LSTM是人们使用的。
 
-#### 把它们放在一起：长期短期记忆[ [54:09](https://youtu.be/H3g26EVADgY%3Ft%3D54m9s) ]
+#### 把它们放在一起：长期短期记忆 [[54:09](https://youtu.be/H3g26EVADgY%3Ft%3D54m9s)] 
 
 LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），所以如果你使用LSTM，你必须在`init_hidden`返回一个矩阵元组（与隐藏状态完全相同）：
 
@@ -227,7 +227,7 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 
 代码与GRU代码相同。 添加的一件事是`dropout` ，它在每个时间步骤后都会辍学并将隐藏层加倍 - 希望它能够学到更多并且能够保持弹性。
 
-#### 没有学习者课程的回调（特别是SGDR）[ [55:23](https://youtu.be/H3g26EVADgY%3Ft%3D55m23s) ]
+#### 没有学习者课程的回调（特别是SGDR） [[55:23](https://youtu.be/H3g26EVADgY%3Ft%3D55m23s)] 
 
 ```
  m = CharSeqStatefulLSTM(md.nt, n_fac, 512, 2).cuda()  lo = LayerOptimizer(optim.Adam, m, 1e-2, 1e-5) 
@@ -255,7 +255,7 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 *   我们可以在训练，纪元或批次开始时，或在训练，纪元或批次结束时进行回调。
 *   它已被用于`CosAnneal` （SGDR），去耦权重衰减（AdamW），时间损失图等。
 
-#### 测试[ [59:55](https://youtu.be/H3g26EVADgY%3Ft%3D59m55s) ]
+#### 测试 [[59:55](https://youtu.be/H3g26EVADgY%3Ft%3D59m55s)] 
 
 ```
  **def** get_next(inp):  idxs = TEXT.numericalize(inp)  p = m(VV(idxs.transpose(0,1)))  r = **torch.multinomial(p[-1].exp(), 1)**  **return** TEXT.vocab.itos[to_np(r)[0]] 
@@ -281,7 +281,7 @@ LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），�
 *   要使用像这样训练基于角色的语言模型，尝试在不同的损失级别运行`get_next_n` ，以了解它的外观。 上面的例子是在1.25，但在1.3，它看起来像一个完全垃圾。
 *   当你在玩NLP时，特别是这样的生成模型，结果有点好但不是很好，不要灰心，因为这意味着你实际上非常非常接近！
 
-### [回到计算机视觉：CIFAR 10](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-cifar10.ipynb) [ [1:01:58](https://youtu.be/H3g26EVADgY%3Ft%3D1h1m58s) ]
+### [回到计算机视觉：CIFAR 10](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-cifar10.ipynb)  [[1:01:58](https://youtu.be/H3g26EVADgY%3Ft%3D1h1m58s)] 
 
 CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前，有CIFAR 10.它在图像数量和图像大小方面都很小，这使它变得有趣和具有挑战性。 你可能会使用数千张图片而不是一百五十万张图片。 我们在医学成像中看到的很多东西，我们正在寻找有肺结节的特定区域，你可能最多看32×32像素。
 
@@ -379,7 +379,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 
 通过一个简单的隐藏层模型，122,880个参数，我们达到了46.9％的准确率。 让我们改进这一点，逐步建立一个基本的ResNet架构。
 
-#### CNN [ [01:12:30](https://youtu.be/H3g26EVADgY%3Ft%3D1h12m30s) ]
+#### CNN  [[01:12:30](https://youtu.be/H3g26EVADgY%3Ft%3D1h12m30s)] 
 
 *   让我们用卷积模型替换完全连接的模型。 完全连接的层只是做一个点积。 这就是权重矩阵很大的原因（3072输入* 40 = 122880）。 我们没有非常有效地使用这些参数，因为输入中的每个像素都具有不同的权重。 我们想要做的是一组3乘3像素，它们具有特定的模式（即卷积）。
 *   我们将使用具有三乘三内核的过滤器。 如果有多个过滤器，则输出将具有其他维度。
@@ -445,7 +445,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 *   它平衡了约60％的准确度。 考虑到它使用了大约30,000个参数（相比之下，参数为122k，为47％）
 *   每个时期的时间大致相同，因为它们的架构既简单又大部分时间花在进行内存传输上。
 
-#### 重构[ [01:21:57](https://youtu.be/H3g26EVADgY%3Ft%3D1h21m57s) ]
+#### 重构 [[01:21:57](https://youtu.be/H3g26EVADgY%3Ft%3D1h21m57s)] 
 
 通过创建`ConvLayer` （我们的第一个自定义层！）简化`forward`功能。 在PyTorch中，层定义和神经网络定义是相同的。 任何时候你有一个图层，你可以将它用作神经网络，当你有神经网络时，你可以将它用作图层。
 
@@ -461,7 +461,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 
 *   与上一个模型的另一个区别是`nn.AdaptiveMaxPool2d`没有任何状态（即没有权重）。 所以我们可以将它称为函数`F.adaptive_max_pool2d` 。
 
-#### BatchNorm [ [1:25:10](https://youtu.be/H3g26EVADgY%3Ft%3D1h25m10s) ]
+#### BatchNorm  [[1:25:10](https://youtu.be/H3g26EVADgY%3Ft%3D1h25m10s)] 
 
 *   最后一个模型，当我们尝试添加更多图层时，我们在训练时遇到了麻烦。 我们训练有困难的原因是，如果我们使用较大的学习率，那么它将用于NaN，如果我们使用较小的学习率，则需要永远并且没有机会正确探索 - 因此它没有弹性。
 *   为了使其具有弹性，我们将使用称为批量规范化的东西。 BatchNorm大约两年前推出，它具有很大的变革性，因为它突然使得培养更深层的网络变得非常容易。
@@ -474,16 +474,16 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 
 *   计算每个通道或每个过滤器的平均值以及每个通道或每个过滤器的标准偏差。 然后减去均值并除以标准差。
 *   我们不再需要对输入进行标准化，因为它会对每个通道进行标准化，或者对于以后的图层，它按照过滤器进行标准化。
-*   原来这还不够，因为SGD是血腥的[ [01:29:20](https://youtu.be/H3g26EVADgY%3Ft%3D1h29m20s) ]。 如果SGD决定它希望矩阵整体更大/更小，那么做`(x=self.means) / self.stds`是不够的，因为SGD将撤消它并尝试在下一个小批量中再次执行。 因此，我们将为每个通道添加两个参数： `a` - 加法器（初始值零）和`m` - 乘数（初始值1）。
+*   原来这还不够，因为SGD是血腥的 [[01:29:20](https://youtu.be/H3g26EVADgY%3Ft%3D1h29m20s)] 。 如果SGD决定它希望矩阵整体更大/更小，那么做`(x=self.means) / self.stds`是不够的，因为SGD将撤消它并尝试在下一个小批量中再次执行。 因此，我们将为每个通道添加两个参数： `a` - 加法器（初始值零）和`m` - 乘数（初始值1）。
 *   `Parameter`告诉PyTorch允许将它们作为权重学习。
 *   为什么这样做？ 如果要扩展图层，则不必扩展矩阵中的每个值。 它可以扩展这个单独的三个数字`self.m` ，如果它想要将它全部向上或向下移动一点，它不必移动整个权重矩阵，它们可以将这三个数字`self.a`为`self.a` 直觉：我们正在对数据进行标准化，然后我们说你可以转移它并使用比实际移位和缩放整个卷积滤波器组所需的参数少得多的参数来缩放它。 在实践中，它允许我们提高我们的学习率，增加训练的弹性，并且它允许我们添加更多层并且仍然有效地训练。
 *   批量规范所做的另一件事是它规则化，换句话说，你可以经常减少或消除辍学或体重衰减。 原因是每个小批量将与先前的小批量具有不同的平均值和不同的标准偏差。 因此，它们不断变化，并以微妙的方式改变滤波器的含义，作为噪声（即正则化）。
 *   在实际版本中，它不使用此批次的均值和标准差，而是采用指数加权移动平均标准差和均值。
 *   `**if** self.training` - 这很重要，因为当你通过验证集时，你不想改变模型的含义。 有些类型的层实际上对网络模式敏感，无论是处于训练模式还是评估/测试模式。 当我们为MovieLens实现迷你网时出现了一个错误，即在验证过程中应用了dropout - 这是固定的。 在PyTorch中，有两个这样的层：dropout和batch norm。 `nn.Dropout`已经进行了检查。
-*   [ [01:37:01](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s) ] [fast.ai](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s)的关键区别在于，无论其他图书馆做什么，只要你基本上说我正在训练，这些手段和标准偏差都会在其他图书馆的训练模式中更新，无论该层是否是否可以训练。 有了预先训练好的网络，这是一个糟糕的主意。 如果你有一个预先训练好的网络，用于批量标准中的那些均值和标准偏差的特定值，如果你更改它们，它将改变那些预先训练的图层的含义。 在fast.ai中，始终默认情况下，如果你的图层被冻结，它将不会触及那些均值和标准偏差。 一旦你取消冻结它，除非你设置`learn.bn_freeze=True` ，否则它将开始更新它们。 在实践中，对于预训练的模型，这似乎通常效果更好，特别是如果你使用的数据与预训练模型的训练非常相似。
+*    [[01:37:01](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s)]  [fast.ai](https://youtu.be/H3g26EVADgY%3Ft%3D1h37m1s)的关键区别在于，无论其他图书馆做什么，只要你基本上说我正在训练，这些手段和标准偏差都会在其他图书馆的训练模式中更新，无论该层是否是否可以训练。 有了预先训练好的网络，这是一个糟糕的主意。 如果你有一个预先训练好的网络，用于批量标准中的那些均值和标准偏差的特定值，如果你更改它们，它将改变那些预先训练的图层的含义。 在fast.ai中，始终默认情况下，如果你的图层被冻结，它将不会触及那些均值和标准偏差。 一旦你取消冻结它，除非你设置`learn.bn_freeze=True` ，否则它将开始更新它们。 在实践中，对于预训练的模型，这似乎通常效果更好，特别是如果你使用的数据与预训练模型的训练非常相似。
 *   你在哪里放置批量标准层？ 我们稍后会谈谈更多，但就目前来说，经过`relu`
 
-#### 消融研究[ [01:39:41](https://youtu.be/H3g26EVADgY%3Ft%3D1h39m41s) ]
+#### 消融研究 [[01:39:41](https://youtu.be/H3g26EVADgY%3Ft%3D1h39m41s)] 
 
 在这种情况下，你可以尝试打开和关闭模型的不同部分，以查看哪些部位产生了哪些影响，而原始批次规范文件中未执行的操作之一是任何有效的消融。 因此缺少的一件事就是这个问题刚才被问到 - 在哪里提出批量规范。 这种疏忽造成了很多问题，因为事实证明原始论文并没有真正把它放在最佳位置。 从那时起，其他人现在已经想到了这一点，当Jeremy向人们展示实际上在现场更好的代码时，人们说他的批量规范是在错误的位置。
 
@@ -499,7 +499,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 *   由于`padding = kernel_size — 1 / 2`并且`stride=1` ，输入大小与输出大小相同 - 只是更多的过滤器。
 *   这是尝试创造更丰富起点的好方法。
 
-#### Deep BatchNorm [ [01:50:52](https://youtu.be/H3g26EVADgY%3Ft%3D1h50m52s) ]
+#### Deep BatchNorm  [[01:50:52](https://youtu.be/H3g26EVADgY%3Ft%3D1h50m52s)] 
 
 让我们增加模型的深度。 我们不能只添加更多的步幅2层，因为它每次将图像的大小减半。 相反，在每个步幅2层之后，我们插入步幅1层。
 
@@ -537,7 +537,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 
 准确性与以前一样。 现在这是12层深，即使批量规范也要处理太深。 可以训练12层深度转换网但它开始变得困难。 如果有的话，它似乎没有多大帮助。
 
-#### ResNet [ [01:52:43](https://youtu.be/H3g26EVADgY%3Ft%3D1h52m43s) ]
+#### ResNet  [[01:52:43](https://youtu.be/H3g26EVADgY%3Ft%3D1h52m43s)] 
 
 ```
  **class** **ResnetLayer** (BnLayer):  **def** forward(self, x): **return** **x + super().forward(x)** 
@@ -594,7 +594,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
  _[ 0\. 0.8307 0.83635 0.7126 ]_  _[ 1\. 0.74295 0.73682 0.74189]_  _[ 2\. 0.66492 0.69554 0.75996]_  _[ 3\. 0.62392 0.67166 0.7625 ]_  _[ 4\. 0.73479 0.80425 0.72861]_  _[ 5\. 0.65423 0.68876 0.76318]_  _[ 6\. 0.58608 0.64105 0.77783]_  _[ 7\. 0.55738 0.62641 0.78721]_  _[ 8\. 0.66163 0.74154 0.7501 ]_  _[ 9\. 0.59444 0.64253 0.78106]_  _[ 10\. 0.53 0.61772 0.79385]_  _[ 11\. 0.49747 0.65968 0.77832]_  _[ 12\. 0.59463 0.67915 0.77422]_  _[ 13\. 0.55023 0.65815 0.78106]_  _[ 14\. 0.48959 0.59035 0.80273]_  _[ 15\. 0.4459 0.61823 0.79336]_  _[ 16\. 0.55848 0.64115 0.78018]_  _[ 17\. 0.50268 0.61795 0.79541]_  _[ 18\. 0.45084 0.57577 0.80654]_  _[ 19\. 0.40726 0.5708 0.80947]_  _[ 20\. 0.51177 0.66771 0.78232]_  _[ 21\. 0.46516 0.6116 0.79932]_  _[ 22\. 0.40966 0.56865 0.81172]_  _[ 23\. 0.3852 0.58161 0.80967]_  _[ 24\. 0.48268 0.59944 0.79551]_  _[ 25\. 0.43282 0.56429 0.81182]_  _[ 26\. 0.37634 0.54724 0.81797]_  _[ 27\. 0.34953 0.54169 0.82129]_  _[ 28\. 0.46053 0.58128 0.80342]_  _[ 29\. 0.4041 0.55185 0.82295]_  _[ 30\. 0.3599 0.53953 0.82861]_  _[ 31\. 0.32937 0.55605 0.82227]_  _CPU times: user 22min 52s, sys: 8min 58s, total: 31min 51s_  _Wall time: 16min 38s_ 
 ```
 
-**ResNet块** [ [01:53:18](https://youtu.be/H3g26EVADgY%3Ft%3D1h53m18s) ]
+**ResNet块**  [[01:53:18](https://youtu.be/H3g26EVADgY%3Ft%3D1h53m18s)] 
 
 `**return** **x + super().forward(x)**`
 
@@ -611,7 +611,7 @@ _f（x）= y - x_
 
 ![](../img/1_0_0J8BFYOTK4Mupk94Izrw.png)
 
-#### ResNet 2 [ [01:59:33](https://youtu.be/H3g26EVADgY%3Ft%3D1h59m33s) ]
+#### ResNet 2  [[01:59:33](https://youtu.be/H3g26EVADgY%3Ft%3D1h59m33s)] 
 
 在这里，我们增加了功能的大小并增加了丢失。
 
@@ -645,9 +645,9 @@ _f（x）= y - x_
 *   更好的正规化方法
 *   ResNet上的一些调整
 
-问题[ [02:01:07](https://youtu.be/H3g26EVADgY%3Ft%3D2h1m7s) ]：我们可以对非图像问题应用“剩余训练”方法吗？ 是! 但它在其他任何地方都被忽视了。 在NLP中，“变形结构”最近出现并被证明是最先进的翻译技术，它有一个简单的ResNet结构。 这种通用的方法被称为“跳过连接”（即跳过一层的想法）并且在计算机视觉中出现了很多，但是即使没有任何关于它的计算机视觉，也没有其他人似乎使用它。 良机！
+问题 [[02:01:07](https://youtu.be/H3g26EVADgY%3Ft%3D2h1m7s)] ：我们可以对非图像问题应用“剩余训练”方法吗？ 是! 但它在其他任何地方都被忽视了。 在NLP中，“变形结构”最近出现并被证明是最先进的翻译技术，它有一个简单的ResNet结构。 这种通用的方法被称为“跳过连接”（即跳过一层的想法）并且在计算机视觉中出现了很多，但是即使没有任何关于它的计算机视觉，也没有其他人似乎使用它。 良机！
 
-### [狗与猫](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-CAM.ipynb) [ [02:02:03](https://youtu.be/H3g26EVADgY%3Ft%3D2h2m3s) ]
+### [狗与猫](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson7-CAM.ipynb)  [[02:02:03](https://youtu.be/H3g26EVADgY%3Ft%3D2h2m3s)] 
 
 回去的狗和猫。 我们将创建resnet34（如果你对尾随数字的含义感兴趣， [请参阅此处](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py) - 只是不同的参数）。
 
@@ -705,7 +705,7 @@ _f（x）= y - x_
 *   `ConvLearner.from_model`是我们之前学到的 - 允许我们使用自定义模型创建一个Learner对象。
 *   然后冻结除我们刚添加的图层之外的图层。
 
-#### 类激活图（CAM）[ [02:08:55](https://youtu.be/H3g26EVADgY%3Ft%3D2h8m55s) ]
+#### 类激活图（CAM） [[02:08:55](https://youtu.be/H3g26EVADgY%3Ft%3D2h8m55s)] 
 
 我们选择一个特定的图像，并使用一种名为CAM的技术，我们在这里采用一个模型，然后我们会问它图像的哪些部分变得很重要。
 
@@ -751,7 +751,7 @@ _f（x）= y - x_
  **class** **SaveFeatures** ():  features= **None**  **def** __init__(self, m):  self.hook = m.register_forward_hook(self.hook_fn)  **def** hook_fn(self, module, input, output):  self.features = to_np(output)  **def** remove(self): self.hook.remove() 
 ```
 
-#### 对杰里米的问题[ [02:14:27](https://youtu.be/H3g26EVADgY%3Ft%3D2h14m27s) ]：“你的深度学习之旅”和“如何跟上从业者的重要研究”
+#### 对杰里米的问题 [[02:14:27](https://youtu.be/H3g26EVADgY%3Ft%3D2h14m27s)] ：“你的深度学习之旅”和“如何跟上从业者的重要研究”
 
 “如果你打算参加第2部分，你应该掌握在第1部分中学到的所有技巧”。 你可以执行以下操作：
 

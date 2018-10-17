@@ -69,7 +69,7 @@ Jeremy喜欢建立模型的方式：
 
 这意味着而不是Fastai和PyTorch是你只知道这些食谱的晦涩的黑盒子，你将很好地了解它们的细节，你可以按照你想要的方式自定义它们，你可以调试它们，你可以阅读他们的源代码，看看发生了什么。 如果你对面向对象的Python没有信心，那么你希望在本课程中专注于学习，因为我们不会在课堂上介绍它。 但Jeremy将介绍一些他认为特别有用的工具，如Python调试器，如何使用编辑器跳过代码。 总的来说，将会有更详细和具体的代码演练，编码技术讨论，以及更详细的论文演练。
 
-请注意示例代码[ [13:20](https://youtu.be/Z0ssNAbe81M%3Ft%3D13m20s) ]！ 代码学者已经提出了与其他人在github上编写的论文或示例代码，Jeremy几乎总是发现存在一些巨大的关键缺陷，所以要小心从在线资源中获取代码并准备好进行一些调试。
+请注意示例代码 [[13:20](https://youtu.be/Z0ssNAbe81M%3Ft%3D13m20s)] ！ 代码学者已经提出了与其他人在github上编写的论文或示例代码，Jeremy几乎总是发现存在一些巨大的关键缺陷，所以要小心从在线资源中获取代码并准备好进行一些调试。
 
 **如何使用笔记本[** [**14:17**](https://youtu.be/Z0ssNAbe81M%3Ft%3D14m17s) **]**
 
@@ -77,13 +77,13 @@ Jeremy喜欢建立模型的方式：
 
 ![](../img/1_GyRVknri5gUktxgDmnxo4A.png)
 
-建立自己的盒子[ [16:50](https://youtu.be/Z0ssNAbe81M%3Ft%3D16m50s) ]
+建立自己的盒子 [[16:50](https://youtu.be/Z0ssNAbe81M%3Ft%3D16m50s)] 
 
 
 
 ![](../img/1__r-uV41M5zUGTdV26N9bsg.png)
 
-阅读论文[ [21:37](https://youtu.be/Z0ssNAbe81M%3Ft%3D21m37s) ]
+阅读论文 [[21:37](https://youtu.be/Z0ssNAbe81M%3Ft%3D21m37s)] 
 
 
 
@@ -91,13 +91,13 @@ Jeremy喜欢建立模型的方式：
 
 ![](../img/1_LBOcbbeBFypTgQ2AOit1EQ.png)
 
-更多机会[ [25:29](https://youtu.be/Z0ssNAbe81M%3Ft%3D25m29s) ]
+更多机会 [[25:29](https://youtu.be/Z0ssNAbe81M%3Ft%3D25m29s)] 
 
 
 
 ![](../img/1_cNNnbJwImpFbqSKdA5_RIQ.png)
 
-第2部分的主题[ [30:12](https://youtu.be/Z0ssNAbe81M%3Ft%3D30m12s) ]
+第2部分的主题 [[30:12](https://youtu.be/Z0ssNAbe81M%3Ft%3D30m12s)] 
 
 
 
@@ -116,7 +116,7 @@ Jeremy喜欢建立模型的方式：
 
 * * *
 
-#### 物体检测[ [35:32](https://youtu.be/Z0ssNAbe81M%3Ft%3D35m32s) ]
+#### 物体检测 [[35:32](https://youtu.be/Z0ssNAbe81M%3Ft%3D35m32s)] 
 
 ![](../img/1_EGZrr-rVX29Ot1j20i116w.png)
 
@@ -130,9 +130,9 @@ Jeremy喜欢建立模型的方式：
 
 边界框有一个非常具体的定义，它是一个矩形，矩形的对象完全适合它，但它不比它必须大。
 
-我们的工作是获取以这种方式标记的数据和未标记的数据，以生成对象的类和每个对象的边界框。 需要注意的一点是，标记此类数据通常更为昂贵[ [37:09](https://youtu.be/Z0ssNAbe81M%3Ft%3D37m09s) ]。 对于对象检测数据集，给注释器一个对象类列表，并要求它们查找图片中任何类型的每一个以及它们的位置。 在这种情况下，为什么没有标记树或跳跃？ 这是因为对于这个特定的数据集，它们不是要求注释者找到的类之一，因此不是这个特定问题的一部分。
+我们的工作是获取以这种方式标记的数据和未标记的数据，以生成对象的类和每个对象的边界框。 需要注意的一点是，标记此类数据通常更为昂贵 [[37:09](https://youtu.be/Z0ssNAbe81M%3Ft%3D37m09s)] 。 对于对象检测数据集，给注释器一个对象类列表，并要求它们查找图片中任何类型的每一个以及它们的位置。 在这种情况下，为什么没有标记树或跳跃？ 这是因为对于这个特定的数据集，它们不是要求注释者找到的类之一，因此不是这个特定问题的一部分。
 
-#### 阶段[ [38:33](https://youtu.be/Z0ssNAbe81M%3Ft%3D38m33s) ]：
+#### 阶段 [[38:33](https://youtu.be/Z0ssNAbe81M%3Ft%3D38m33s)] ：
 
 1.  对每个图像中的最大对象进行分类。
 2.  找到每个图像的最大对象的位置。
@@ -140,7 +140,7 @@ Jeremy喜欢建立模型的方式：
 
 ![](../img/1_RAxYMkvF3zHFe_cst52STA.png)
 
-#### [帕斯卡笔记本](https://github.com/fastai/fastai/blob/master/courses/dl2/pascal.ipynb) [ [40:06](https://youtu.be/Z0ssNAbe81M%3Ft%3D40m06s) ]
+#### [帕斯卡笔记本](https://github.com/fastai/fastai/blob/master/courses/dl2/pascal.ipynb)  [[40:06](https://youtu.be/Z0ssNAbe81M%3Ft%3D40m06s)] 
 
 ```
  %matplotlib inline  %reload_ext autoreload  %autoreload 2 
@@ -156,13 +156,13 @@ Jeremy喜欢建立模型的方式：
 
 你可能会发现留下一行`torch.cuda.set_device(1)` ，如果你只有一个GPU，则会出现错误。 这是你在拥有多个GPU时选择GPU的方式，因此只需将其设置为零或完全取出该行即可。
 
-有许多标准物体检测数据集，就像ImageNet是标准物体分类数据集[ [41:12](https://youtu.be/Z0ssNAbe81M%3Ft%3D41m12s) ]。 经典的ImageNet等效物是Pascal VOC。
+有许多标准物体检测数据集，就像ImageNet是标准物体分类数据集 [[41:12](https://youtu.be/Z0ssNAbe81M%3Ft%3D41m12s)] 。 经典的ImageNet等效物是Pascal VOC。
 
 #### 帕斯卡VOC
 
-我们将查看[Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/)数据集。 这很慢，所以你可能更喜欢从[这个镜像](https://pjreddie.com/projects/pascal-voc-dataset-mirror/)下载。 从2007年到2012年，有两个不同的竞争/研究数据集。我们将使用2007版本。 你可以使用更大的2012来获得更好的结果，甚至可以将它们组合起来[ [42:25](https://youtu.be/Z0ssNAbe81M%3Ft%3D42m25s) ]（但是如果这样做，请注意避免验证集之间的数据泄漏）。
+我们将查看[Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/)数据集。 这很慢，所以你可能更喜欢从[这个镜像](https://pjreddie.com/projects/pascal-voc-dataset-mirror/)下载。 从2007年到2012年，有两个不同的竞争/研究数据集。我们将使用2007版本。 你可以使用更大的2012来获得更好的结果，甚至可以将它们组合起来 [[42:25](https://youtu.be/Z0ssNAbe81M%3Ft%3D42m25s)] （但是如果这样做，请注意避免验证集之间的数据泄漏）。
 
-与之前的课程不同，我们使用python 3标准库`pathlib`来实现路径和文件访问。 请注意，它返回特定于操作系统的类（在Linux上， `PosixPath` ），因此你的输出可能看起来有点不同[ [44:50](https://youtu.be/Z0ssNAbe81M%3Ft%3D44m50s) ]。 将路径作为输入的大多数库可以采用pathlib对象 - 尽管有些（如`cv2` ）不能，在这种情况下，你可以使用`str()`将其转换为字符串。
+与之前的课程不同，我们使用python 3标准库`pathlib`来实现路径和文件访问。 请注意，它返回特定于操作系统的类（在Linux上， `PosixPath` ），因此你的输出可能看起来有点不同 [[44:50](https://youtu.be/Z0ssNAbe81M%3Ft%3D44m50s)] 。 将路径作为输入的大多数库可以采用pathlib对象 - 尽管有些（如`cv2` ）不能，在这种情况下，你可以使用`str()`将其转换为字符串。
 
 [Pathlib备忘单](http://pbpython.com/pathlib-intro.html)
 
@@ -186,7 +186,7 @@ Jeremy喜欢建立模型的方式：
 
 #### 加载注释
 
-除了图像之外，还有_注释_ - 显示每个对象所在位置的_边界框_ 。 这些是手工贴上的。 原始版本采用XML [ [47:59](https://youtu.be/Z0ssNAbe81M%3Ft%3D47m59s) ]，现在有点[难以使用](https://youtu.be/Z0ssNAbe81M%3Ft%3D47m59s) ，因此我们使用了最新的JSON版本，你可以从此[链接](https://storage.googleapis.com/coco-dataset/external/PASCAL_VOC.zip)下载。
+除了图像之外，还有_注释_ - 显示每个对象所在位置的_边界框_ 。 这些是手工贴上的。 原始版本采用XML  [[47:59](https://youtu.be/Z0ssNAbe81M%3Ft%3D47m59s)] ，现在有点[难以使用](https://youtu.be/Z0ssNAbe81M%3Ft%3D47m59s) ，因此我们使用了最新的JSON版本，你可以从此[链接](https://storage.googleapis.com/coco-dataset/external/PASCAL_VOC.zip)下载。
 
 你可以在此处看到`pathlib`如何包含打开文件的功能（以及许多其他功能）。
 
@@ -198,7 +198,7 @@ Jeremy喜欢建立模型的方式：
  _dict_keys(['images', 'type', 'annotations', 'categories'])_ 
 ```
 
-这里`/`不是除以它是路径斜线[ [45:55](https://youtu.be/Z0ssNAbe81M%3Ft%3D45m55s) ]。 `PATH/`让你的孩子走在那条路上。 `PATH/'pascal_train2007.json'`返回一个具有`open`方法的`pathlib`对象。 此JSON文件不包含图像，而是包含边界框和对象的类。
+这里`/`不是除以它是路径斜线 [[45:55](https://youtu.be/Z0ssNAbe81M%3Ft%3D45m55s)] 。 `PATH/`让你的孩子走在那条路上。 `PATH/'pascal_train2007.json'`返回一个具有`open`方法的`pathlib`对象。 此JSON文件不包含图像，而是包含边界框和对象的类。
 
 ```
  IMAGES,ANNOTATIONS,CATEGORIES = ['images', 'annotations',  'categories'] 
@@ -212,7 +212,7 @@ Jeremy喜欢建立模型的方式：
  _[{'file_name': '000012.jpg', 'height': 333, 'id': 12, 'width': 500}, {'file_name': '000017.jpg', 'height': 364, 'id': 17, 'width': 480}, {'file_name': '000023.jpg', 'height': 500, 'id': 23, 'width': 334}, {'file_name': '000026.jpg', 'height': 333, 'id': 26, 'width': 500}, {'file_name': '000032.jpg', 'height': 281, 'id': 32, 'width': 500}]_ 
 ```
 
-#### 注释[ [49:16](https://youtu.be/Z0ssNAbe81M%3Ft%3D49m16s) ]
+#### 注释 [[49:16](https://youtu.be/Z0ssNAbe81M%3Ft%3D49m16s)] 
 
 *   `bbox` ：列，行（左上角），高度，宽度
 *   `image_id` ：你可以用`trn_j[IMAGES]` （上面）加入这个来查找`file_name`等。
@@ -229,7 +229,7 @@ Jeremy喜欢建立模型的方式：
  _[{'area': 34104,_  _'bbox': [155, 96, 196, 174],_  _'category_id': 7,_  _'id': 1,_  _'ignore': 0,_  _'image_id': 12,_  _'iscrowd': 0,_  _'segmentation': [[155, 96, 155, 270, 351, 270, 351, 96]]},_  _{'area': 13110,_  _'bbox': [184, 61, 95, 138],_  _'category_id': 15,_  _'id': 2,_  _'ignore': 0,_  _'image_id': 17,_  _'iscrowd': 0,_  _'segmentation': [[184, 61, 184, 199, 279, 199, 279, 61]]}]_ 
 ```
 
-#### 分类[ [50:15](https://youtu.be/Z0ssNAbe81M%3Ft%3D50m15s) ]
+#### 分类 [[50:15](https://youtu.be/Z0ssNAbe81M%3Ft%3D50m15s)] 
 
 ```
  **trn_j[CATEGORIES]** [:4] 
@@ -251,9 +251,9 @@ Jeremy喜欢建立模型的方式：
 
 [**旁注**](https://youtu.be/Z0ssNAbe81M%3Ft%3D51m21s) **：** **当人们看到杰里米在看过他的班级时实时工作时，人们最评论的是什么[** [**51:21**](https://youtu.be/Z0ssNAbe81M%3Ft%3D51m21s) **]：**
 
-“哇，你其实不知道你在做什么，对吗”。 他所做的99％的事情都不起作用，而有效的事情的一小部分最终会在这里结束。 他之所以提到这一点，是因为机器学习，特别是深度学习令人难以置信的沮丧[ [51:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D51m45s) ]。 从理论上讲，你只需定义正确的损失函数和足够灵活的架构，然后按下列车即可完成。 但如果真的那么多，那么任何事情都不会花费任何时间。 问题是沿途的所有步骤直到它工作，它不起作用。 就像它直接进入无限，崩溃时张力大小不正确等等。他会努力向你展示一些调试技巧，但它是最难教的东西之一。 它需要的主要是坚韧。 超级有效的人和那些似乎没有走得太远的人之间的区别从来都不是智力。 它始终是坚持它 - 基本上永不放弃。 这种深度学习尤为重要，因为你没有得到连续的奖励周期[ [53:04](https://youtu.be/Z0ssNAbe81M%3Ft%3D53m04s) ]。 这是一个不变的工作，不起作用，不起作用，直到最终它这样做它有点烦人。
+“哇，你其实不知道你在做什么，对吗”。 他所做的99％的事情都不起作用，而有效的事情的一小部分最终会在这里结束。 他之所以提到这一点，是因为机器学习，特别是深度学习令人难以置信的沮丧 [[51:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D51m45s)] 。 从理论上讲，你只需定义正确的损失函数和足够灵活的架构，然后按下列车即可完成。 但如果真的那么多，那么任何事情都不会花费任何时间。 问题是沿途的所有步骤直到它工作，它不起作用。 就像它直接进入无限，崩溃时张力大小不正确等等。他会努力向你展示一些调试技巧，但它是最难教的东西之一。 它需要的主要是坚韧。 超级有效的人和那些似乎没有走得太远的人之间的区别从来都不是智力。 它始终是坚持它 - 基本上永不放弃。 这种深度学习尤为重要，因为你没有得到连续的奖励周期 [[53:04](https://youtu.be/Z0ssNAbe81M%3Ft%3D53m04s)] 。 这是一个不变的工作，不起作用，不起作用，直到最终它这样做它有点烦人。
 
-#### 我们来看看图像[ [53:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D53m45s) ]
+#### 我们来看看图像 [[53:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D53m45s)] 
 
 ```
  list((PATH/'VOCdevkit'/'VOC2007').iterdir()) 
@@ -275,7 +275,7 @@ Jeremy喜欢建立模型的方式：
  _[PosixPath('data/pascal/VOCdevkit/VOC2007/JPEGImages/007594.jpg'),_  _PosixPath('data/pascal/VOCdevkit/VOC2007/JPEGImages/005682.jpg'),_  _PosixPath('data/pascal/VOCdevkit/VOC2007/JPEGImages/005016.jpg'),_  _PosixPath('data/pascal/VOCdevkit/VOC2007/JPEGImages/001930.jpg'),_  _PosixPath('data/pascal/VOCdevkit/VOC2007/JPEGImages/007666.jpg')]_ 
 ```
 
-#### 创建字典（关键字：图像ID，值：注释）[ [54:16](https://youtu.be/Z0ssNAbe81M%3Ft%3D54m16s) ]
+#### 创建字典（关键字：图像ID，值：注释） [[54:16](https://youtu.be/Z0ssNAbe81M%3Ft%3D54m16s)] 
 
 每张图片都有一个唯一的ID。
 
@@ -287,11 +287,11 @@ Jeremy喜欢建立模型的方式：
  ('000012.jpg', 12) 
 ```
 
-只要你想拥有新密钥的默认字典条目[ [55:05](https://youtu.be/Z0ssNAbe81M%3Ft%3D55m05s) ]， [defaultdict就很有用](https://youtu.be/Z0ssNAbe81M%3Ft%3D55m05s) 。 如果你尝试访问不存在的键，它会神奇地使其自身存在，并且它将自身设置为等于你指定的函数的返回值（在本例中为`lambda:[]` ）。
+只要你想拥有新密钥的默认字典条目 [[55:05](https://youtu.be/Z0ssNAbe81M%3Ft%3D55m05s)] ， [defaultdict就很有用](https://youtu.be/Z0ssNAbe81M%3Ft%3D55m05s) 。 如果你尝试访问不存在的键，它会神奇地使其自身存在，并且它将自身设置为等于你指定的函数的返回值（在本例中为`lambda:[]` ）。
 
 在这里，我们创建一个从图像ID到注释列表的dict（边界框和类ID的元组）。
 
-我们将VOC的高度/宽度转换为左上/右下，并将x / y坐标切换为与numpy一致。 如果给定的数据集是蹩脚的格式，请花一些时间使事情保持一致，并按照你希望的方式制作它们[ [1:01:24](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h1m24s) ]
+我们将VOC的高度/宽度转换为左上/右下，并将x / y坐标切换为与numpy一致。 如果给定的数据集是蹩脚的格式，请花一些时间使事情保持一致，并按照你希望的方式制作它们 [[1:01:24](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h1m24s)] 
 
 ```
  trn_anno = **collections.defaultdict** (lambda:[])  for o in trn_j[ANNOTATIONS]:  if not o['ignore']:  bb = o[BBOX]  bb = np.array([bb[1], bb[0], bb[3]+bb[1]-1, bb[2]+bb[0]-1])  trn_anno[o[IMG_ID]] **.append** ((bb,o[CAT_ID]))  len(trn_anno) 
@@ -305,7 +305,7 @@ Jeremy喜欢建立模型的方式：
 
 **例1**
 
-*   `[ 96, 155, 269, 350]` [96,155,269,350](https://youtu.be/Z0ssNAbe81M%3Ft%3D59m53s) ]：一个边界框[ [59:53](https://youtu.be/Z0ssNAbe81M%3Ft%3D59m53s) ]。 如上所述，当我们创建边界框时，我们做了几件事。 首先是我们切换x和y坐标。 其原因在于计算机视觉领域，当你说“我的屏幕是640×480”时，它是高度的宽度。 或者，数学世界，当你说“我的数组是640乘480”时，它是逐列的。 所以枕头图像库倾向于按宽度或逐行逐行进行处理，而numpy则是相反的方式。 第二个是我们要通过描述左上角xy坐标和右下角xy坐标来做事情 - 而不是x，y，高度，宽度。
+*   `[ 96, 155, 269, 350]` [96,155,269,350](https://youtu.be/Z0ssNAbe81M%3Ft%3D59m53s)] ：一个边界框 [[59:53](https://youtu.be/Z0ssNAbe81M%3Ft%3D59m53s)] 。 如上所述，当我们创建边界框时，我们做了几件事。 首先是我们切换x和y坐标。 其原因在于计算机视觉领域，当你说“我的屏幕是640×480”时，它是高度的宽度。 或者，数学世界，当你说“我的数组是640乘480”时，它是逐列的。 所以枕头图像库倾向于按宽度或逐行逐行进行处理，而numpy则是相反的方式。 第二个是我们要通过描述左上角xy坐标和右下角xy坐标来做事情 - 而不是x，y，高度，宽度。
 *   `7` ：班级标签/类别
 
 ```
@@ -350,7 +350,7 @@ Jeremy喜欢建立模型的方式：
  _('person', 'horse')_ 
 ```
 
-有些lib采用VOC格式的边界框，所以这让我们在需要时转换回来[ [1:02:23](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h2m23s) ]：
+有些lib采用VOC格式的边界框，所以这让我们在需要时转换回来 [[1:02:23](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h2m23s)] ：
 
 ```
  def bb_hw(a): return np.array([a[1],a[0],a[3]-a[1],a[2]-a[0]]) 
@@ -389,17 +389,17 @@ Jeremy喜欢建立模型的方式：
 *   查看文档
 *   Zen模式（ `Control-`-4–2`或搜索“distraction free mode”）
 
-#### 我们来谈谈open_image [ [1:10:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h10m52s) ]
+#### 我们来谈谈open_image  [[1:10:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h10m52s)] 
 
-Fastai使用OpenCV。 TorchVision使用PyTorch张量进行数据增强等。许多人使用Pillow `PIL` 。 Jeremy对所有这些进行了大量测试，他发现OpenCV比TorchVision快5到10倍。 对于[行星卫星图像竞争](https://www.kaggle.com/c/planet-understanding-the-amazon-from-space) [ [1:11:55](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ]，TorchVision速度[太快](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ，因为他们只进行了大量的数据增强，因此只能获得25％的GPU利用率。 Profiler显示它全部在TorchVision中。
+Fastai使用OpenCV。 TorchVision使用PyTorch张量进行数据增强等。许多人使用Pillow `PIL` 。 Jeremy对所有这些进行了大量测试，他发现OpenCV比TorchVision快5到10倍。 对于[行星卫星图像竞争](https://www.kaggle.com/c/planet-understanding-the-amazon-from-space)  [[1:11:55](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s)] ，TorchVision速度[太快](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h11m55s) ，因为他们只进行了大量的数据增强，因此只能获得25％的GPU利用率。 Profiler显示它全部在TorchVision中。
 
-枕头速度要快得多，但它不如OpenCV快，而且也不像线程安全[ [1:12:19](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h12m19s) ]。 Python有这个称为全局解释器锁（GIL）的东西，这意味着两个线程不能同时做pythonic事情 - 这使得Python成为现代编程的一种糟糕的语言，但我们坚持使用它。 OpenCV发布了GIL。 fast.ai库如此之快的原因之一是因为它不像其他库那样使用多个处理器来进行数据增强 - 它实际上是多线程的。 它可以做多线程的原因是因为它使用OpenCV。 不幸的是，OpenCV有一个难以理解的API，文档有点迟钝。 这就是杰里米试图做到这一点的原因，以至于没有人使用fast.ai需要知道它正在使用OpenCV。 你无需知道要打开图像的标志。 你不需要知道如果读取失败，则不会显示异常 - 它会以静默方式返回`None` 。
+枕头速度要快得多，但它不如OpenCV快，而且也不像线程安全 [[1:12:19](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h12m19s)] 。 Python有这个称为全局解释器锁（GIL）的东西，这意味着两个线程不能同时做pythonic事情 - 这使得Python成为现代编程的一种糟糕的语言，但我们坚持使用它。 OpenCV发布了GIL。 fast.ai库如此之快的原因之一是因为它不像其他库那样使用多个处理器来进行数据增强 - 它实际上是多线程的。 它可以做多线程的原因是因为它使用OpenCV。 不幸的是，OpenCV有一个难以理解的API，文档有点迟钝。 这就是杰里米试图做到这一点的原因，以至于没有人使用fast.ai需要知道它正在使用OpenCV。 你无需知道要打开图像的标志。 你不需要知道如果读取失败，则不会显示异常 - 它会以静默方式返回`None` 。
 
 ![](../img/1_afXUCCfpzM6E1anLo8bKxA.png)
 
-不要开始使用PyTorch进行数据增强或开始引入Pillow - 你会发现突然发生的事情变得非常缓慢或多线程不再起作用。 你应该坚持使用OpenCV进行处理[ [1:14:10](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m10s) ]
+不要开始使用PyTorch进行数据增强或开始引入Pillow - 你会发现突然发生的事情变得非常缓慢或多线程不再起作用。 你应该坚持使用OpenCV进行处理 [[1:14:10](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m10s)] 
 
-#### 更好地使用Matplotlib [ [1:14:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m45s) ]
+#### 更好地使用Matplotlib  [[1:14:45](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h14m45s)] 
 
 Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 不幸的是，Matlab的绘图库并不是很好，但当时，这是每个人都知道的。 在某些时候，matplotlib人员意识到并添加了第二个API，这是一个面向对象的API。 不幸的是，因为最初学习matplotlib的人没有学过OO API，所以他们教会了下一代人的旧Matlab风格的API。 现在没有很多示例或教程使用更好，更容易理解和更简单的OO API。 因为绘图在深度学习中非常重要，所以我们将在本课程中学习的内容之一是如何使用此API。
 
@@ -455,9 +455,9 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 当你使用新数据集时，达到可以快速探索它的点是值得的。
 
-### 最大的物品分类[ [1:22:57](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h22m57s) ]
+### 最大的物品分类 [[1:22:57](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h22m57s)] 
 
-不要试图一下子解决所有问题，而是让我们不断进步。 我们知道如何找到每个图像中最大的对象并对其进行分类，所以让我们从那里开始。 Jeremy每天参加Kaggle比赛的时间是半小时[ [1:24:00](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h24m) ]。 在那个半小时结束时，提交一些东西并尝试使它比昨天好一点。
+不要试图一下子解决所有问题，而是让我们不断进步。 我们知道如何找到每个图像中最大的对象并对其进行分类，所以让我们从那里开始。 Jeremy每天参加Kaggle比赛的时间是半小时 [[1:24:00](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h24m)] 。 在那个半小时结束时，提交一些东西并尝试使它比昨天好一点。
 
 我们需要做的第一件事是遍历图像中的每个边界框并获得最大的边界框。 _lambda函数_只是一种定义内联匿名函数的方法。 在这里，我们用它来描述如何为每个图像排序注释 - 通过限制框大小（降序）。
 
@@ -481,13 +481,13 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 ![](../img/1_ncFID5QGdWrtpeIgVVhLeA.png)
 
-当你有任何处理管道[ [1:28:01](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h28m1s) ]时，你需要查看每个阶段。 假设你第一次做的一切都是错的。
+当你有任何处理管道 [[1:28:01](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h28m1s)] 时，你需要查看每个阶段。 假设你第一次做的一切都是错的。
 
 ```
  (PATH/'tmp').mkdir(exist_ok=True)  CSV = PATH/'tmp/lrg.csv' 
 ```
 
-通常，最简单的方法是简单地创建要建模的数据的CSV，而不是尝试创建自定义数据集[ [1:29:06](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h29m06s) ]。 在这里，我们使用Pandas来帮助我们创建图像文件名和类的CSV。 `columns=['fn','cat']`因为字典没有订单而且列的顺序很重要。
+通常，最简单的方法是简单地创建要建模的数据的CSV，而不是尝试创建自定义数据集 [[1:29:06](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h29m06s)] 。 在这里，我们使用Pandas来帮助我们创建图像文件名和类的CSV。 `columns=['fn','cat']`因为字典没有订单而且列的顺序很重要。
 
 ```
  df = pd.DataFrame({'fn': [trn_fns[o] for o in trn_ids],  'cat': [cats[trn_lrg_anno[o][1]] for o in trn_ids]},  columns=['fn','cat'])  df.to_csv(CSV, index=False) 
@@ -507,7 +507,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 有一点不同的是`crop_type` 。 在fast.ai中创建224 x 224图像的默认策略是首先调整它的大小，使最小边为224.然后在训练期间采用随机平方裁剪。 在验证期间，除非我们使用数据增强，否则我们采用中心作物。
 
-对于边界框，我们不希望这样做，因为与图像网不同，我们关心的东西几乎在中间并且非常大，对象检测中的很多东西都很小并且接近边缘。 通过将`crop_type`设置为`CropType.NO` ，它将不会裁剪，因此，为了使其成为正方形，它会使它[ [1:32:09](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h32m9s) ]。 一般来说，如果你裁剪而不是挤压，许多计算机视觉模型的效果会好一点，但是如果你压扁它们仍然可以很好地工作。 在这种情况下，我们绝对不想裁剪，所以这完全没问题。
+对于边界框，我们不希望这样做，因为与图像网不同，我们关心的东西几乎在中间并且非常大，对象检测中的很多东西都很小并且接近边缘。 通过将`crop_type`设置为`CropType.NO` ，它将不会裁剪，因此，为了使其成为正方形，它会使它 [[1:32:09](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h32m9s)] 。 一般来说，如果你裁剪而不是挤压，许多计算机视觉模型的效果会好一点，但是如果你压扁它们仍然可以很好地工作。 在这种情况下，我们绝对不想裁剪，所以这完全没问题。
 
 ```
  x,y=next(iter(md.val_dl))  show_img(md.val_ds.denorm(to_np(x))[0]); 
@@ -515,7 +515,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 ![](../img/1_bTBWgFXrJYD7sKtiPnCt5g.png)
 
-#### 数据加载器[ [1:33:04](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h33m4s) ]
+#### 数据加载器 [[1:33:04](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h33m4s)] 
 
 你已经知道在模型数据对象内部，我们有很多东西，包括训练数据加载器和训练数据集。 关于数据加载器的主要知识是它是一个迭代器，每次你从中获取下一个东西的迭代时，你得到一个迷你批处理。 你获得的迷你批量是你要求的任何大小，默认情况下批量大小为64.在Python中，你从迭代器中获取下一个东西的方式是下`next(md.trn_dl)`但你不能只做那。 你不能说这是因为你需要说“现在开始一个新纪元”。 通常，不仅在PyTorch中，而且对于任何Python迭代器，你都需要说“请从序列的开始处开始”。 你这么说就是使用`iter(md.trn_dl)`来获取`iter(md.trn_dl)`一个迭代器 - 特别是我们稍后会学到的，这意味着这个类必须定义一个`__iter__`方法，它返回一些不同的对象，然后有一个`__next__`方法。
 
@@ -525,17 +525,17 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
  x,y=next(iter(md.val_dl)) 
 ```
 
-我们不能直接发送到`show_image` [ [1:35:30](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h35m30s) ]。 例如， `x`不是一个numpy数组，不是在CPU上，并且形状都是错误的（ `3x224x224` ）。 此外，它们不是介于0和1之间的数字，因为所有标准的ImageNet预训练模型都希望我们的数据被归一化为零均值和1个标准差。
+我们不能直接发送到`show_image`  [[1:35:30](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h35m30s)] 。 例如， `x`不是一个numpy数组，不是在CPU上，并且形状都是错误的（ `3x224x224` ）。 此外，它们不是介于0和1之间的数字，因为所有标准的ImageNet预训练模型都希望我们的数据被归一化为零均值和1个标准差。
 
 ![](../img/1_CbjuSpn8ZnX6SMLNiBzoag.png)
 
-如你所见，已经对输入做了大量事情，以便将其传递给预先训练的模型。 因此我们有一个名为`denorm` for denormalize的函数，并且还修复了维度顺序等等。因为非规范化取决于变换[ [1:37:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h37m52s) ]，并且数据集知道使用什么变换来创建它，所以这就是你必须要做的事情`md.val_ds.denorm`并将其转换为numpy数组后传递小批量：
+如你所见，已经对输入做了大量事情，以便将其传递给预先训练的模型。 因此我们有一个名为`denorm` for denormalize的函数，并且还修复了维度顺序等等。因为非规范化取决于变换 [[1:37:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h37m52s)] ，并且数据集知道使用什么变换来创建它，所以这就是你必须要做的事情`md.val_ds.denorm`并将其转换为numpy数组后传递小批量：
 
 ```
  show_img(md.val_ds.denorm(to_np(x))[0]); 
 ```
 
-#### 使用ResNet34进行训练[ [1:38:36](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h38m36s) ]
+#### 使用ResNet34进行训练 [[1:38:36](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h38m36s)] 
 
 ```
  learn = ConvLearner.pretrained(f_model, md, metrics=[accuracy])  learn.opt_fn = optim.Adam 
@@ -547,7 +547,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 ![](../img/1_oZe5esLqorSwfDyN9ld3Rw.png)
 
-我们故意删除前几个点和最后几个点[ [1:38:54](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h38m54s) ]，因为通常最后几个点向无限远射高，你看不到任何东西，所以这通常是一个好主意。 但是当你的迷你批次非常少时，这不是一个好主意。 当你的LR查找器图形如上所示时，你可以在每一端要求更多点（你也可以使批量大小非常小）：
+我们故意删除前几个点和最后几个点 [[1:38:54](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h38m54s)] ，因为通常最后几个点向无限远射高，你看不到任何东西，所以这通常是一个好主意。 但是当你的迷你批次非常少时，这不是一个好主意。 当你的LR查找器图形如上所示时，你可以在每一端要求更多点（你也可以使批量大小非常小）：
 
 ```
  learn.sched.plot(n_skip=5, n_skip_end=1) 
@@ -585,7 +585,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 精度没有太大提高 - 因为许多图像有多个不同的对象，所以不可能准确。
 
-#### 让我们来看看结果[ [1:40:48](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h40m48s) ]
+#### 让我们来看看结果 [[1:40:48](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h40m48s)] 
 
 ```
  fig, axes = plt.subplots(3, 4, figsize=(12, 8))  for i,ax in enumerate(axes.flat):  ima=md.val_ds.denorm(x)[i]  b = md.classes[preds[i]]  ax = show_img(ima, ax=ax)  draw_text(ax, (0,0), b)  plt.tight_layout() 
@@ -597,11 +597,11 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 *   逐步运行每行代码，打印输入和输出。
 
-**方法1** [ [1:42:28](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h42m28s) ]：你可以获取循环的内容，复制它，在它上面创建一个单元格，粘贴它，取消缩进它，设置`i=0`并将它们全部放在不同的单元格中。
+**方法1**  [[1:42:28](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h42m28s)] ：你可以获取循环的内容，复制它，在它上面创建一个单元格，粘贴它，取消缩进它，设置`i=0`并将它们全部放在不同的单元格中。
 
 ![](../img/1_mOfiv9blUSSx5iFEArlZNw.png)
 
-**方法2** [ [1:43:04](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h43m4s) ]：使用Python调试器
+**方法2**  [[1:43:04](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h43m4s)] ：使用Python调试器
 
 你可以使用python调试器`pdb`来逐步执行代码。
 
@@ -626,7 +626,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 ![](../img/1_aztHN3af_MxEhHS71_SUDQ.png)
 
-#### 创建边界框[ [1:52:51](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h52m51s) ]
+#### 创建边界框 [[1:52:51](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h52m51s)] 
 
 在最大的对象周围创建一个边界框可能看起来像你之前没有做过的事情，但实际上它完全是你以前做过的事情。 我们可以创建回归而不是分类神经网络。 分类神经网络是具有sigmoid或softmax输出的网络，我们使用交叉熵，二进制交叉熵或负对数似然丢失函数。 这基本上是什么使它成为分类器。 如果我们最后没有softmax或sigmoid并且我们使用均方误差作为损失函数，它现在是一个回归模型，它预测连续数而不是类别。 我们也知道我们可以像行星竞赛那样有多个输出（多重分类）。 如果我们结合这两个想法并进行多列回归怎么办？
 
@@ -637,7 +637,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 而已。 我们来试试吧。
 
-#### 仅限Bbox [ [1:55:27](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h55m27s) ]
+#### 仅限Bbox  [[1:55:27](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h55m27s)] 
 
 现在我们将尝试找到最大对象的边界框。 这只是一个带有4个输出的回归。 因此，我们可以使用具有多个“标签”的CSV。 如果你记得第1部分要进行多标签分类，则多个标签必须以空格分隔，并且文件名以逗号分隔。
 
@@ -657,7 +657,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
  _['fn,bbox\n',_  _'000012.jpg,96 155 269 350\n',_  _'000017.jpg,77 89 335 402\n',_  _'000023.jpg,1 2 461 242\n',_  _'000026.jpg,124 89 211 336\n']_ 
 ```
 
-#### 训练[ [1:56:11](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h56m11s) ]
+#### 训练 [[1:56:11](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h56m11s)] 
 
 ```
  f_model=resnet34  sz=224  bs=64 
@@ -693,7 +693,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 ![](../img/1_nahTyZS46y9PuRseHjNg4g.png)
 
-#### 让我们根据ResNet34 [ [1:56:57](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h56m57s) ]创建一个卷积网：
+#### 让我们根据ResNet34  [[1:56:57](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h56m57s)] 创建一个卷积网：
 
 fastai允许你使用`custom_head`在`custom_head`上添加自己的模块，而不是默认添加的自适应池和完全连接的网络。 在这种情况下，我们不想进行任何池化，因为我们需要知道每个网格单元的激活。
 
@@ -704,7 +704,7 @@ fastai允许你使用`custom_head`在`custom_head`上添加自己的模块，而
 ```
 
 *   `Flatten()` ：通常前一层在`7x7x512`中有7x7x512，因此将其展平为长度为2508的单个向量
-*   `L1Loss` [ [1:58:22](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h58m22s) ]：不是将平方误差相加，而是将误差的绝对值相加。 这通常是你想要的，因为加上平方误差确实会对过多的错误进行惩罚。 所以L1Loss通常更适合使用。
+*   `L1Loss`  [[1:58:22](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h58m22s)] ：不是将平方误差相加，而是将误差的绝对值相加。 这通常是你想要的，因为加上平方误差确实会对过多的错误进行惩罚。 所以L1Loss通常更适合使用。
 
 ```
  learn.lr_find(1e-5,100)  learn.sched.plot(5) 
@@ -752,7 +752,7 @@ fastai允许你使用`custom_head`在`custom_head`上添加自己的模块，而
  learn.save('reg4') 
 ```
 
-#### 看看结果[ [1:59:18](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h59m18s) ]
+#### 看看结果 [[1:59:18](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h59m18s)] 
 
 ```
  x,y = next(iter(md.val_dl))  learn.model.eval()  preds = to_np(learn.model(VV(x))) 

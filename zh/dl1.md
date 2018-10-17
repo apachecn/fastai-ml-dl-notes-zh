@@ -2,12 +2,12 @@
 
 ### [第1课](http://forums.fast.ai/t/wiki-lesson-1/9398/1)
 
-#### 入门[ [0:00](https://youtu.be/IPBSB1HLNLo) ]：
+#### 入门 [[0:00](https://youtu.be/IPBSB1HLNLo)] ：
 
 *   为了训练神经网络，你肯定需要图形处理单元（GPU） - 特别是NVIDIA GPU，因为它是唯一支持CUDA（几乎所有深度学习图书馆和从业者都使用的语言和框架）的人。
-*   租用GPU有几种方法：Crestle [04:06]，Paperspace [ [06:10](https://youtu.be/IPBSB1HLNLo%3Ft%3D6m10s) ]
+*   租用GPU有几种方法：Crestle [04:06]，Paperspace  [[06:10](https://youtu.be/IPBSB1HLNLo%3Ft%3D6m10s)] 
 
-#### [Jupyter笔记本和狗与猫的介绍](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson1.ipynb) [ [12:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D12m39s) ]
+#### [Jupyter笔记本和狗与猫的介绍](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson1.ipynb)  [[12:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D12m39s)] 
 
 *   你可以通过选择它并按下`shift+enter`来运行单元格（你可以按住`shift`并多次按`enter`键以继续按下单元格），或者你可以单击顶部的“运行”按钮。 单元格可以包含代码，文本，图片，视频等。
 *   Fast.ai需要Python 3
@@ -127,10 +127,10 @@ learn.fit (0.01, 3)
 *   输出中的三个数字中的最后一个是验证集上的准确度。
 *   前两个是训练集和验证集的损失函数值（在这种情况下是交叉熵损失）。
 *   开始（例如， `1.` ）是纪元号。
-*   我们通过3行代码在17秒内达到了~99％（这将在2013年赢得Kaggle比赛）！ [ [21:49](https://youtu.be/IPBSB1HLNLo%3Ft%3D21m49s) ]
+*   我们通过3行代码在17秒内达到了~99％（这将在2013年赢得Kaggle比赛）！  [[21:49](https://youtu.be/IPBSB1HLNLo%3Ft%3D21m49s)] 
 *   很多人都认为深度学习需要大量的时间，大量的资源和大量的数据 - 一般来说，这不是真的！
 
-#### Fast.ai图书馆[ [22:24](https://youtu.be/IPBSB1HLNLo%3Ft%3D22m24s) ]
+#### Fast.ai图书馆 [[22:24](https://youtu.be/IPBSB1HLNLo%3Ft%3D22m24s)] 
 
 *   该库采用了他们可以找到的所有最佳实践和方法 - 每次出现看起来很有趣的论文时，他们会对其进行测试，如果它适用于各种数据集，并且他们可以弄清楚如何调整它，它会得到它在库中实现它。
 *   Fast.ai策划所有这些最佳实践并为你打包，并且大部分时间都会找出自动处理事物的最佳方法。
@@ -138,7 +138,7 @@ learn.fit (0.01, 3)
 *   大多数人比PyTorch更熟悉TensorFlow，但Jeremy现在知道的大多数顶级研究人员已经转向PyTorch。
 *   Fast.ai非常灵活，你可以根据需要尽可能多地使用所有这些策划的最佳实践。 在任何时候都很容易挂钩并编写自己的数据增强，丢失功能，网络架构等，我们将在本课程中学习所有内容。
 
-#### 分析结果[ [24:21](https://youtu.be/IPBSB1HLNLo%3Ft%3D24m12s) ]
+#### 分析结果 [[24:21](https://youtu.be/IPBSB1HLNLo%3Ft%3D24m12s)] 
 
 这就是验证数据集标签（将其视为正确答案）的样子：
 
@@ -249,7 +249,7 @@ plot_val_with_title(most_uncertain, "Most uncertain predictions")
 *   现在你已准备好构建自己的图像分类器（对于常规照片 - 可能不是CT扫描）！ 例如， [这](https://towardsdatascience.com/fun-with-small-image-data-sets-8c83d95d0159)是其中一个学生所做的。
 *   查看[此论坛帖子](http://forums.fast.ai/t/understanding-softmax-probabilities-output-on-a-multi-class-classification-problem/8194) ，了解可视化结果的不同方式（例如，当有超过2个类别时等）
 
-#### 自上而下与自下而上[ [30:52](https://youtu.be/IPBSB1HLNLo%3Ft%3D30m52s) ]
+#### 自上而下与自下而上 [[30:52](https://youtu.be/IPBSB1HLNLo%3Ft%3D30m52s)] 
 
 自下而上：了解你需要的每个构建块，并最终将它们组合在一起
 
@@ -261,7 +261,7 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 *   逐渐剥离层，修改，看看引擎盖下
 
-#### 课程结构[ [33:53](https://youtu.be/IPBSB1HLNLo%3Ft%3D33m53s) ]
+#### 课程结构 [[33:53](https://youtu.be/IPBSB1HLNLo%3Ft%3D33m53s)] 
 
 ![](../img/1_xTuKc0FAP9yKZ6fpcymKbA.png)
 
@@ -277,22 +277,22 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 图像分类算法对很多东西很有用。
 
-*   例如，AlphaGo [ [42:20](https://youtu.be/IPBSB1HLNLo%3Ft%3D42m20s) ]看了成千上万的棋盘，每个人都有一个标签，说明棋盘是否最终成为赢球或输球球员。 因此，它学会了一种图像分类，能够看到一块棋盘，并弄清楚它是好还是坏 - 这是玩得好的最重要的一步：知道哪个动作更好。
+*   例如，AlphaGo  [[42:20](https://youtu.be/IPBSB1HLNLo%3Ft%3D42m20s)] 看了成千上万的棋盘，每个人都有一个标签，说明棋盘是否最终成为赢球或输球球员。 因此，它学会了一种图像分类，能够看到一块棋盘，并弄清楚它是好还是坏 - 这是玩得好的最重要的一步：知道哪个动作更好。
 *   另一个例子是早期的学生创建[了鼠标移动图像](https://www.splunk.com/blog/2017/04/18/deep-learning-with-splunk-and-tensorflow-for-security-catching-the-fraudster-in-neural-networks-with-behavioral-biometrics.html)和检测到的欺诈性交易[的图像分类器](https://www.splunk.com/blog/2017/04/18/deep-learning-with-splunk-and-tensorflow-for-security-catching-the-fraudster-in-neural-networks-with-behavioral-biometrics.html) 。
 
-#### 深度学习≠机器学习[ [44:26](https://youtu.be/IPBSB1HLNLo%3Ft%3D44m26s) ]
+#### 深度学习≠机器学习 [[44:26](https://youtu.be/IPBSB1HLNLo%3Ft%3D44m26s)] 
 
 *   深度学习是一种机器学习
 *   机器学习是由Arthur Samuel发明的。 在50年代后期，他通过发明机器学习，得到了一台IBM大型机，可以更好地玩跳棋。 他让大型机多次与自己对抗并弄清楚哪种东西能够取得胜利，并在某种程度上用它来编写自己的程序。 1962年，亚瑟·塞缪尔说，有一天，绝大多数计算机软件将使用这种机器学习方法而不是手工编写。
-*   C-Path（计算病理学家）[ [45:42](https://youtu.be/IPBSB1HLNLo%3Ft%3D45m42s) ]是传统机器学习方法的一个例子。 他拍摄了乳腺癌活组织检查的病理学幻灯片，咨询了许多病理学家关于哪些类型的模式或特征可能与长期生存相关的想法。 然后他们编写专家算法来计算这些特征，通过逻辑回归进行运算，并预测存活率。 它的表现优于病理学家，但是领域专家和计算机专家需要多年的工作才能建立起来。
+*   C-Path（计算病理学家） [[45:42](https://youtu.be/IPBSB1HLNLo%3Ft%3D45m42s)] 是传统机器学习方法的一个例子。 他拍摄了乳腺癌活组织检查的病理学幻灯片，咨询了许多病理学家关于哪些类型的模式或特征可能与长期生存相关的想法。 然后他们编写专家算法来计算这些特征，通过逻辑回归进行运算，并预测存活率。 它的表现优于病理学家，但是领域专家和计算机专家需要多年的工作才能建立起来。
 
-#### 更好的方式[ [47:35](https://youtu.be/IPBSB1HLNLo%3Ft%3D47m35s) ]
+#### 更好的方式 [[47:35](https://youtu.be/IPBSB1HLNLo%3Ft%3D47m35s)] 
 
 ![](../img/1_R4qix1l4TjKOrLkrA4t6EA.png)
 
 *   具有这三个属性的一类算法是深度学习。
 
-#### 无限灵活的功能：神经网络[ [48:43](https://youtu.be/IPBSB1HLNLo%3Ft%3D48m43s) ]
+#### 无限灵活的功能：神经网络 [[48:43](https://youtu.be/IPBSB1HLNLo%3Ft%3D48m43s)] 
 
 深度学习使用的基础功能称为神经网络：
 
@@ -300,17 +300,17 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 *   你现在需要知道的是，它由许多简单的线性层组成，其中散布着许多简单的非线性层。 当你散布这些层时，你会得到一种称为通用逼近定理的东西。 通用近似定理所说的是，只要添加足够的参数，这种函数就可以解决任何给定的问题，任意精度。
 
-#### 通用参数拟合：梯度下降[ [49:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D49m39s) ]
+#### 通用参数拟合：梯度下降 [[49:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D49m39s)] 
 
 ![](../img/1_ezus486-s4OMT2YrXq81Dg.png)
 
-#### 快速且可扩展：GPU [ [51:05](https://youtu.be/IPBSB1HLNLo%3Ft%3D51m5s) ]
+#### 快速且可扩展：GPU  [[51:05](https://youtu.be/IPBSB1HLNLo%3Ft%3D51m5s)] 
 
 ![](../img/1_qPZYWZebPi6Sx_usSPWHUg.png)
 
 上面显示的神经网络示例具有一个隐藏层。 我们在过去几年中学到的东西是这些神经网络不是快速或可扩展的，除非我们添加了多个隐藏层 - 因此称为“深度”学习。
 
-#### 全部放在一起[ [53:40](https://youtu.be/IPBSB1HLNLo%3Ft%3D53m40s) ]
+#### 全部放在一起 [[53:40](https://youtu.be/IPBSB1HLNLo%3Ft%3D53m40s)] 
 
 ![](../img/1_btdxcSWzAoJMPuo0qgVXKw.png)
 
@@ -323,7 +323,7 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 ![](../img/1_BFG_B7UpS3AvJxE6lH0lug.gif)
 
-#### 诊断肺癌[ [56:55](https://youtu.be/IPBSB1HLNLo%3Ft%3D56m55s) ]
+#### 诊断肺癌 [[56:55](https://youtu.be/IPBSB1HLNLo%3Ft%3D56m55s)] 
 
 ![](../img/1__E0tiKelpZ3_7u0rOo6T5A.png)
 
@@ -331,7 +331,7 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 ![](../img/1_LtaJU-2GsBanHnxavDysDA.png)
 
-### 卷积神经网络[ [59:13](https://youtu.be/IPBSB1HLNLo%3Ft%3D59m13s) ]
+### 卷积神经网络 [[59:13](https://youtu.be/IPBSB1HLNLo%3Ft%3D59m13s)] 
 
 #### 线性层
 
@@ -339,7 +339,7 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 ![](../img/1_saLeHFHg9zMRmmCAR-qqzA.png)
 
-#### 非线性层[ [01:02:12](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h2m12s) ]
+#### 非线性层 [[01:02:12](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h2m12s)] 
 
 [**神经网络和深度学习**](http://neuralnetworksanddeeplearning.com/chap4.html "http://neuralnetworksanddeeplearning.com/chap4.html")[
 ](http://neuralnetworksanddeeplearning.com/chap4.html "http://neuralnetworksanddeeplearning.com/chap4.html")[_在本章中，我给出了普遍性定理的简单且大部分的视觉解释。_](http://neuralnetworksanddeeplearning.com/chap4.html "http://neuralnetworksanddeeplearning.com/chap4.html") [_我们将一步一步地进行..._ neuralnetworksanddeeplearning.com](http://neuralnetworksanddeeplearning.com/chap4.html "http://neuralnetworksanddeeplearning.com/chap4.html")[](http://neuralnetworksanddeeplearning.com/chap4.html)
@@ -354,7 +354,7 @@ Sigmoid和ReLU
 
 *   线性层跟随元素非线性函数的组合允许我们创建任意复杂的形状 - 这是通用逼近定理的本质。
 
-#### 如何设置这些参数来解决问题[ [01:04:25](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h4m25s) ]
+#### 如何设置这些参数来解决问题 [[01:04:25](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h4m25s)] 
 
 *   随机梯度下降 - 我们沿着山坡走小步。 步长称为**学习率**
 
@@ -365,13 +365,13 @@ Sigmoid和ReLU
 *   如果学习率太大，它将发散而不是收敛
 *   如果学习率太小，则需要永远
 
-#### 可视化和理解卷积网络[ [01:08:27](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h8m27s) ]
+#### 可视化和理解卷积网络 [[01:08:27](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h8m27s)] 
 
 ![](../img/1_RPakI9UqMTYmGIm4ELhh6w.png)
 
 我们从一些非常简单的东西开始，但如果我们使用它作为一个足够大的规模，由于通用近似定理和在深度学习中使用多个隐藏层，我们实际上获得了非常丰富的功能。 这实际上是我们在训练我们的狗与猫识别器时使用的。
 
-#### Dog vs. Cat Revisited - 选择学习率[ [01:11:41](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h11m41s) ]
+#### Dog vs. Cat Revisited - 选择学习率 [[01:11:41](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h11m41s)] 
 
 ```py
 learn.fit(0.01, 3) 
@@ -405,7 +405,7 @@ learn.sched.plot()
 
 *   然后我们选择学习率，其中损失仍在明显改善 - 在这种情况下`1e-2` （0.01）
 
-#### 选择时代数量[ [1:18:49](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h18m49s) ]
+#### 选择时代数量 [[1:18:49](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h18m49s)] 
 
 ```py
 [ 0. 0.04955 0.02605 0.98975]  [ 1. 0.03977 0.02916 0.99219]  [ 2. 0.03372 0.02929 0.98975] 
@@ -414,7 +414,7 @@ learn.sched.plot()
 *   尽可能多的人，但如果你运行太久，准确性可能会变得更糟。 它被称为“过拟合”，我们稍后会详细了解它。
 *   另一个考虑因素是你可以使用的时间。
 
-#### 提示与技巧[ [1:21:40](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h21m40s) ]
+#### 提示与技巧 [[1:21:40](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h21m40s)] 
 
 **1.** `Tab` - 当你忘记功能名称时，它将自动完成
 

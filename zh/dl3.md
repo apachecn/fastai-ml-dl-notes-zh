@@ -19,7 +19,7 @@
 
 ![](../img/1_w03TpHU-IgKy5GsLuMYxzw.png)
 
-### 回顾[ [08:24](https://youtu.be/9C06ZPF8Uuc%3Ft%3D8m24s) ]：
+### 回顾 [[08:24](https://youtu.be/9C06ZPF8Uuc%3Ft%3D8m24s)] ：
 
 #### Kaggle CLI：如何下载数据1：
 
@@ -45,7 +45,7 @@
 
 [![](../img/1_dpgcElfgbBLg-LKqyQHOBQ.png)](https://chrome.google.com/webstore/detail/curlwget/jmocjfidanebdlinpbcdkcmgdifblncg)
 
-#### 快狗与猫[ [13:39](https://youtu.be/9C06ZPF8Uuc%3Ft%3D13m39s) ]
+#### 快狗与猫 [[13:39](https://youtu.be/9C06ZPF8Uuc%3Ft%3D13m39s)] 
 
 ```
  **from** fastai.conv_learner **import** *  PATH = 'data/dogscats/'  sz=224; bs=64 
@@ -85,7 +85,7 @@ Quick Dogs v Cats
 
 *   `bn_freeze` ：如果你在一个与ImageNet非常相似的数据集上使用更大的更深层次的模型，如ResNet50或ResNext101（数字大于34的任何东西）（即标准对象的侧面照片，其大小类似于ImageNet在200-500之间像素），你应该添加这一行。 我们将在课程的后半部分了解更多信息，但这会导致批量标准化移动平均值无法更新。
 
-#### [如何使用其他图书馆 - Keras](https://github.com/fastai/fastai/blob/master/courses/dl1/keras_lesson1.ipynb) [ [20:02](https://youtu.be/9C06ZPF8Uuc%3Ft%3D20m2s) ]
+#### [如何使用其他图书馆 - Keras](https://github.com/fastai/fastai/blob/master/courses/dl1/keras_lesson1.ipynb)  [[20:02](https://youtu.be/9C06ZPF8Uuc%3Ft%3D20m2s)] 
 
 了解如何使用Fast.ai以外的库非常重要。 Keras是一个很好的例子，因为就像Fast.ai一样位于PyTorch之上，它位于各种库之上，如TensorFlow，MXNet，CNTK等。
 
@@ -177,7 +177,7 @@ Quick Dogs v Cats
 
 **Tensorflow** - 如果你想要转换你在本课程中学到的东西，可以使用**Keras**做更多的工作，但这需要更多的工作并且很难获得相同级别的结果。 也许将来会有TensorFlow兼容的Fast.ai版本。 我们会看到。
 
-#### 为Kaggle创建提交文件[ [32:45](https://youtu.be/9C06ZPF8Uuc%3Ft%3D32m45s) ]
+#### 为Kaggle创建提交文件 [[32:45](https://youtu.be/9C06ZPF8Uuc%3Ft%3D32m45s)] 
 
 要创建提交文件，我们需要两条信息：
 
@@ -224,7 +224,7 @@ Quick Dogs v Cats
 
 *   你可以使用Kaggle CLI直接从服务器提交，也可以使用`FileLink` ，它将为你提供从服务器下载文件到计算机的链接。
 
-#### 个人预测[ [39:32](https://youtu.be/9C06ZPF8Uuc%3Ft%3D39m32s) ]
+#### 个人预测 [[39:32](https://youtu.be/9C06ZPF8Uuc%3Ft%3D39m32s)] 
 
 如果我们想通过模型运行单个图像来获得预测怎么办？
 
@@ -262,7 +262,7 @@ Quick Dogs v Cats
 *   传递给模型或从模型返回的所有内容通常都假定为小批量。 这里我们只有一个图像，但我们必须将其转换为单个图像的小批量。 换句话说，我们需要创建一个不仅仅是`[rows, columns, channels]` ，而是`[number of images, rows, columns, channels]` 。
 *   `im[None]` ：在开始时添加额外单位轴的Numpy技巧。
 
-#### 理论：卷积神经网络在幕后实际发生了什么[ [42:17](https://youtu.be/9C06ZPF8Uuc%3Ft%3D42m17s) ]
+#### 理论：卷积神经网络在幕后实际发生了什么 [[42:17](https://youtu.be/9C06ZPF8Uuc%3Ft%3D42m17s)] 
 
 *   我们在第1课中看到了一点理论 - [http://setosa.io/ev/image-kernels/](http://setosa.io/ev/image-kernels/)
 *   卷积是我们有一个小矩阵（在深度学习中几乎总是3x3）并将该矩阵的每个元素乘以图像的3x3部分的每个元素并将它们全部加在一起以在一个点获得该卷积的结果。
@@ -286,9 +286,9 @@ Quick Dogs v Cats
 *   **完全连接的层：**为每个单独的激活赋予权重并计算总和乘积。 权重矩阵与整个输入一样大。
 *   注意：在最大池层之后，你可以执行许多操作。 其中一个是在整个大小上做另一个最大池。 在旧架构或结构化数据中，我们完全连接层。 大量使用完全连接层的架构容易过拟合而且速度较慢。 ResNet和ResNext不使用非常大的完全连接层。
 
-**问题** ：如果输入有3个通道会发生什么？ [ [1:05:30](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h5m30s) ]它看起来类似于具有2个通道的Conv1层 - 因此，滤波器每个滤波器有2个通道。 预先训练的ImageNet模型使用3个通道。 当你有少于3个频道时，你可以使用的一些技巧是复制其中一个频道使其成为3，或者如果你有2，则获得平均值并将其视为第三个频道。 如果你有4个通道，你可以用卷全部零点为卷积内核添加额外的级别。
+**问题** ：如果输入有3个通道会发生什么？  [[1:05:30](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h5m30s)] 它看起来类似于具有2个通道的Conv1层 - 因此，滤波器每个滤波器有2个通道。 预先训练的ImageNet模型使用3个通道。 当你有少于3个频道时，你可以使用的一些技巧是复制其中一个频道使其成为3，或者如果你有2，则获得平均值并将其视为第三个频道。 如果你有4个通道，你可以用卷全部零点为卷积内核添加额外的级别。
 
-#### 接下来发生什么？ [ [1:08:47](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h8m47s) ]
+#### 接下来发生什么？  [[1:08:47](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h8m47s)] 
 
 我们已经达到完全连接层（它做经典矩阵产品）。 在excel表中，有一个激活。 如果我们想查看输入的十位数中的哪一位，我们实际上想要计算10个数字。
 
@@ -301,7 +301,7 @@ Quick Dogs v Cats
 
 为什么我们需要非线性？ 如果堆叠多个线性图层，它仍然只是一个线性图层。 通过添加非线性层，我们可以适应任意复杂的形状。 我们使用的非线性激活函数是ReLU。
 
-#### Softmax [ [01:14:08](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h14m8s) ]
+#### Softmax  [[01:14:08](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h14m8s)] 
 
 Softmax仅出现在最后一层。 它输出0到1之间的数字，它们加起来为1.理论上，这并不是绝对必要的 - 我们可以要求神经网络学习一组内核，这些内核可以提供尽可能接近我们想要的概率的内核。 通常，通过深度学习，如果你可以构建你的体系结构，以便尽可能容易地表达所需的特征，你将获得更好的模型（更快速地学习并使用更少的参数）。
 
@@ -315,13 +315,13 @@ Softmax仅出现在最后一层。 它输出0到1之间的数字，它们加起�
 
 2.然后我们将`exp`列（182.75）相加，并将`e^x`除以总和。 结果总是积极的，因为我们将积极的积极分开。 每个数字介于0和1之间，总数将为1。
 
-**问题** ：如果想把图片分类为猫狗，我们使用什么样的激活功能？ [ [1:20:27](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h20m27s) ]碰巧我们现在要这样做。 我们可能想要这样做的一个原因是进行多标签分类。
+**问题** ：如果想把图片分类为猫狗，我们使用什么样的激活功能？  [[1:20:27](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h20m27s)] 碰巧我们现在要这样做。 我们可能想要这样做的一个原因是进行多标签分类。
 
-### 星球大赛[ [01:20:54](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h20m54s) ]
+### 星球大赛 [[01:20:54](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h20m54s)] 
 
 [Notebook](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson2-image_models.ipynb) / [Kaggle页面](https://www.kaggle.com/c/planet-understanding-the-amazon-from-space)
 
-> 我肯定会建议拟人化你的激活功能。 他们有个性。 [ [1:22:21](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h22m21s) ]
+> 我肯定会建议拟人化你的激活功能。 他们有个性。  [[1:22:21](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h22m21s)] 
 
 Softmax不喜欢预测多个事物。 它想要选择一件事。
 
@@ -371,11 +371,11 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
 
 ![](../img/1_u6f0xuCoSDDIz5zDrdTO5A.png)
 
-我们取`actuals`和`softmax`之间的差值，将它们加起来说出有多少错误（即损失函数）[ [1:31:02](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h31m2s) ]。
+我们取`actuals`和`softmax`之间的差值，将它们加起来说出有多少错误（即损失函数） [[1:31:02](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h31m2s)] 。
 
-单热编码对于存储是非常低效的，因此我们将存储索引值（单个整数）而不是0和1的目标值（ `y` ）[ [1:31:21](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h31m21s) ]。 如果你看一下狗品种比赛的`y`值，你实际上不会看到1和0的大名单，但你会得到一个整数。 在内部，PyTorch正在将索引转换为单热编码向量（即使你真的不会看到它）。 PyTorch具有不同的损失函数，对于一个热编码而另一些不是 - 但这些细节被fast.ai库隐藏，因此你不必担心它。 但要实现的很酷的事情是，我们对单标签分类和多标签分类都做了完全相同的事情。
+单热编码对于存储是非常低效的，因此我们将存储索引值（单个整数）而不是0和1的目标值（ `y` ） [[1:31:21](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h31m21s)] 。 如果你看一下狗品种比赛的`y`值，你实际上不会看到1和0的大名单，但你会得到一个整数。 在内部，PyTorch正在将索引转换为单热编码向量（即使你真的不会看到它）。 PyTorch具有不同的损失函数，对于一个热编码而另一些不是 - 但这些细节被fast.ai库隐藏，因此你不必担心它。 但要实现的很酷的事情是，我们对单标签分类和多标签分类都做了完全相同的事情。
 
-**问题** ：改变softmax的日志基数是否有意义？[ [01:32:55](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h32m55s) ]不，改变基数只是神经网络可以轻松学习的线性缩放：
+**问题** ：改变softmax的日志基数是否有意义？ [[01:32:55](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h32m55s)] 不，改变基数只是神经网络可以轻松学习的线性缩放：
 
 ![](../img/1_WUqrfSxhd4dBKSgknPWV6w.png)
 
@@ -477,7 +477,7 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
  _0.93626519738612801_ 
 ```
 
-人们问过这个问题有几个问题[ [01:38:46](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h38m46s) ]：
+人们问过这个问题有几个问题 [[01:38:46](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h38m46s)] ：
 
 ```
  data = data.resize(int(sz*1.3), 'tmp') 
@@ -497,7 +497,7 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
 
 我们在这款笔记本上使用了[F-beta](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.fbeta_score.html)而不是`accuacy` - 它是一种权衡假阴性和误报的方法。 我们使用它的原因是因为这个特殊的Kaggle比赛想要使用它。 看看[planet.py](https://github.com/fastai/fastai/blob/master/courses/dl1/planet.py) ，了解如何创建自己的指标函数。 这是最后打印出来的`[ 0\. 0.08932 0.08218 **0.9324** ]`
 
-#### 多标签分类的激活功能[ [01:44:25](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h44m25s) ]
+#### 多标签分类的激活功能 [[01:44:25](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h44m25s)] 
 
 用于多标签分类的激活函数称为**sigmoid。**
 
@@ -505,15 +505,15 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
 
 ![](../img/1_p8VFZrnPgWgVpUf62ZPuuA.png)
 
-**问题** ：为什么我们不开始训练差异学习率而不是单独训练最后一层？ [ [01:50:30](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h50m30s) ]
+**问题** ：为什么我们不开始训练差异学习率而不是单独训练最后一层？  [[01:50:30](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h50m30s)] 
 
 ![](../img/1_2Ocl12SOFKZ75iV4bqg-OQ.png)
 
 你可以跳过最后一层的训练，直接进入不同的学习率，但你可能不想这样做。 卷积层都包含预先训练的权重，因此它们不是随机的 - 对于接近ImageNet的东西，它们确实很好; 对于那些与ImageNet不相近的东西，它们总比没有好。 然而，我们所有完全连接的层都是完全随机的。 因此，你总是希望通过先训练它们来使完全连接的权重优于随机。 否则，如果你直接解冻，那么当你后来的那些仍然是随机的时候，你实际上是要摆弄那些早期的图层权重 - 这可能不是你想要的。
 
-问题：当你使用差异学习率时，这三种学习率是否在各层之间均匀分布？ [ [01:55:35](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h55m35s) ]我们将在后面的课程中详细讨论这个问题，但是fast.ai库中有一个“图层组”的概念。 在类似ResNet50的东西中，有数百个层，你可能不想写出数百个学习率，因此库决定如何拆分它们，最后一个总是指我们随机初始化的完全连接的层并补充说。
+问题：当你使用差异学习率时，这三种学习率是否在各层之间均匀分布？  [[01:55:35](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h55m35s)] 我们将在后面的课程中详细讨论这个问题，但是fast.ai库中有一个“图层组”的概念。 在类似ResNet50的东西中，有数百个层，你可能不想写出数百个学习率，因此库决定如何拆分它们，最后一个总是指我们随机初始化的完全连接的层并补充说。
 
-#### 可视化图层[ [01:56:42](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h56m42s) ]
+#### 可视化图层 [[01:56:42](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h56m42s)] 
 
 ```
  learn.summary() 
@@ -527,9 +527,9 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
 *   `-1` ：表示批量大小。 Keras使用`None` 。
 *   `'output_shape', [-1, 64, 32, 32]` - 64是内核的数量
 
-**问题** ：一个非常小的数据集的学习率查找器返回了奇怪的数字并且情节是空的[ [01:58:57](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h58m57s) ] - 学习率查找器将一次通过一个小批量。 如果你有一个很小的数据集，那么就没有足够的小批量。 所以诀窍是让你的批量大小非常小，如4或8。
+**问题** ：一个非常小的数据集的学习率查找器返回了奇怪的数字并且情节是空的 [[01:58:57](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h58m57s)]  - 学习率查找器将一次通过一个小批量。 如果你有一个很小的数据集，那么就没有足够的小批量。 所以诀窍是让你的批量大小非常小，如4或8。
 
-### 结构化数据[ [01:59:48](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h59m48s) ]
+### 结构化数据 [[01:59:48](https://youtu.be/9C06ZPF8Uuc%3Ft%3D1h59m48s)] 
 
 我们在机器学习中使用了两种类型的数据集：
 
@@ -541,7 +541,7 @@ Softmax不喜欢预测多个事物。 它想要选择一件事。
 *   [CorporaciónFavoritaGrocery销售预测](https://www.kaggle.com/c/favorita-grocery-sales-forecasting) - 目前正在运行
 *   [罗斯曼商店销售](https://www.kaggle.com/c/rossmann-store-sales) - 几乎与上述相同但已完成竞争。
 
-#### 罗斯曼商店促销[ [02:02:42](https://youtu.be/9C06ZPF8Uuc%3Ft%3D2h2m42s) ]
+#### 罗斯曼商店促销 [[02:02:42](https://youtu.be/9C06ZPF8Uuc%3Ft%3D2h2m42s)] 
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson3-rossman.ipynb)
 
