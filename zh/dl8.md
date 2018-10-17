@@ -77,13 +77,13 @@ Jeremy喜欢建立模型的方式：
 
 ![](../img/1_GyRVknri5gUktxgDmnxo4A.png)
 
-<figcaption class="imageCaption">建立自己的盒子[ [16:50](https://youtu.be/Z0ssNAbe81M%3Ft%3D16m50s) ]</figcaption>
+建立自己的盒子[ [16:50](https://youtu.be/Z0ssNAbe81M%3Ft%3D16m50s) ]
 
 
 
 ![](../img/1__r-uV41M5zUGTdV26N9bsg.png)
 
-<figcaption class="imageCaption">阅读论文[ [21:37](https://youtu.be/Z0ssNAbe81M%3Ft%3D21m37s) ]</figcaption>
+阅读论文[ [21:37](https://youtu.be/Z0ssNAbe81M%3Ft%3D21m37s) ]
 
 
 
@@ -91,13 +91,13 @@ Jeremy喜欢建立模型的方式：
 
 ![](../img/1_LBOcbbeBFypTgQ2AOit1EQ.png)
 
-<figcaption class="imageCaption">更多机会[ [25:29](https://youtu.be/Z0ssNAbe81M%3Ft%3D25m29s) ]</figcaption>
+更多机会[ [25:29](https://youtu.be/Z0ssNAbe81M%3Ft%3D25m29s) ]
 
 
 
 ![](../img/1_cNNnbJwImpFbqSKdA5_RIQ.png)
 
-<figcaption class="imageCaption">第2部分的主题[ [30:12](https://youtu.be/Z0ssNAbe81M%3Ft%3D30m12s) ]</figcaption>
+第2部分的主题[ [30:12](https://youtu.be/Z0ssNAbe81M%3Ft%3D30m12s) ]
 
 
 

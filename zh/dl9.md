@@ -91,7 +91,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1_4V4sjFZxn-y2cU9tCJPEUw.png)
 
-<figcaption class="imageCaption">这就是箱子变大的原因</figcaption>
+这就是箱子变大的原因
 
 
 
@@ -445,7 +445,7 @@ _分类器_是具有因变量的任何分类或二项式。 与_回归_相反，
 
 ![](../img/1_cCBVbJ2WjiPMlqX4nA2bwA.png)
 
-<figcaption class="imageCaption">3x3卷积，不透明度为15％ - 显然盒子的中心有更多的依赖性</figcaption>
+3x3卷积，不透明度为15％ - 显然盒子的中心有更多的依赖性
 
 
 
@@ -848,7 +848,7 @@ There are 3 ways to do this:
 
 ![](../img/1_QCo0wOgJKXDBYNlmE7zUmA.png)
 
-<figcaption class="imageCaption" style="width: 301.205%; left: -201.205%;">From left (1x1, 2x2, 4x4 grids of anchor boxes). Notice that some of the anchor box is bigger than the original image.</figcaption>
+From left (1x1, 2x2, 4x4 grids of anchor boxes). Notice that some of the anchor box is bigger than the original image.
 
 
 

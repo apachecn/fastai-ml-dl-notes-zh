@@ -19,7 +19,7 @@
 
 ![](../img/1_9XXQ3J7G3rD92tFkusi4bA.png)
 
-<figcaption class="imageCaption">标准的全连接网络</figcaption>
+标准的全连接网络
 
 
 
@@ -182,7 +182,7 @@
 
 ![](../img/1__29x3zNI1C0vM3fxiIpiVA.png)
 
-<figcaption class="imageCaption">[http://www.wildml.com/2015/10/recurrent-neural-network-tutorial-part-4-implementing-a-grulstm-rnn-with-python-and-theano/](http://www.wildml.com/2015/10/recurrent-neural-network-tutorial-part-4-implementing-a-grulstm-rnn-with-python-and-theano/)</figcaption>
+[http://www.wildml.com/2015/10/recurrent-neural-network-tutorial-part-4-implementing-a-grulstm-rnn-with-python-and-theano/](http://www.wildml.com/2015/10/recurrent-neural-network-tutorial-part-4-implementing-a-grulstm-rnn-with-python-and-theano/)
 
 
 
@@ -193,7 +193,7 @@
 
 ![](../img/1_qzfburCutJ3p-FYu1T6Q3Q.png)
 
-<figcaption class="imageCaption">[http://colah.github.io/posts/2015-08-Understanding-LSTMs/](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)</figcaption>
+[http://colah.github.io/posts/2015-08-Understanding-LSTMs/](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 
 
 

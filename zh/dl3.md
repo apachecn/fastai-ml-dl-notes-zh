@@ -59,7 +59,7 @@
 
 ![](../img/1_ItxElIWV6hU9f_fwEZ9jMQ.png)
 
-<figcaption class="imageCaption">Quick Dogs v Cats</figcaption>
+Quick Dogs v Cats
 
 
 
@@ -273,7 +273,7 @@
 
 ![](../img/1_AUQDWjcwS2Yt7Id0WyXCaQ.png)
 
-<figcaption class="imageCaption">我使用[https://office.live.com/start/Excel.aspx](https://office.live.com/start/Excel.aspx%3Fui%3Den-US%26rs%3DUS)</figcaption>
+我使用[https://office.live.com/start/Excel.aspx](https://office.live.com/start/Excel.aspx%3Fui%3Den-US%26rs%3DUS)
 
 
 

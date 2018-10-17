@@ -12,87 +12,96 @@
 *   您可以通过选择它并按下`shift+enter`来运行单元格（您可以按住`shift`并多次按`enter`键以继续按下单元格），或者您可以单击顶部的“运行”按钮。 单元格可以包含代码，文本，图片，视频等。
 *   Fast.ai需要Python 3
 
-```
- %reload_ext autoreload  %autoreload 2  %matplotlib inline 
-```
-
-```
- _# This file contains all the main external libs we'll use_  **from** **fastai.imports** **import** * 
+```py
+%reload_ext autoreload  
+%autoreload 2  
+%matplotlib inline 
 ```
 
-```
- **from** **fastai.transforms** **import** *  **from** **fastai.conv_learner** **import** *  **from** **fastai.model** **import** *  **from** **fastai.dataset** **import** *  **from** **fastai.sgdr** **import** *  **from** **fastai.plots** **import** * 
+```py
+# This file contains all the main external libs we'll use  
+from fastai.imports import * 
 ```
 
+```py
+from fastai.transforms import *  
+from fastai.conv_learner import *  
+from fastai.model import *  
+from fastai.dataset import *  
+from fastai.sgdr import *  
+from fastai.plots import * 
 ```
- PATH = "data/dogscats/"  sz=224 
+
+```py
+PATH = "data/dogscats/"  
+sz=224 
 ```
 
 **先看图片[** [**15:39**](https://youtu.be/IPBSB1HLNLo%3Ft%3D15m40s) **]**
 
-```
- !ls {PATH} 
+```py
+!ls {PATH} 
 ```
 
 ```
- _models sample test1 tmp train valid_ 
+models sample test1 tmp train valid
 ```
 
 *   `!` 告诉使用bash（shell）而不是python
 *   如果您不熟悉训练集和验证集，请查看Practical Machine Learning课程（或阅读[Rachel的博客](http://www.fast.ai/2017/11/13/validation-sets/) ）
 
-```
- !ls {PATH}valid 
-```
-
-```
- _cats dogs_ 
+```py
+!ls {PATH}valid 
 ```
 
 ```
- files = !ls {PATH}valid/cats | head  files 
+cats dogs
 ```
 
+```py
+files = !ls {PATH}valid/cats | head  files 
 ```
- _['cat.10016.jpg',_  _'cat.1001.jpg',_  _'cat.10026.jpg',_  _'cat.10048.jpg',_  _'cat.10050.jpg',_  _'cat.10064.jpg',_  _'cat.10071.jpg',_  _'cat.10091.jpg',_  _'cat.10103.jpg',_  _'cat.10104.jpg']_ 
+
+```py
+['cat.10016.jpg',  'cat.1001.jpg',  'cat.10026.jpg',  'cat.10048.jpg',  'cat.10050.jpg',  'cat.10064.jpg',  'cat.10071.jpg',  'cat.10091.jpg',  'cat.10103.jpg',  'cat.10104.jpg'] 
 ```
 
 *   此文件夹结构是共享和提供图像分类数据集的最常用方法。 每个文件夹都会告诉您标签（例如`dogs`或`cats` ）。
 
-```
- img = plt.imread(f' **{PATH}** valid/cats/ **{files[0]}** ')  plt.imshow(img); 
+```py
+img = plt.imread(f' {PATH} valid/cats/ {files[0]} ')  plt.imshow(img); 
 ```
 
 ![](../img/1_Uqy-JLzpyZedFNdpm15N2A.png)
 
 *   `f'{PATH}valid/cats/{files[0]}'` - 这是一个Python 3.6。 格式化字符串，可以方便地格式化字符串。
 
-```
- img.shape 
-```
-
-```
- _(198, 179, 3)_ 
+```py
+img.shape 
 ```
 
-```
- img[:4,:4] 
-```
-
-```
- _array([[[ 29, 20, 23],_  _[ 31, 22, 25],_  _[ 34, 25, 28],_  _[ 37, 28, 31]],_ 
+```py
+(198, 179, 3)
 ```
 
-```
- _[[ 60, 51, 54],_  _[ 58, 49, 52],_  _[ 56, 47, 50],_  _[ 55, 46, 49]],_ 
-```
-
-```
- _[[ 93, 84, 87],_  _[ 89, 80, 83],_  _[ 85, 76, 79],_  _[ 81, 72, 75]],_ 
+```py
+img[:4,:4] 
 ```
 
+```py
+array([[[ 29, 20, 23],  [ 31, 22, 25],  [ 34, 25, 28],  [ 37, 28, 31]], 
 ```
- _[[104, 95, 98],_  _[103, 94, 97],_  _[102, 93, 96],_  _[102, 93, 96]]], dtype=uint8)_ 
+
+```py
+[[ 60, 51, 54],  [ 58, 49, 52],  [ 56, 47, 50],  [ 55, 46, 49]], 
+```
+
+```py
+[[ 93, 84, 87],  [ 89, 80, 83],  [ 85, 76, 79],  [ 81, 72, 75]], 
+```
+
+```py
+[[104, 95, 98],  [103, 94, 97],  [102, 93, 96],  [102, 93, 96]]], dtype=uint8) 
 ```
 
 *   `img`是一个三维数组（又名3级张量）
@@ -104,12 +113,14 @@
 
 以下是训练模型所需的三行代码：
 
-```
- **data** = ImageClassifierData.from_paths(PATH, tfms=tfms_from_model(resnet34, sz))  **learn** = ConvLearner.pretrained(resnet34, data, precompute= **True** )  **learn.fit** (0.01, 3) 
+```py
+data = ImageClassifierData.from_paths(PATH, tfms=tfms_from_model(resnet34, sz))  
+learn = ConvLearner.pretrained(resnet34, data, precompute= True )  
+learn.fit (0.01, 3) 
 ```
 
-```
- _[ 0\. 0.04955 0.02605 0.98975]_  _[ 1\. 0.03977 0.02916 0.99219]_  _[ 2\. 0.03372 0.02929 0.98975]_ 
+```py
+[ 0. 0.04955 0.02605 0.98975]  [ 1. 0.03977 0.02916 0.99219]  [ 2. 0.03372 0.02929 0.98975] 
 ```
 
 *   这将做3个**时期** ，这意味着它将三次查看整个图像集。
@@ -131,22 +142,22 @@
 
 这就是验证数据集标签（将其视为正确答案）的样子：
 
-```
- data.val_y 
+```py
+data.val_y 
 ```
 
-```
- _array([0, 0, 0, ..., 1, 1, 1])_ 
+```py
+array([0, 0, 0, ..., 1, 1, 1]) 
 ```
 
 这些0和1代表什么？
 
-```
- data.classes 
+```py
+data.classes 
 ```
 
-```
- _['cats', 'dogs']_ 
+```py
+['cats', 'dogs'] 
 ```
 
 *   `data`包含验证和训练数据
@@ -154,26 +165,30 @@
 
 让我们对验证集进行预测（预测是以对数比例）：
 
-```
- log_preds = learn.predict()  log_preds.shape 
-```
-
-```
- _(2000, 2)_ 
+```py
+log_preds = learn.predict()  
+log_preds.shape 
 ```
 
-```
- log_preds[:10] 
+```py
+(2000, 2)
 ```
 
+```py
+log_preds[:10] 
 ```
- _array([[ -0.00002, -11.07446],_  _[ -0.00138, -6.58385],_  _[ -0.00083, -7.09025],_  _[ -0.00029, -8.13645],_  _[ -0.00035, -7.9663 ],_  _[ -0.00029, -8.15125],_  _[ -0.00002, -10.82139],_  _[ -0.00003, -10.33846],_  _[ -0.00323, -5.73731],_  _[ -0.0001 , -9.21326]], dtype=float32)_ 
+
+```py
+array([[ -0.00002, -11.07446],  [ -0.00138, -6.58385],  [ -0.00083, -7.09025],  [ -0.00029, -8.13645],  [ -0.00035, -7.9663 ],  [ -0.00029, -8.15125],  [ -0.00002, -10.82139],  [ -0.00003, -10.33846],  [ -0.00323, -5.73731],  [ -0.0001 , -9.21326]], dtype=float32) 
 ```
 
 *   输出表示猫的预测和狗的预测
 
-```
- preds = np.argmax(log_preds, axis=1) _# from log probabilities to 0 or 1_  probs = np.exp(log_preds[:,1]) _# pr(dog)_ 
+```py
+preds = np.argmax(logpreds, axis=1) 
+# from log probabilities to 0 or 1  
+probs = np.exp(logpreds[:,1]) 
+# pr(dog) 
 ```
 
 *   在PyTorch和Fast.ai中，大多数模型返回预测的对数而不是概率本身（我们将在后面的课程中了解原因）。 现在，只知道要获得概率，你必须做`np.exp()`
@@ -182,46 +197,49 @@
 
 *   确保你熟悉numpy（ `np` ）
 
-```
- _# 1\. A few correct labels at random_ plot_val_with_title(rand_by_correct( **True** ), "Correctly classified") 
+```py
+# 1. A few correct labels at random 
+plo_tval_with_title(rand_by_correct( **True** ), "Correctly classified") 
 ```
 
 *   图像上方的数字是成为狗的概率
 
-```
- _# 2\. A few incorrect labels at random_  plot_val_with_title(rand_by_correct( **False** ), "Incorrectly classified") 
+```py
+# 2. A few incorrect labels at random  
+plot_val_with_title(rand_by_correct( **False** ), "Incorrectly classified") 
 ```
 
 ![](../img/1_ZLhFRuLXqQmFV2uAok84DA.png)
 
-```
- plot_val_with_title(most_by_correct(0, **True** ), "Most correct cats") 
+```py
+plot_val_with_title(most_by_correct(0, True ), "Most correct cats") 
 ```
 
 ![](../img/1_RxYBmvqixwG4BYNPQGAZ4w.png)
 
-```
- plot_val_with_title(most_by_correct(1, **True** ), "Most correct dogs") 
+```py
+plot_val_with_title(most_by_correct(1, True ), "Most correct dogs") 
 ```
 
 ![](../img/1_kwUuA3gN-xbNBIUjDBHePg.png)
 
 更有趣的是，这里的模型认为它绝对是一只狗，但结果却是一只猫，反之亦然：
 
-```
- plot_val_with_title(most_by_correct(0, **False** ), "Most incorrect cats") 
+```py
+plot_val_with_title(most_by_correct(0, False ), "Most incorrect cats") 
 ```
 
 ![](../img/1_gvPAqSdB9IRFmhU4DCk-mg.png)
 
-```
- plot_val_with_title(most_by_correct(1, **False** ), "Most incorrect dogs") 
+```py
+plot_val_with_title(most_by_correct(1, False ), "Most incorrect dogs") 
 ```
 
 ![](../img/1_jXaTLkWMrvpC8Yz0QfR6LA.png)
 
-```
- most_uncertain = np.argsort(np.abs(probs -0.5))[:4]  plot_val_with_title(most_uncertain, "Most uncertain predictions") 
+```py
+most_uncertain = np.argsort(np.abs(probs -0.5))[:4]  
+plot_val_with_title(most_uncertain, "Most uncertain predictions") 
 ```
 
 ![](../img/1_wZDDn_XFH-z7libyMUlsBg.png)
@@ -330,7 +348,7 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 ![](../img/1_QindKA4Dt7Ol3CbICMSxWw.png)
 
-<figcaption class="imageCaption" style="width: 269.898%; left: -169.898%;">Sigmoid和ReLU</figcaption>
+Sigmoid和ReLU
 
 
 
@@ -355,22 +373,22 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 #### Dog vs. Cat Revisited - 选择学习率[ [01:11:41](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h11m41s) ]
 
-```
- learn.fit(0.01, 3) 
+```py
+learn.fit(0.01, 3) 
 ```
 
 *   第一个数字`0.01`是学习率。
 *   _学习率_决定了您想要更新_权重_ （或_参数_ ）的速度或速度。 学习率是设置最困难的参数之一，因为它会显着影响模型性能。
 *   方法`learn.lr_find()`可帮助您找到最佳学习率。 它使用2015年论文“ [循环学习率训练神经网络”中](http://arxiv.org/abs/1506.01186)开发的技术，我们只需将学习率从非常小的值提高，直到损失停止下降。 我们可以绘制不同批次的学习率，看看它是什么样的。
 
-```
- learn = ConvLearner.pretrained(arch, data, precompute= **True** )  learn.lr_find() 
+```py
+learn = ConvLearner.pretrained(arch, data, precompute=True)  learn.lr_find() 
 ```
 
 我们的`learn`对象包含一个属性`sched` ，其中包含我们的学习率调度程序，并具有一些方便的绘图功能，包括以下内容：
 
-```
- learn.sched.plot_lr() 
+```py
+learn.sched.plot_lr() 
 ```
 
 ![](../img/1_iGjSbGhX60ZZ3bHbqaIURQ.png)
@@ -379,8 +397,8 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 我们可以看到损失与学习率的关系，看看我们的损失在哪里停止下降：
 
-```
- learn.sched.plot() 
+```py
+learn.sched.plot() 
 ```
 
 ![](../img/1_CWF7v1ihFka2QG4RebgqjQ.png)
@@ -389,8 +407,8 @@ fast.ai：让学生立即使用神经网络，尽快获得结果
 
 #### 选择时代数量[ [1:18:49](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h18m49s) ]
 
-```
- _[ 0\. 0.04955 0.02605 0.98975]_  _[ 1\. 0.03977 0.02916 0.99219]_  _[ 2\. 0.03372 0.02929 0.98975]_ 
+```py
+[ 0. 0.04955 0.02605 0.98975]  [ 1. 0.03977 0.02916 0.99219]  [ 2. 0.03372 0.02929 0.98975] 
 ```
 
 *   尽可能多的人，但如果你运行太久，准确性可能会变得更糟。 它被称为“过拟合”，我们稍后会详细了解它。

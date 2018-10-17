@@ -324,7 +324,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 ![](../img/1_VEEVatttQmlWeI98vTO0iA.png)
 
-<figcaption class="imageCaption">`batch_size`维度和激活函数（例如relu，softmax）未在此处显示</figcaption>
+`batch_size`维度和激活函数（例如relu，softmax）未在此处显示
 
 
 
@@ -337,7 +337,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 ![](../img/1_gc1z1R1d5zHkYc75iqSWtw.png)
 
-<figcaption class="imageCaption">层图操作未显示; 记住箭头代表层操作</figcaption>
+层图操作未显示; 记住箭头代表层操作
 
 
 
@@ -426,7 +426,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 ![](../img/1_gBZslK323CITflsnXp-DSA.png)
 
-<figcaption class="imageCaption">[视频[1:27:57]](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h27m57s)</figcaption>
+[视频[1:27:57]](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h27m57s)
 
 
 
@@ -496,7 +496,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 ![](../img/1_xF-ab5Hn_3FGZRZtEGwFtw.png)
 
-<figcaption class="imageCaption">使用字符1到n-1预测字符</figcaption>
+使用字符1到n-1预测字符
 
 
 
@@ -611,7 +611,7 @@ PyTorch将自动为我们和线性输入层编写`for`循环。
 
 ![](../img/1_0-XkFkCIatPvenvKPfe2_g.png)
 
-<figcaption class="imageCaption">使用字符1到n-1预测字符2到n</figcaption>
+使用字符1到n-1预测字符2到n
 
 
 

@@ -307,7 +307,7 @@
 
 ![](../img/1_0-PpgltveKXnyjaMHPhCPA.png)
 
-<figcaption class="imageCaption">每个品种有多少只狗图像</figcaption>
+每个品种有多少只狗图像
 
 
 
@@ -376,7 +376,7 @@
 
 ![](../img/1_KPYOb0uGgAmaqLr6JWZmSg.png)
 
-<figcaption class="imageCaption">行的直方图</figcaption>
+行的直方图
 
 
 
@@ -496,7 +496,7 @@
 
 ![](../img/1_IHxFF49erSrWw02s8H6BiQ.png)
 
-<figcaption class="imageCaption">[可视化和理解卷积网络](https://arxiv.org/abs/1311.2901)</figcaption>
+[可视化和理解卷积网络](https://arxiv.org/abs/1311.2901)
 
 
 

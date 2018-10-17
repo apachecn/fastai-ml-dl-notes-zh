@@ -101,7 +101,7 @@
 
 ![](../img/1_Xl9If92kjaI5OEIxKyNLiw.png)
 
-<figcaption class="imageCaption">输出MSE</figcaption>
+输出MSE
 
 
 
@@ -320,7 +320,7 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 ![](../img/1_DS4ZfpUfsseOBayQMqS4Yw.png)
 
-<figcaption class="imageCaption">[链规则](https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/differentiating-vector-valued-functions/a/multivariable-chain-rule-simple-version)概述</figcaption>
+[链规则](https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/differentiating-vector-valued-functions/a/multivariable-chain-rule-simple-version)概述
 
 
 
