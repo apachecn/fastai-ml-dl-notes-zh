@@ -37,7 +37,7 @@ PATH = "data/dogscats/"
 sz=224 
 ```
 
-**先看图片[** [**15:39**](https://youtu.be/IPBSB1HLNLo%3Ft%3D15m40s) **]**
+**先看图片[** [15:39](https://youtu.be/IPBSB1HLNLo%3Ft%3D15m40s) **]**
 
 ```py
 !ls {PATH} 
