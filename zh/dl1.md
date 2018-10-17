@@ -252,11 +252,11 @@ plot_val_with_title(most_uncertain, "Most uncertain predictions")
 
 #### 自上而下与自下而上[ [30:52](https://youtu.be/IPBSB1HLNLo%3Ft%3D30m52s) ]
 
-自下而上：了解你需要的每个构建块，并最终将它们组合在一起
+自下而上：了解你需要的每个积木，并最终将它们组合在一起
 
 *   很难保持动力
 *   很难知道“大局”
-*   很难知道你真正需要的模块
+*   很难知道你真正需要的积木
 
 fast.ai：让学生立即使用神经网络，尽快获得结果
 
