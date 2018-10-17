@@ -12,7 +12,7 @@
 
 ![](../img/1_D0WqPCX7RfOL47TOEfkzYg.png)
 
-#### 辍学[04:59]
+####  Dropout [04:59]
 
 ```
  learn = ConvLearner.pretrained(arch, data, ps=0.5, precompute=True) 
@@ -28,7 +28,7 @@
  _Sequential(_  _(0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True)_  _(1): Dropout(p=0.5)_  _(2): Linear(in_features=1024, out_features=512)_  _(3): ReLU()_  _(4): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True)_  _(5): Dropout(p=0.5)_  _(6): Linear(in_features=512, out_features=120)_  _(7): LogSoftmax()_  _)_ 
 ```
 
-`learn` - 这将显示我们最后添加的图层。 这些是我们在`precompute=True`时训练的层
+`learn` - 这将显示我们最后添加的层。 这些是我们在`precompute=True`时训练的层
 
 （0），（4）： `BatchNorm`将在上一课中介绍
 
@@ -69,7 +69,7 @@
 
 **问题** ：你是否必须采取任何措施来适应你正在放弃激活的事实？  [[13:26](https://youtu.be/gbceqO8PpBg%3Ft%3D13m26s)] 我们没有，但是当你说`p=0.5`时，PyTorch会做两件事。 它抛弃了一半的激活，并且它已经存在的所有激活加倍，因此平均激活不会改变。
 
-在Fast.ai中，你可以传入`ps` ，这是所有添加的图层的`p`值。 它不会改变预训练网络中的辍学率，因为它应该已经训练过一些适当的辍学水平：
+在Fast.ai中，你可以传入`ps` ，这是所有添加的层的`p`值。 它不会改变预训练网络中的 Dropout 率，因为它应该已经训练过一些适当的 Dropout 水平：
 
 ```
  learn = ConvLearner.pretrained(arch, data, **ps=0.5** , precompute=True) 
@@ -81,7 +81,7 @@
  [2. **0.3521** **0.55247** 0.84189] 
 ```
 
-当`ps=0.` ，dropout图层甚至没有添加到模型中：
+当`ps=0.` ，dropout层甚至没有添加到模型中：
 
 ```
  Sequential(  (0): BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True)  (1): Linear(in_features=4096, out_features=512)  (2): ReLU()  (3): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True)  (4): Linear(in_features=512, out_features=120)  (5): LogSoftmax()  ) 
@@ -105,11 +105,11 @@
  _Sequential(_  _(0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True)_  _(1): Linear(in_features=1024, out_features=_ **_700_** _)_  _(2): ReLU()_  _(3): BatchNorm1d(700, eps=1e-05, momentum=0.1, affine=True)_  _(4): Linear(in_features=700, out_features=_ **_300_** _)_  _(5): ReLU()_  _(6): BatchNorm1d(300, eps=1e-05, momentum=0.1, affine=True)_  _(7): Linear(in_features=300, out_features=120)_  _(8): LogSoftmax()_  _)_ 
 ```
 
-**问题** ：有没有特定的方法可以确定它是否过度装配？  [[19:53](https://youtu.be/gbceqO8PpBg%3Ft%3D19m53s)] 。 是的，你可以看到训练损失远低于验证损失。 你无法判断它是否_过度_装修。 零过拟合通常不是最佳的。 你要做的唯一事情就是降低验证损失，因此你需要尝试一些事情，看看是什么导致验证损失很低。 对于你的特殊问题，你会有一种过度加工的感觉。
+**问题** ：有没有特定的方法可以确定它是否过拟合？  [[19:53](https://youtu.be/gbceqO8PpBg%3Ft%3D19m53s)] 。 是的，你可以看到训练损失远低于验证损失。 你无法判断它是否过拟合。 零过拟合通常不是最佳的。 你要做的唯一事情就是降低验证损失，因此你需要尝试一些事情，看看是什么导致验证损失很低。 对于你的特殊问题，你会有一种过拟合的感觉。
 
 **问题** ：为什么平均激活很重要？  [[21:15](https://youtu.be/gbceqO8PpBg%3Ft%3D21m15s)] 如果我们刚刚删除了一半的激活，那么将它们作为输入的下一次激活也将减半，之后的所有内容。 例如，如果蓬松的耳朵大于0.6，则蓬松的耳朵会蓬松，现在如果它大于0.3则只是蓬松 - 这改变了意义。 这里的目标是删除激活而不改变含义。
 
-**问题** ：我们可以逐层提供不同级别的辍学吗？  [[22:41](https://youtu.be/gbceqO8PpBg%3Ft%3D22m41s)] 是的，这就是它被称为`ps` ：
+**问题** ：我们可以逐层提供不同级别的 Dropout 吗？  [[22:41](https://youtu.be/gbceqO8PpBg%3Ft%3D22m41s)] 是的，这就是它被称为`ps` ：
 
 ```
  learn = ConvLearner.pretrained(arch, data, ps=[0., 0.2],  precompute=True, xtra_fc=[512]); learn 
@@ -119,13 +119,13 @@
  _Sequential(_  _(0): BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True)_  _(1): Linear(in_features=4096, out_features=512)_  _(2): ReLU()_  _(3): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True)_  _(4): Dropout(p=0.2)_  _(5): Linear(in_features=512, out_features=120)_  _(6): LogSoftmax()_  _)_ 
 ```
 
-*   当早期或晚期的图层应该具有不同的辍学量时，没有经验法则。
-*   如果有疑问，请为每个完全连接的层使用相同的压差。
-*   通常人们只会在最后一个线性层上投入辍学。
+*   当早期或晚期的层应该具有不同的 Dropout 量时，没有经验法则。
+*   如果有疑问，请为每个全连接层使用相同的压差。
+*   通常人们只会在最后一个线性层上投入 Dropout 。
 
 **问题** ：为什么要监控损失而不是准确性？  [[23:53](https://youtu.be/gbceqO8PpBg%3Ft%3D23m53s)] 损失是我们唯一可以看到的验证集和训练集。 正如我们后来所了解的那样，损失是我们实际上正在优化的事情，因此更容易监控和理解这意味着什么。
 
-**问题** ：我们是否需要在添加辍学后调整学习率？ [[24:33](https://youtu.be/gbceqO8PpBg%3Ft%3D24m33s)] 它似乎不足以影响学习率。 理论上，它可能但不足以影响我们。
+**问题** ：我们是否需要在添加 Dropout 后调整学习率？ [[24:33](https://youtu.be/gbceqO8PpBg%3Ft%3D24m33s)] 它似乎不足以影响学习率。 理论上，它可能但不足以影响我们。
 
 #### 结构化和时间序列数据 [[25:03](https://youtu.be/gbceqO8PpBg%3Ft%3D25m3s)] 
 
@@ -244,9 +244,9 @@
 ```
 
 *   在这里，我们要求它创建一个适合我们的模型数据的学习者。
-*   `0.04` ：使用多少辍学
+*   `0.04` ：使用多少 Dropout 
 *   `[1000,500]` ： `[1000,500]`激活多少次
-*   `[0.001,0.01]` ：在后续层使用多少辍学者
+*   `[0.001,0.01]` ：在后续层使用多少 Dropout 者
 
 #### 关键新概念：嵌入 [[45:39](https://youtu.be/gbceqO8PpBg%3Ft%3D45m39s)] 
 
@@ -260,7 +260,7 @@
 
 ![](../img/1_5D0_nDy0K0QLKFHTD07gcQ.png)
 
-对于回归问题（不是分类），你甚至可以跳过softmax图层。
+对于回归问题（不是分类），你甚至可以跳过softmax层。
 
 #### 分类变量 [[50:49](https://youtu.be/gbceqO8PpBg%3Ft%3D50m49s)] 
 
@@ -334,7 +334,7 @@
 
 *   `emb_szs` ：嵌入大小
 *   `len(df.columns)-len(cat_vars)` ：数据框中连续变量的数量
-*   `0.04` ：嵌入矩阵有自己的丢失，这是辍学率
+*   `0.04` ：嵌入矩阵有自己的丢失，这是 Dropout 率
 *   `1` ：我们想要创建多少输出（最后一个线性层的输出）
 *   `[1000, 500]` ：第一线性层和第二线性层中的激活次数
 *   `[0.001, 0.01]` ：第一线性层和第二线性层中的脱落
@@ -366,7 +366,7 @@
 
 所以这是一种处理时间序列和结构化数据的技术。 有趣的是，与使用这种技术的组（ [分类变量的实体嵌入](https://arxiv.org/abs/1604.06737) ）相比，第二名获胜者做了更多的特征工程。 本次比赛的获胜者实际上是物流销售预测的主题专家，因此他们有自己的代码来创建大量的功能。 Pinterest的人们为建议建立了一个非常相似的模型也表示，当他们从梯度增强机器转向深度学习时，他们的功能工程设计更少，而且模型更简单，需要的维护更少。 因此，这是使用这种深度学习方法的一大好处 - 你可以获得最先进的结果，但工作量却少得多。
 
-**问题** ：我们是否正在使用任何时间序列？  [[01:15:01](https://youtu.be/gbceqO8PpBg%3Ft%3D1h15m1s)] 间接地，是的。 正如我们刚刚看到的那样，我们的列中有一周中的一周，一年中的一些等，其中大多数都被视为类别，因此我们正在构建一月，周日等的分布式表示。 我们没有使用任何经典的时间序列技术，我们所做的只是在神经网络中真正完全连接的层。 嵌入矩阵能够以比任何标准时间序列技术更丰富的方式处理诸如星期几周期性之类的事情。
+**问题** ：我们是否正在使用任何时间序列？  [[01:15:01](https://youtu.be/gbceqO8PpBg%3Ft%3D1h15m1s)] 间接地，是的。 正如我们刚刚看到的那样，我们的列中有一周中的一周，一年中的一些等，其中大多数都被视为类别，因此我们正在构建一月，周日等的分布式表示。 我们没有使用任何经典的时间序列技术，我们所做的只是在神经网络中真正全连接层。 嵌入矩阵能够以比任何标准时间序列技术更丰富的方式处理诸如星期几周期性之类的事情。
 
 关于图像模型和这个模型之间差异的**问题**  [[01:15:59](https://youtu.be/gbceqO8PpBg%3Ft%3D1h15m59s)] ：我们调用`get_learner`的方式有所不同。 在成像中我们只是做了`Learner.trained`并传递数据：
 
@@ -402,7 +402,7 @@
 
 **第6步** 。 打电话给`m.fit`
 
-**问题** ：如何对此类数据使用数据增强，以及丢失如何工作？  [[01:18:59](https://youtu.be/gbceqO8PpBg%3Ft%3D1h18m59s)] 不知道。 Jeremy认为它必须是针对特定领域的，但他从未见过任何论文或业内任何人使用结构化数据和深度学习进行数据增强。 他认为可以做到但没有看到它完成。 辍学者正在做什么与以前完全一样。
+**问题** ：如何对此类数据使用数据增强，以及丢失如何工作？  [[01:18:59](https://youtu.be/gbceqO8PpBg%3Ft%3D1h18m59s)] 不知道。 Jeremy认为它必须是针对特定领域的，但他从未见过任何论文或业内任何人使用结构化数据和深度学习进行数据增强。 他认为可以做到但没有看到它完成。  Dropout 者正在做什么与以前完全一样。
 
 **问题** ：缺点是什么？ 几乎没有人使用这个。 为什么不？  [[01:20:41](https://youtu.be/gbceqO8PpBg%3Ft%3D1h20m41s)] 基本上答案就像我们之前讨论过的那样，学术界没有人差不多正在研究这个问题，因为这不是人们发表的内容。 结果，人们可以看到的并没有很好的例子，并且说“哦，这是一种运作良好的技术，让我们的公司实施它”。 但也许同样重要的是，到目前为止，使用这个Fast.ai库，还没有任何方法可以方便地进行。 如果你想要实现其中一个模型，则必须自己编写所有自定义代码。 有很多大的商业和科学机会来使用它并解决以前未能很好解决的问题。
 
@@ -573,7 +573,7 @@ IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/
  _5686719_ 
 ```
 
-在我们可以对文本执行任何操作之前，我们必须将其转换为令牌列表。 令牌基本上就像一个单词。 最终我们将它们变成一个数字列表，但第一步是将它变成一个单词列表 - 这在NLP中称为“标记化”。 一个好的标记器可以很好地识别句子中的碎片。 每个分隔的标点符号将被分开，并且多部分单词的每个部分将被适当地分开。 Spacy做了很多NLP的东西，它拥有Jeremy所知道的最好的标记器。 因此，Fast.ai库可以与Spacech tokenizer一起使用，就像使用torchtext一样。
+在我们可以对文本执行任何操作之前，我们必须将其转换为标记列表。 标记基本上就像一个单词。 最终我们将它们变成一个数字列表，但第一步是将它变成一个单词列表 - 这在NLP中称为“标记化”。 一个好的标记器可以很好地识别句子中的碎片。 每个分隔的标点符号将被分开，并且多部分单词的每个部分将被适当地分开。 Spacy做了很多NLP的东西，它拥有Jeremy所知道的最好的标记器。 因此，Fast.ai库可以与Spacech tokenizer一起使用，就像使用torchtext一样。
 
 #### 创建一个领域 [[01:41:01](https://youtu.be/gbceqO8PpBg?t=1h41m1s)] 
 
@@ -702,7 +702,7 @@ IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/
  opt_fn = partial(optim.Adam, betas=(0.7, 0.99)) 
 ```
 
-Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https://arxiv.org/abs/1708.02182)的变体。 该模型的一个关键特性是它通过[Dropout](https://en.wikipedia.org/wiki/Convolutional_neural_network#Dropout)提供出色的正则化。 没有简单的方法（但是！）找到下面的辍学参数的最佳值 - 你只需要试验......
+Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https://arxiv.org/abs/1708.02182)的变体。 该模型的一个关键特性是它通过[Dropout](https://en.wikipedia.org/wiki/Convolutional_neural_network#Dropout)提供出色的正则化。 没有简单的方法（但是！）找到下面的 Dropout 参数的最佳值 - 你只需要试验......
 
 但是，其他参数（ `alpha` ， `beta`和`clip` ）通常不需要调整。
 
@@ -710,7 +710,7 @@ Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https:
  learner = md.get_model(opt_fn, em_sz, nh, nl, dropouti=0.05,  dropout=0.05, wdrop=0.1, dropoute=0.02,  dropouth=0.05)  learner.reg_fn = partial(seq2seq_reg, alpha=2, beta=1)  learner.clip=0.3 
 ```
 
-*   在上一讲中，我们将了解架构是什么以及所有这些辍学者是什么。 现在，只要知道它与平常一样，如果你试图建立一个NLP模型并且你不合适，那么减少所有这些辍学，如果过度拟合，然后以大致这个比率增加所有这些辍学。 由于这是最近的一篇论文，所以没有很多指导，但这些比率运作良好 - 这也是斯蒂芬一直在使用的。
+*   在上一讲中，我们将了解架构是什么以及所有这些 Dropout 者是什么。 现在，只要知道它与平常一样，如果你试图建立一个NLP模型并且你不合适，那么减少所有这些 Dropout ，如果过度拟合，然后以大致这个比率增加所有这些 Dropout 。 由于这是最近的一篇论文，所以没有很多指导，但这些比率运作良好 - 这也是斯蒂芬一直在使用的。
 *   还有另一种我们可以避免过度拟合的方法，我们将在最后一堂课中讨论。 目前， `learner.reg_fn = partial(seq2seq_reg, alpha=2, beta=1)`可靠地运行，因此你的所有NLP模型可能都需要此特定行。
 *   `learner.clip=0.3` ：当你查看你的渐变并将它们乘以学习率来决定更新你的权重多少时，这将不允许它们超过0.3。 这是一个很酷的小技巧，可以防止我们采取太大的措施。
 *   现在细节并不重要，所以你可以按原样使用它们。
@@ -889,7 +889,7 @@ fastai可以直接从torchtext `splits`创建`ModelData`对象。
  _[ 0\. 0.29202 0.19023 0.92768]_ 
 ```
 
-我们确保冻结最后一层以外的所有图层。 然后我们训练一下，解冻它，训练一下。 好的一点是，一旦你有一个预先训练好的语言模型，它实际上训练得非常快。
+我们确保冻结最后一层以外的所有层。 然后我们训练一下，解冻它，训练一下。 好的一点是，一旦你有一个预先训练好的语言模型，它实际上训练得非常快。
 
 ```
  m3.fit(lrs, 7, metrics=[accuracy], cycle_len=2,  cycle_save_name='imdb2') 
