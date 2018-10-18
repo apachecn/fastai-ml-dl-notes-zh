@@ -1,6 +1,6 @@
 # 深度学习：第一部分第一课
 
-[课程 Wiki](http://forums.fast.ai/t/wiki-lesson-1/9398/1)
++   [课程论坛](http://forums.fast.ai/t/wiki-lesson-1/9398/1)
 
 ## 入门 [[0:00](https://youtu.be/IPBSB1HLNLo)]：
 

@@ -1,52 +1,61 @@
 # 深度学习：第一部分第四课
 
-### [第4课](http://forums.fast.ai/t/wiki-lesson-4/9402/1)
++   [课程论坛](http://forums.fast.ai/t/wiki-lesson-4/9402/1)
 
-学生用品：
+学生的文章：
 
-*   [改善我们学习率的方式](https://techburst.io/improving-the-way-we-work-with-learning-rate-5e99554f163b)
+*   [改善学习率的方式](https://techburst.io/improving-the-way-we-work-with-learning-rate-5e99554f163b)
 *   [循环学习率技术](http://teleported.in/posts/cyclic-learning-rate/)
-*   [使用重新启动（SGDR）探索随机梯度下降](https://medium.com/38th-street-studios/exploring-stochastic-gradient-descent-with-restarts-sgdr-fa206c38a74e)
-*   [使用差异学习率转移学习](https://towardsdatascience.com/transfer-learning-using-differential-learning-rates-638455797f00)
+*   [探索带有重启动的随机梯度下降（SGDR）](https://medium.com/38th-street-studios/exploring-stochastic-gradient-descent-with-restarts-sgdr-fa206c38a74e)
+*   [使用差异学习率的迁移学习](https://towardsdatascience.com/transfer-learning-using-differential-learning-rates-638455797f00)
 *   [让计算机看得比人类更好](https://medium.com/%40ArjunRajkumar/getting-computers-to-see-better-than-humans-346d96634f73)
 
 ![](../img/1_D0WqPCX7RfOL47TOEfkzYg.png)
 
-####  Dropout [04:59]
+###  Dropout [04:59]
 
 ```
- learn = ConvLearner.pretrained(arch, data, ps=0.5, precompute=True) 
+learn = ConvLearner.pretrained(arch, data, ps=0.5, precompute=True) 
 ```
 
-*   `precompute=True` ：预先计算从最后一个卷积层出来的激活。 请记住，激活是一个数字，它是根据构成内核/过滤器的一些权重/参数计算出来的，它们会应用于上一层的激活或输入。
+*   `precompute=True` ：预计算来自最后一个卷积层的激活。 请记住，激活是一个数字，它是根据构成内核/过滤器的一些权重/参数计算出来的，它们会应用于上一层的激活或输入。
 
 ```
- learn 
+learn 
 ```
 
 ```
- _Sequential(_  _(0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True)_  _(1): Dropout(p=0.5)_  _(2): Linear(in_features=1024, out_features=512)_  _(3): ReLU()_  _(4): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True)_  _(5): Dropout(p=0.5)_  _(6): Linear(in_features=512, out_features=120)_  _(7): LogSoftmax()_  _)_ 
+Sequential(
+  (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True)
+  (1): Dropout(p=0.5)
+  (2): Linear(in_features=1024, out_features=512)
+  (3): ReLU()
+  (4): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True)
+  (5): Dropout(p=0.5)
+  (6): Linear(in_features=512, out_features=120)
+  (7): LogSoftmax()
+)
 ```
 
 `learn` - 这将显示我们最后添加的层。 这些是我们在`precompute=True`时训练的层
 
 （0），（4）： `BatchNorm`将在上一课中介绍
 
-（1），（5）： `Dropout`
+（1），（5）：`Dropout`
 
-（2）： `Linear`层简单地表示矩阵乘法。 这是一个包含1024行和512列的矩阵，因此它将进行1024次激活并输出512次激活。
+（2）： `Linear`层仅仅是矩阵乘法。 这是一个包含 1024 行和 512 列的矩阵，因此它将接受 1024 个激活并输出 512 个激活。
 
-（3）： `ReLU` - 只需用零替换负数
+（3）： `ReLU` - 只是用零替换负数
 
-（6）： `Linear` - 第二个线性层，从前一个线性层获取512次激活并将它们通过一个新矩阵乘以512乘120并输出120次激活
+（6）： `Linear` - 第二个线性层，从前一个线性层获取 512 个激活并将它们乘以 512 乘 120 的新矩阵并输出 120 个激活
 
-（7）： `Softmax` - 激活函数，返回最多为1的数字，每个数字在0和1之间：
+（7）： `Softmax` - 激活函数，返回最大为 1 的数字，每个数字在 0 和 1 之间：
 
 ![](../img/1_PNRoFZeNc0DfGyqsq-S7sA.png)
 
-出于较小的数值精度原因，事实证明最好直接使用softmax的log而不是softmax  [[15:03](https://youtu.be/gbceqO8PpBg%3Ft%3D15m3s)] 。 这就是为什么当我们从模型中得到预测时，我们必须做`np.exp(log_preds)` 。
+出于较小的数值精度原因，事实证明最好直接使用 softmax 的 log 而不是 softmax [[15:03](https://youtu.be/gbceqO8PpBg%3Ft%3D15m3s)]。这就是为什么当我们从模型中得到预测时，我们必须执行`np.exp(log_preds)`。
 
-#### 什么是`Dropout` ，什么是`p` ？  [[08:17](https://youtu.be/gbceqO8PpBg%3Ft%3D8m17s)] 
+### 什么是`Dropout` ，什么是`p` ？  [[08:17](https://youtu.be/gbceqO8PpBg%3Ft%3D8m17s)] 
 
 ```
  _Dropout(p=0.5)_ 
@@ -127,7 +136,7 @@
 
 **问题** ：我们是否需要在添加 Dropout 后调整学习率？ [[24:33](https://youtu.be/gbceqO8PpBg%3Ft%3D24m33s)] 它似乎不足以影响学习率。 理论上，它可能但不足以影响我们。
 
-#### 结构化和时间序列数据 [[25:03](https://youtu.be/gbceqO8PpBg%3Ft%3D25m3s)] 
+### 结构化和时间序列数据 [[25:03](https://youtu.be/gbceqO8PpBg%3Ft%3D25m3s)] 
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson3-rossman.ipynb) / [Kaggle](https://www.kaggle.com/c/rossmann-store-sales)
 
@@ -173,7 +182,7 @@
 *   循环遍历`cat_vars`并将适用的数据框列转换为分类列。
 *   循环通过`contin_vars`并将它们设置为`float32` （32位浮点），因为这是PyTorch所期望的。
 
-#### 从一个小样本开始 [[34:29](https://youtu.be/gbceqO8PpBg%3Ft%3D34m29s)] 
+### 从一个小样本开始 [[34:29](https://youtu.be/gbceqO8PpBg%3Ft%3D34m29s)] 
 
 ```
  idxs = get_cv_idxs(n, val_pct=150000/n)  joined_samp = joined.iloc[idxs].set_index("Date")  samp_size = len(joined_samp); samp_size 
@@ -205,7 +214,7 @@
 
 *   [如何（以及为什么）创建一个好的验证集](http://www.fast.ai/2017/11/13/validation-sets/)
 
-#### 让我们直接进入深度学习行动 [[39:48](https://youtu.be/gbceqO8PpBg%3Ft%3D39m48s)] 
+### 让我们直接进入深度学习行动 [[39:48](https://youtu.be/gbceqO8PpBg%3Ft%3D39m48s)] 
 
 对于任何Kaggle比赛，重要的是你要充分了解你的指标 - 你将如何评判。 在[本次比赛中](https://www.kaggle.com/c/rossmann-store-sales) ，我们将根据均方根百分比误差（RMSPE）进行判断。
 
@@ -248,7 +257,7 @@
 *   `[1000,500]` ： `[1000,500]`激活多少次
 *   `[0.001,0.01]` ：在后续层使用多少 Dropout 者
 
-#### 关键新概念：嵌入 [[45:39](https://youtu.be/gbceqO8PpBg%3Ft%3D45m39s)] 
+### 关键新概念：嵌入 [[45:39](https://youtu.be/gbceqO8PpBg%3Ft%3D45m39s)] 
 
 我们暂时忘记分类变量：
 
@@ -256,13 +265,13 @@
 
 请记住，你永远不想将ReLU放在最后一层，因为softmax需要负数来创建低概率。
 
-#### **完全连接神经网络的简单视图[** [**49:13**](https://youtu.be/gbceqO8PpBg%3Ft%3D49m13s) **]：**
+### **完全连接神经网络的简单视图[** [**49:13**](https://youtu.be/gbceqO8PpBg%3Ft%3D49m13s) **]：**
 
 ![](../img/1_5D0_nDy0K0QLKFHTD07gcQ.png)
 
 对于回归问题（不是分类），你甚至可以跳过softmax层。
 
-#### 分类变量 [[50:49](https://youtu.be/gbceqO8PpBg%3Ft%3D50m49s)] 
+### 分类变量 [[50:49](https://youtu.be/gbceqO8PpBg%3Ft%3D50m49s)] 
 
 我们创建一个7行的新矩阵和我们选择的列数（例如4）并用浮点数填充它。 要使用连续变量将“星期日”添加到我们的等级1张量中，我们会查看此矩阵，它将返回4个浮点数，并将它们用作“星期日”。
 
@@ -310,7 +319,7 @@
 
 **问题** ：嵌入是否适合某些类型的变量？  [[01:02:45](https://youtu.be/gbceqO8PpBg%3Ft%3D1h2m45s)] 嵌入适用于任何分类变量。 它唯一不能很好地工作的是基数太高的东西。 如果你有600,000行且变量有600,000个级别，那么这不是一个有用的分类变量。 但总的来说，本次比赛的第三名获胜者确实认为所有基因都不是太高，他们都把它们都视为绝对的。 好的经验法则是，如果你可以创建一个分类变量，你也可以这样，因为它可以学习这种丰富的分布式表示; 如果你把它留在连续的地方，它最能做的就是试着找到一个适合它的单一功能形式。
 
-#### 场景背后的矩阵代数 [[01:04:47](https://youtu.be/gbceqO8PpBg%3Ft%3D1h4m47s)] 
+### 场景背后的矩阵代数 [[01:04:47](https://youtu.be/gbceqO8PpBg%3Ft%3D1h4m47s)] 
 
 查找具有索引的嵌入与在单热编码向量和嵌入矩阵之间进行矩阵乘积相同。 但这样做非常低效，因此现代库实现这一点，即采用整数并查看数组。
 
@@ -326,7 +335,7 @@
 
 因此，例如，星期几现在变为八行四列嵌入矩阵。 从概念上讲，这允许我们的模型创建一些有趣的时间序列模型。 如果有一个七天周期的周期在周一和周三上升，但仅限于每天和仅在柏林，它可以完全这样做 - 它拥有它需要的所有信息。 这是处理时间序列的绝佳方式。 你只需确保时间序列中的循环指示符作为列存在。 如果你没有一个名为day of week的列，那么神经网络很难学会做mod 7并在嵌入矩阵中查找。 这不是不可能，但真的很难。 如果你预测旧金山的饮料销售，你可能想要一个AT＆T公园球赛开始时的清单，因为这会影响到SoMa有多少人在喝啤酒。 因此，你需要确保基本指标或周期性在你的数据中，并且只要它们在那里，神经网络将学会使用它们。
 
-#### 学习器 [[01:10:13](https://youtu.be/gbceqO8PpBg%3Ft%3D1h10m13s)] 
+### 学习器 [[01:10:13](https://youtu.be/gbceqO8PpBg%3Ft%3D1h10m13s)] 
 
 ```
  m = md.get_learner(emb_szs, len(df.columns)-len(cat_vars), 0.04, 1,  [1000,500], [0.001,0.01], y_range=y_range)  lr = 1e-3 
@@ -406,11 +415,11 @@
 
 **问题** ：缺点是什么？ 几乎没有人使用这个。 为什么不？  [[01:20:41](https://youtu.be/gbceqO8PpBg%3Ft%3D1h20m41s)] 基本上答案就像我们之前讨论过的那样，学术界没有人差不多正在研究这个问题，因为这不是人们发表的内容。 结果，人们可以看到的并没有很好的例子，并且说“哦，这是一种运作良好的技术，让我们的公司实施它”。 但也许同样重要的是，到目前为止，使用这个Fast.ai库，还没有任何方法可以方便地进行。 如果你想要实现其中一个模型，则必须自己编写所有自定义代码。 有很多大的商业和科学机会来使用它并解决以前未能很好解决的问题。
 
-### 自然语言处理 [[01:23:37](https://youtu.be/gbceqO8PpBg%3Ft%3D1h23m37s)] 
+## 自然语言处理 [[01:23:37](https://youtu.be/gbceqO8PpBg%3Ft%3D1h23m37s)] 
 
 最具前瞻性的深度学习领域，它落后于计算机视觉两三年。 软件的状态和一些概念远没有计算机视觉那么成熟。 你在NLP中找到的一件事是你可以解决的特殊问题，并且它们具有特定的名称。 NLP中存在一种称为“语言建模”的特殊问题，它有一个非常具体的定义 - 它意味着建立一个模型，只要给出一个句子的几个单词，你能预测下一个单词将会是什么。
 
-#### 语言建模 [[01:25:48](https://youtu.be/gbceqO8PpBg%3Ft%3D1h25m48s)] 
+### 语言建模 [[01:25:48](https://youtu.be/gbceqO8PpBg%3Ft%3D1h25m48s)] 
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lang_model-arxiv.ipynb)
 
@@ -485,7 +494,7 @@
 
 语言模型可以非常深刻和微妙，所以我们将尝试构建它 - 不是因为我们关心这一点，而是因为我们正在尝试创建一个用于执行其他任务的预训练模型。 例如，鉴于IMDB电影评论，我们将确定它们是正面还是负面。 这很像猫与狗 - 分类问题。 所以我们真的想使用预先训练好的网络，至少知道如何阅读英语。 因此，我们将训练一个模型来预测句子的下一个单词（即语言模型），就像在计算机视觉中一样，在最后粘贴一些新的层并要求它预测某些东西是正面的还是负面的。
 
-#### IMDB  [[1:31:11](https://youtu.be/gbceqO8PpBg?t=1h31m11s)] 
+### IMDB  [[1:31:11](https://youtu.be/gbceqO8PpBg?t=1h31m11s)] 
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson4-imdb.ipynb)
 
@@ -521,7 +530,7 @@
 
 *   `torchtext` - PyTorch的NLP库
 
-#### 数据 [[01:37:05](https://youtu.be/gbceqO8PpBg?t=1h37m5s)] 
+### 数据 [[01:37:05](https://youtu.be/gbceqO8PpBg?t=1h37m5s)] 
 
 IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/)
 
@@ -575,7 +584,7 @@ IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/
 
 在我们可以对文本执行任何操作之前，我们必须将其转换为标记列表。 标记基本上就像一个单词。 最终我们将它们变成一个数字列表，但第一步是将它变成一个单词列表 - 这在NLP中称为“分词”。 一个好的分词器可以很好地识别句子中的碎片。 每个分隔的标点符号将被分开，并且多部分单词的每个部分将被适当地分开。 Spacy做了很多NLP的东西，它拥有Jeremy所知道的最好的分词器。 因此，Fast.ai库可以与Spacech tokenizer一起使用，就像使用torchtext一样。
 
-#### 创建一个领域 [[01:41:01](https://youtu.be/gbceqO8PpBg?t=1h41m1s)] 
+### 创建一个领域 [[01:41:01](https://youtu.be/gbceqO8PpBg?t=1h41m1s)] 
 
 字段是如何预处理某些文本的定义。
 
@@ -643,7 +652,7 @@ IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/
 
 **问题** ：处理自然语言时，上下文不重要吗？ 我们为什么要对单词进行标记和查看？  [[01:46:38](https://youtu.be/gbceqO8PpBg?t=1h46m38s)] 不，我们不是在看单个词 - 它们仍然是有序的。 仅仅因为我们用12号替换了我，他们仍然按照这个顺序。 处理称为“词袋”的自然语言有一种不同的方式，它们会丢弃秩序和背景。 在机器学习课程中，我们将学习如何使用词语表示，但我相信它们不再有用或者不再有用。 我们开始学习如何使用深度学习来正确使用上下文。
 
-#### 批量大小和BPTT  [[01:47:40](https://youtu.be/gbceqO8PpBg?t=1h47m40s)] 
+### 批量大小和BPTT  [[01:47:40](https://youtu.be/gbceqO8PpBg?t=1h47m40s)] 
 
 在语言模型中发生的事情即使我们有很多电影评论，它们都会被连接成一个大块的文本。 因此，我们预测这个巨大的长篇内容中的下一个词是所有IMDB电影评论连接在一起。
 
@@ -671,7 +680,7 @@ IMDB [大型电影评论数据集](http://ai.stanford.edu/~amaas/data/sentiment/
 
 关于这个问题，Jeremy在这个语言模型矩阵中发现了一段时间有点令人费解的东西，所以不要担心，如果需要一段时间，你必须问几千个问题。
 
-#### 创建模型 [[01:55:46](https://youtu.be/gbceqO8PpBg?t=1h55m46s)] 
+### 创建模型 [[01:55:46](https://youtu.be/gbceqO8PpBg?t=1h55m46s)] 
 
 现在我们有了一个模型数据对象可以为我们批量生产，我们可以创建一个模型。 首先，我们将创建一个嵌入矩阵。
 
@@ -719,7 +728,7 @@ Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https:
 
 **问题：**模型的架构是什么？  [[02:03:55](https://youtu.be/gbceqO8PpBg?t=2h3m55s)] 我们将在[上一课](https://youtu.be/gbceqO8PpBg?t=2h3m55s)中学习模型架构，但目前，它是一个使用LSTM（长期短期记忆）的反复神经网络。
 
-#### 适合 [[02:04:24](https://youtu.be/gbceqO8PpBg?t=2h4m24s)] 
+### 适合 [[02:04:24](https://youtu.be/gbceqO8PpBg?t=2h4m24s)] 
 
 ```
  learner.fit(3e-3, 4, wds=1e-6, cycle_len=1, cycle_mult=2) 
@@ -769,7 +778,7 @@ Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https:
  pickle.dump(TEXT, open(f' **{PATH}** models/TEXT.pkl','wb')) 
 ```
 
-#### 测试 [[02:04:53](https://youtu.be/gbceqO8PpBg?t=2h4m53s)] 
+### 测试 [[02:04:53](https://youtu.be/gbceqO8PpBg?t=2h4m53s)] 
 
 我们可以使用我们的语言模型来检查它似乎工作正常。 首先，让我们创建一小段文本来“填充”一组预测。 我们将使用我们的torchtext字段对其进行数值化，以便我们可以将其提供给我们的语言模型。
 
@@ -815,7 +824,7 @@ Fast.ai使用由Stephen Merity开发的最先进的[AWD LSTM语言模型](https:
  _film ever !_ _<eos> i saw this movie at the toronto international film festival ._ _i was very impressed ._ _i was very impressed with the acting ._ _i was very impressed with the acting ._ _i was surprised to see that the actors were not in the movie ._ _..._ 
 ```
 
-#### 情绪 [[02:05:09](https://youtu.be/gbceqO8PpBg?t=2h5m9s)] 
+### 情绪 [[02:05:09](https://youtu.be/gbceqO8PpBg?t=2h5m9s)] 
 
 所以我们预先训练了一种语言模型，现在我们想对其进行微调以进行情感分类。
 
@@ -925,7 +934,7 @@ Bradbury等人最近的一篇论文， [学习翻译：语境化词汇向量](ht
 
 有一位名叫塞巴斯蒂安·鲁德（Sebastian Ruder）的非常出色的研究员，他是唯一一位真正在NLP中进行预训练，微调和转学习的NLP研究员。 Jeremy问他为什么这不会发生更多，他的观点是因为没有软件可以让它变得简单。 希望Fast.ai会改变这一点。
 
-#### 协同过滤介绍 [[02:11:38](https://youtu.be/gbceqO8PpBg?t=2h11m38s)] 
+### 协同过滤介绍 [[02:11:38](https://youtu.be/gbceqO8PpBg?t=2h11m38s)] 
 
 [笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb)
 
