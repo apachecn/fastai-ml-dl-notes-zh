@@ -8,7 +8,7 @@
 | 深度学习| - |
 | 第一课 | [咸鱼](https://github.com/Watermelon233) |
 | 第二课 | [咸鱼](https://github.com/Watermelon233) |
-| 第三课 | |
+| 第三课 | [咸鱼](https://github.com/Watermelon233) |
 | 第四课 | |
 | 第五课 | |
 | 第六课 | |
@@ -34,3 +34,4 @@
 
 * dl1.md √
 * dl2.md √
+* dl3.md √
