@@ -155,7 +155,7 @@ b = T([[2., 2], [10, 10]])
 '''
 ```
 
-### **构建我们的第一个自定义层（即 PyTorch 模块）[** [**33:55**](https://youtu.be/J99NV9Cr75I%3Ft%3D33m55s) **]**
+### 构建我们的第一个自定义层（即 PyTorch 模块）[ [33:55](https://youtu.be/J99NV9Cr75I%3Ft%3D33m55s) ]
 
 我们通过创建一个扩展`nn.Module`并覆盖`forward`函数的 Python 类来实现它。
 
@@ -177,14 +177,14 @@ model(a,b)
 '''
 ```
 
-### **建造更复杂的模块[** [**41:31**](https://youtu.be/J99NV9Cr75I%3Ft%3D41m31s) **]**
+### 建造更复杂的模块[ [41:31](https://youtu.be/J99NV9Cr75I%3Ft%3D41m31s) ]
 
-这个实现有两个`DotProduct`类的补充：
+这个实现对`DotProduct`类有两个补充：
 
 *   两个`nn.Embedding`矩阵
 *   在上面的嵌入矩阵中查找我们的用户和电影
 
-用户ID很可能不是连续的，这使得很难用作嵌入矩阵的索引。 因此，我们将首先创建从零开始并且连续的索引，并使用带有匿名函数`lambda` Panda的`apply`函数将`ratings.userId`列替换为索引，并对`ratings.movieId`执行相同的操作。
+用户 ID 很可能不是连续的，这使其很难用作嵌入矩阵的索引。 因此，我们将首先创建从零开始并且连续的索引，并使用匿名函数`lambda`和 Pandas 的`apply`函数，将`ratings.userId`列替换为索引，并对`ratings.movieId`执行相同的操作。
 
 ```py
 u_uniq = ratings.userId.unique() 
@@ -198,7 +198,7 @@ ratings.movieId = ratings.movieId.apply(lambda x: movie2idx[x])
 n_users=int(ratings.userId.nunique()) n_movies=int(ratings.movieId.nunique())
 ```
 
-_提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保存在你的工具带中！
+_提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行，保存在你的工具箱中！
 
 ```py
 class EmbeddingDot(nn.Module):
@@ -215,9 +215,9 @@ class EmbeddingDot(nn.Module):
         return (u*m).sum(1)
 ```
 
-请注意， `__init__`是一个现在需要的构造函数，因为我们的类需要跟踪“状态”（多少部电影，多少用户，多少因素等）。 我们将权重初始化为0到0.05之间的随机数，你可以在这里找到关于权重初始化的标准算法的更多信息，“Kaiming Initialization”（PyTorch有He初始化实用函数，但是我们试图从头开始做事） [[46 ：58](https://youtu.be/J99NV9Cr75I%3Ft%3D46m58s)] 。
+请注意， `__init__`是一个现在需要的构造函数，因为我们的类需要跟踪“状态”（多少部电影，多少用户，多少因子等）。 我们将权重初始化为 0 到 0.05 之间的随机数，你可以在这里找到关于权重初始化的标准算法的更多信息，“Kaiming Initialization”（PyTorch 有 He 初始化实用函数，但是我们试图从头开始） [[46 ：58](https://youtu.be/J99NV9Cr75I%3Ft%3D46m58s)] 。
 
-`Embedding`不是张量而是**变量** 。 变量执行与张量完全相同的操作，但它也可以自动区分。 要从变量中拉出张量，请调用`data`属性。 所有张量函数都有一个变量，尾随下划线（例如`uniform_` ）将就地执行。
+`Embedding`不是张量而是**变量** 。 变量执行与张量完全相同的操作，但它也可以自动微分。 要从变量中拉出张量，请调用`data`属性。 所有张量函数都有尾随下划线的变体（例如`uniform_` ），将原地执行。
 
 ```py
 x = ratings.drop(['rating', 'timestamp'],axis=1)
@@ -225,7 +225,7 @@ y = ratings['rating'].astype(np.float32)
 data = ColumnarModelData.from_data_frame(path, val_idxs, x, y, ['userId', 'movieId'], 64)
 ```
 
-我们正在重用Rossmann笔记本中的ColumnarModelData（来自fast.ai库），这也是为什么在`EmbeddingDot`类 [[50:20](https://youtu.be/J99NV9Cr75I%3Ft%3D50m20s)] 中为`def forward(self, cats, conts)`函数存在分类和连续变量的原因。 由于在这种情况下我们没有连续变量，我们将忽略`conts`并使用`cats`的第一和第二列作为`users`和`movies` 。 请注意，它们是小批量的用户和电影。 重要的是不要手动循环小批量，因为你不会获得GPU加速，而是一次处理整个小批量，正如你在上面的`forward`功能的第3和第4行看到的那样 [[51](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ： [00-52](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ：05 ]。
+我们正在复用 Rossmann 笔记本中的 ColumnarModelData（来自 fast.ai 库），这也是`EmbeddingDot`类 [[50:20](https://youtu.be/J99NV9Cr75I%3Ft%3D50m20s)] 中的`def forward(self, cats, conts)`函数中，存在分类和连续变量的原因。 由于在这种情况下我们没有连续变量，我们将忽略`conts`并使用`cats`的第一和第二列作为`users`和`movies` 。 请注意，它们是小批量的用户和电影。 重要的是不要手动遍历小批量，因为你不会获得 GPU 加速，而是一次处理整个小批量，正如上面的`forward`功能的第 3 和第 4 行中你看到的那样 [[51:00-52:05](https://youtu.be/J99NV9Cr75I%3Ft%3D51m)]。
 
 ```py
 wd=1e-5
@@ -233,17 +233,17 @@ model = EmbeddingDot(n_users, n_movies).cuda()
 opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9)
 ```
 
-`optim`是为PyTorch提供优化器的原因。 `model.parameters()`是从`nn.Modules`继承的函数之一，它为我们提供了更新/学习的`nn.Modules`重。
+`optim`为 PyTorch 提供优化器。 `model.parameters()`是从`nn.Modules`继承的函数之一，它为我们提供了更新/学习的权重。
 
 ```py
 fit(model, data, 3, opt, F.mse_loss) 
 ```
 
-这个函数来自fast.ai库 [[54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s)] 并且比我们一直在使用的`learner.fit()`更接近常规的PyTorch方法。 它不会为你提供诸如“重启的随机梯度下降”或开箱即用的“差分学习率”等功能。
+这个函数来自 fast.ai 库 [[54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s)] 并且比我们一直在使用的`learner.fit()`更接近常规的 PyTorch 方法。 它不会为你提供诸如“带有重启的随机梯度下降”或开箱即用的“可微分学习率”等功能。
 
-### **让我们改进我们的模型**
+### 让我们改进我们的模型
 
-**偏见** - 适应普遍流行的电影或普遍热情的用户。
+**偏差** - 适应普遍流行的电影或普遍热情的用户。
 
 ```py
 min_rating,max_rating = ratings.rating.min(),ratings.rating.max()
@@ -269,13 +269,13 @@ class EmbeddingDotBias(nn.Module):
         return res
 ```
 
-`squeeze`是PyTorch版本的_广播_  [[1:04:11](https://youtu.be/J99NV9Cr75I%3Ft%3D1h4m11s)] 以获取更多信息，请参阅机器学习课程或[numpy文档](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html) 。
+`squeeze`是 PyTorch 版本的广播  [[1:04:11](https://youtu.be/J99NV9Cr75I%3Ft%3D1h4m11s)] 请参阅机器学习课程或[ numpy 文档](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html)，来获取更多信息。
 
-我们可以压缩评级，使其在1到5之间吗？ 是! 通过sigmoid函数进行预测将导致数字介于1和0之间。因此，在我们的情况下，我们可以将其乘以4并加1 - 这将导致1到5之间的数字。
+我们可以压缩评级，使其在 1 到 5 之间吗？是！通过 sigmoid 函数进行预测将导致数字位于 1 和 0 之间。因此，在我们的情况下，我们可以将其乘以 4 并加 1 - 这将导致 1 到 5 之间的数字。
 
 ![](../img/1_UYeXmpTtxA0pIkHJ8ETMUA.png)
 
-`F`是PyTorch函数（ `torch.nn.functional` ），包含张量的所有函数，在大多数情况下作为`F`导入。
+`F`是 PyTorch 函数（ `torch.nn.functional` ），包含用于张量的所有函数，在大多数情况下作为`F`导入。
 
 ```py
 wd=2e-4
@@ -290,15 +290,15 @@ fit(model, data, 3, opt, F.mse_loss)
 '''
 ```
 
-让我们来看看我们在**Simple Python版本中**使用的fast.ai代码 [[1:13:44](https://youtu.be/J99NV9Cr75I%3Ft%3D1h13m44s)]  **。** 在`column_data.py`文件中， `CollabFilterDataSet.get_leaner`调用`get_model`函数，该函数创建与我们创建的相同的`EmbeddingDotBias`类。
+让我们来看看我们在简单的 Python 版本中，使用的 fast.ai 代码 [[1:13:44](https://youtu.be/J99NV9Cr75I%3Ft%3D1h13m44s)]。在`column_data.py`文件中，`CollabFilterDataSet.get_leaner`调用`get_model`函数，该函数创建`EmbeddingDotBias`类，与我们创建的相同。
 
 ### 神经网络版 [[1:17:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h17m21s)] 
 
-我们回到excel表来理解直觉。 请注意，我们创建user_idx以查找嵌入，就像我们之前在python代码中所做的那样。 如果我们对user_idx进行单热编码并将其乘以用户嵌入，我们将为用户获取适用的行。 如果它只是矩阵乘法，为什么我们需要嵌入？ 它用于计算表现优化目的。
+我们回到 excel 表来理解直觉。 请注意，我们创建`user_idx`来查找嵌入，就像我们之前在 python 代码中所做的那样。 如果我们对`user_idx`进行单热编码并将其乘以用户嵌入，我们将为用户获取对应的行。 如果它只是矩阵乘法，为什么我们需要嵌入？ 它用于计算表现优化的目的。
 
 ![](../img/1_0CRZIBnNzw1lT_9EHOyd5g.png)
 
-我们不是计算用户嵌入向量和电影嵌入向量的点积来得到预测，而是将两者连接起来并通过神经网络来提供它。
+我们不计算用户嵌入向量和电影嵌入向量的点积来得到预测，而是将两者连接起来并使用神经网络来提供它。
 
 ```py
 class EmbeddingNet(nn.Module):
@@ -318,7 +318,7 @@ class EmbeddingNet(nn.Module):
         return F.sigmoid(self.lin2(x)) * (max_rating-min_rating+1) + min_rating-0.5
 ```
 
-请注意，我们不再有偏差项，因为PyTorch中的`Linear`层已经存在偏差。 `nh`是线性层创建的一些激活（Jeremy称之为“数字隐藏”）。
+请注意，我们不再有偏差项，因为 PyTorch 中的`Linear`层已经存在偏差。 `nh`是线性层创建的激活数量（Jeremy 称之为“隐藏数量”）。
 
 ![](../img/1_EUxuR7ejeb1wJUib0GRr2g.jpeg)
 
@@ -338,43 +338,43 @@ A Jupyter Widget
 '''
 ```
 
-请注意，损失函数也在`F` （这里，它是均方损失）。
+请注意，损失函数也在`F`中（这里，它是均方损失）。
 
 既然我们有神经网络，我们可以尝试很多东西：
 
-*   添加 Dropout 者
-*   使用不同的嵌入大小进行用户嵌入和电影嵌入
+*   添加 Dropout
+*   为用户嵌入和电影嵌入使用不同的嵌入大小
 *   不仅是用户和电影嵌入，而且还附加来自原始数据的电影类型嵌入和/或时间戳。
-*   增加/减少隐藏层数和激活次数
-*   增加/减少正规化
+*   增加/减少隐藏层数和激活个数
+*   增加/减少正则化
 
-### **训练循环中发生了什么？**  [[1:33:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h33m21s)] 
+### 训练循环中发生了什么？  [[1:33:21](https://youtu.be/J99NV9Cr75I%3Ft%3D1h33m21s)] 
 
-目前，我们正在将权重更新传递给PyTorch的优化器。 优化器有什么作用？ 什么是`momentum` ？
+目前，我们正在将权重更新传递给 PyTorch 的优化器。 优化器有什么作用？ 什么是`momentum` ？
 
 ```py
 opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9)
 ```
 
-我们将在excel表（ [graddesc.xlsm](https://github.com/fastai/fastai/blob/master/courses/dl1/excel/graddesc.xlsm) ）中实现梯度下降 - 从右到左看工作表。 首先我们创建一个随机_x_ '， _y_与_x_的线性相关（例如_y_ = _a * x_ + _b_ ）。 通过使用_x_和_y_的集合，我们将尝试学习_a_和_b。_
+我们将在 excel 表（[graddesc.xlsm](https://github.com/fastai/fastai/blob/master/courses/dl1/excel/graddesc.xlsm)）中实现梯度下降 - 从右到左看工作表。 首先我们创建一个随机的`x`，`y`与`x`线性相关（例如`y = a * x + b`）。 通过使用`x`和`y`的集合，我们将尝试学习`a`和`b`。
 
 ![](../img/1_EyHgeFUNArZ3xZRbY507QQ.jpeg)
 
 ![](../img/1_D_qMGnGAmQYMwsuBpBhhlQ.jpeg)
 
-要计算误差，我们首先需要预测，并将差异平方：
+要计算误差，我们首先需要预测，并计算差的平方：
 
 ![](../img/1_q7Fb4G2j2csZ7sS0tbi8zQ.png)
 
-为了减少误差，我们增加/减少_a_和_b_一点点，并找出会导致误差减小的原因。 这被称为通过有限差分找到导数。
+为了减少误差，我们增加/减少`a`和`b`一点点，并找出会导致误差减小的东西。 这被称为通过有限差分找到导数。
 
 ![](../img/1_Z2NHeXo8RFIOwhCyuQb7oQ.jpeg)
 
-有限差分在高维空间中变得复杂 [[1:41:46](https://youtu.be/J99NV9Cr75I%3Ft%3D1h41m46s)] ，并且它变得非常耗费内存并且需要很长时间。 所以我们想找到一些方法来更快地完成这项工作。 查找Jacobian和Hessian之类的东西是值得的（深度学习书： [第84页第4.3.1节](http://www.deeplearningbook.org/contents/numerical.html) ）。
+有限差分在高维空间中变得复杂 [[1:41:46](https://youtu.be/J99NV9Cr75I%3Ft%3D1h41m46s)] ，并且它变得非常耗费内存并且需要很长时间。 所以我们想找到一些方法来更快地完成这项工作。 值得查找 Jacobian 和 Hessian 之类的东西（深度学习书： [第 84 页第 4.3.1 节](http://www.deeplearningbook.org/contents/numerical.html) ）。
 
-### 链规则和反向传播
+### 链式规则和反向传播
 
-更快的方法是分析地做到这一点 [[1:45:27](https://youtu.be/J99NV9Cr75I%3Ft%3D1h45m27s)] 。 为此，我们需要一个链规则：
+更快的方法是解析地做到这一点 [[1:45:27](https://youtu.be/J99NV9Cr75I%3Ft%3D1h45m27s)] 。 为此，我们需要一个链式规则：
 
 ![](../img/1_DS4ZfpUfsseOBayQMqS4Yw.png)
 
@@ -382,45 +382,45 @@ opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9)
 
 
 
-这是Chris Olah关于[反向传播作为连锁规则](http://colah.github.io/posts/2015-08-Backprop/)的伟大文章。
+这是 Chris Olah 的不错的文章，[作为链式规则的反向传播](http://colah.github.io/posts/2015-08-Backprop/)。
 
-现在我们用[WolframAlpha](https://www.wolframalpha.com/)给出的实际导数替换有限差分（注意有限差分输出与实际导数非常接近，如果你需要计算自己的导数，那么做好快速健全性检查的好方法）：
+现在我们用 [WolframAlpha](https://www.wolframalpha.com/) 给出的实际导数替换有限差分（注意有限差分输出与实际导数非常接近，如果你需要计算自己的导数，那么它是个快速健全性检查的好方法）：
 
 ![](../img/1_VHXoG1HpJxlR_y0yfrEz-g.jpeg)
 
-*   “在线”训练 - 规模为1的小批量训练
+*   “在线”训练 - 大小为 1 的小批量
 
-这就是你如何使用excel表格进行SGD。 如果你要使用CNN电子表格的输出更改预测值，我们可以使用SGD训练CNN。
+这就是你如何使用 excel 表格进行 SGD。 如果你要使用 CNN 电子表格的输出更改预测值，我们可以使用 SGD 训练 CNN。
 
 ### 动量 [[1:53:47](https://youtu.be/J99NV9Cr75I%3Ft%3D1h53m47s)] 
 
-> 来吧，采取一些暗示 - 这是一个很好的方向。 请继续这样做，但更多。
+> 来吧，接受这个暗示 - 这是一个很好的方向。 请这样做下去，做得更多。
 
-通过这种方法，我们将在当前的小批量衍生物和我们在最后一批小批量（单元格K9）之后采取的步骤（和方向）之间使用线性插值：
+使用这种方法，我们将在当前的小批量导数，和我们在最后一个小批量（单元格 K9）之后采取的步骤（和方向）之间使用线性插值：
 
 ![](../img/1_zvTMttj6h4iwFcxnt8zKyg.png)
 
-与其符号（+/-）是随机的_de_ / _db_相比，具有动量的那个将继续向同一方向移动一点点直到某一点。 这将减少训练所需的一些时期。
+与`de/db`相比（它的符号（`+/-`）是随机的），具有动量的那个将继续向同一方向移动一点点直到某一点。 这将减少训练所需的迭代。
 
 ###  Adam  [[1:59:04](https://youtu.be/J99NV9Cr75I%3Ft%3D1h59m4s)] 
 
- Adam 的速度要快得多，但问题在于最终的预测并不像SGD那样有动力。 似乎这是由于 Adam 和权重衰减的联合使用。 解决此问题的新版本称为**AdamW** 。
+Adam 的速度要快得多，但问题在于最终的预测并不像带动量的 SGD 那样好。 似乎这是由于 Adam 和权重衰减的联合使用。 解决此问题的新版本称为 **AdamW**。
 
 ![](../img/1_0yZ9Hbn2BPSNY9L-5jL0Tg.png)
 
-*   `cell J8` ：导数和前一个方向的线性插值（与我们在动量中的相同）
-*   `cell L8` ：从最后一步（ `cell L7` ）的导数平方+导数平方的线性插值
-*   这个想法被称为“指数加权移动平均线”（换句话说，平均值与之前的值相乘）
+*   `cell J8`：导数和前一个方向的线性插值（与我们在动量中的相同）
+*   `cell L8`：来自最后一步（ `cell L7` ）的导数平方，加上导数平方的线性插值
+*   这个想法被称为“指数加权移动平均”（换句话说，平均值与之前的值相乘）
 
-学习率比以前高得多，因为我们将它除以`L8`平方根。
+学习率比以前高得多，因为我们将它除以`L8`的平方根。
 
-如果你看一下fast.ai库（model.py），你会注意到在`fit`函数中，它不只是计算平均损失，而是计算损失的**指数加权移动平均值** 。
+如果你看一下 fast.ai 库（`model.py`），你会注意到在`fit`函数中，它不只是计算平均损失，而是计算损失的**指数加权移动平均**。
 
 ```py
 avg_loss = avg_loss * avg_mom + loss * (1-avg_mom) 
 ```
 
-另一个有用的概念是每当你看到`α（...）+（1-α）（...）`时，立即想到**线性插值。**
+另一个有用的概念是每当你看到`α(...) + (1-α)(...)`时，立即想到**线性插值**。
 
 ### **一些直觉**
 
@@ -435,6 +435,6 @@ avg_loss = avg_loss * avg_mom + loss * (1-avg_mom)
 
 ### AdamW  [[2:11:18](https://youtu.be/J99NV9Cr75I%3Ft%3D2h11m18s)] 
 
-当参数多于数据点时，正则化变得很重要。 我们以前见过 Dropout ，权重衰退是另一种正规化。 权重衰减（L2正则化）通过将平方权重（权重衰减乘数乘以）加到损失中来惩罚大权重。 现在损失函数想要保持较小的权重，因为增加权重会增加损失; 因此，只有当损失提高超过罚款时才这样做。
+当参数多于数据点时，正则化变得很重要。 我们以前见过 Dropout ，权重衰退是另一种正则化。 权重衰减（L2正则化）通过将平方权重（权重衰减乘数乘以）加到损失中来惩罚大权重。 现在损失函数想要保持较小的权重，因为增加权重会增加损失; 因此，只有当损失提高超过罚款时才这样做。
 
 问题在于，由于我们将平方权重添加到损失函数，这会影响梯度的移动平均值和Adam的平方梯度的移动平均值。 这导致当梯度变化很大时减少权重衰减量，并且当变化很小时增加权重衰减量。 换句话说，“惩罚大权重，除非渐变变化很大”，这不是我们想要的。 AdamW从损失函数中删除了权重衰减，并在更新权重时直接添加它。

@@ -437,7 +437,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
  md = ColumnarModelData.from_arrays('.', [-1], np.stack( **[x1,x2,x3]** , axis=1), y, bs=512) 
 ```
 
-我们将重用[ColumnarModelData](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)  [[1:32:20](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)] 。 如果我们堆栈`x1` ， `x2`和`x3` ，我们将在`forward`方法中得到`c1` ， `c2` ， `c3` 。 当你想用原始方法训练模型时， `ColumnarModelData.from_arrays`会派上用场，你放入`[x1, x2, x3]` ，你将在`**def** **forward** (self, c1, c2, c3)`返回`**def** **forward** (self, c1, c2, c3)`
+我们将复用[ColumnarModelData](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)  [[1:32:20](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)] 。 如果我们堆栈`x1` ， `x2`和`x3` ，我们将在`forward`方法中得到`c1` ， `c2` ， `c3` 。 当你想用原始方法训练模型时， `ColumnarModelData.from_arrays`会派上用场，你放入`[x1, x2, x3]` ，你将在`**def** **forward** (self, c1, c2, c3)`返回`**def** **forward** (self, c1, c2, c3)`
 
 ```
  m = Char3Model(vocab_size, n_fac).cuda() 
