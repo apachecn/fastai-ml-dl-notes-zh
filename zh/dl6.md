@@ -215,47 +215,47 @@ Skip-Gram 特定于 NLP。 将未标记的问题转变为标记问题的好方�
 *   对于更详细的说明，请参阅机器学习课程。
 *   `apply_cats(joined_test, joined)`用于确保测试集和训练集具有相同的类别编号。
 *   跟踪包含每个连续列的平均值和标准差的`mapper` ，并将相同的`mapper`应用于测试集。
-*   不要依赖Kaggle公共董事会 - 依靠你自己精心设计的验证集。
+*   不要依赖 Kaggle 公共版 - 依靠你自己精心设计的验证集。
 
-#### 为罗斯曼寻找一个好的[核心](https://www.kaggle.com/thie1e/exploratory-analysis-rossmann)
+#### 为 Rossmann 寻找一个好的[核心](https://www.kaggle.com/thie1e/exploratory-analysis-rossmann)
 
 *   周日对销售的影响
 
-商店关闭前后的销售额有所增长。 第三名获胜者在开始任何分析之前删除了关闭的商店行。
+商店关闭前后的销售额有所增长。 第三名获胜者在开始任何分析之前删除了关闭的商店的行。
 
-> **不要触摸你的数据，除非你首先分析看你正在做什么是好的 - 没有假设。**
+> **不要触碰你的数据，除非你首先分析来看看做什么好 - 没有假设。**
 
 #### Vim技巧 [[49:12](https://youtu.be/sHcLkfRrgoQ%3Ft%3D49m12s)] 
 
-*   `:tag ColumnarModelData`将带你进入类定义
-*   `ctrl + ]`将带你定义光标下的内容
-*   `ctrl + t`回去
+*   `:tag ColumnarModelData`访问类定义
+*   `ctrl + ]`访问光标下内容的定义
+*   `ctrl + t`返回
 *   `*`找到光标下的内容的用法
-*   你可以使用`:tabn`选项在选项卡之间切换`:tabn`和`:tabp` ，使用`:tabe &lt;filepath&gt;`可以添加新选项卡; 并使用常规`:q`或`:wq`你关闭一个标签。 如果将`:tabn`和`:tabp`到F7 / F8键，则可以轻松地在文件之间切换。
+*   你可以使用`:tabn`和`:tabp`在选项卡之间切换，使用`:tabe <filepath>`可以添加新选项卡；并使用常规`:q`或`:wq`关闭一个标签。 如果将`:tabn`和`:tabp`映射到`F7 / F8`键，则可以轻松地在文件之间切换。
 
 #### [ColumnarModelData](https://youtu.be/sHcLkfRrgoQ%3Ft%3D51m1s)内部 [[51:01](https://youtu.be/sHcLkfRrgoQ%3Ft%3D51m1s)] 
 
-慢慢但肯定地，过去只是“神奇”的东西开始看起来很熟悉。 如你所见， `get_learner`返回`Learner` ，它是包装数据和PyTorch模型的fast.ai概念：
+慢慢地，但是必然，过去只是“神奇”的东西，开始看起来很熟悉。 如你所见， `get_learner`返回`Learner` ，它是包装数据和 PyTorch 模型的 fast.ai 概念：
 
 ![](../img/1_Fda8NgH2L9m3d_UIdNsKCQ.png)
 
-在`MixedInputModel`内部，你可以看到它是如何创建我们现在更了解的`Embedding` 。 `nn.ModuleList`用于注册层列表。 我们将在下周讨论`BatchNorm` ，但我们之前已经看过了休息。
+在`MixedInputModel`内部，你可以看到，它如何创建我们现在更了解的`Embedding。 `nn.ModuleList`用于注册层的列表。 我们将在下周讨论`BatchNorm`，但我们之前已经看过了其余部分。
 
 ![](../img/1_7E46VmEHXatQWNY2s7D9-g.png)
 
-同样，我们现在了解`forward`功能正在发生什么。
+同样，我们现在了解`forward`函数发生了什么。
 
-*   使用第_i_个类别变量调用嵌入层并将它们连接在一起
-*   通过 Dropout 把它
-*   浏览每个线性层，调用它，应用relu和dropout
-*   然后最终线性层的大小为1
-*   如果`y_range` ，则应用sigmoid并将输出拟合到一个范围内（我们上周学到的）
+*   使用第`i`个类别变量调用嵌入层并将它们连接在一起
+*   将其通过 Dropout
+*   浏览每个线性层，调用它，应用 relu 和 dropout
+*   然后最终线性层的大小为 1
+*   如果`y_range`，则应用 sigmoid 并将输出拟合到一个范围内（我们上周学到的）
 
 ![](../img/1_Ry2bDxD36x8zV9KfH_IL9Q.png)
 
-#### [随机梯度下降 - 新元](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson6-sgd.ipynb)  [[59:56](https://youtu.be/sHcLkfRrgoQ%3Ft%3D59m56s)] 
+#### [随机梯度下降 - SGD](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson6-sgd.ipynb)  [[59:56](https://youtu.be/sHcLkfRrgoQ%3Ft%3D59m56s)] 
 
-为了确保我们完全适应SGD，我们将用它来学习`_y = ax + b_` 。 如果我们可以用2个参数解决问题，我们可以使用相同的技术来解决1亿个参数。
+为了确保我们完全掌握 SGD，我们将用它来学习`y = ax + b`。 如果我们可以用 2 个参数解决问题，我们可以使用相同的技巧来解决 1 亿个参数。
 
 ```py
 # Here we generate some fake data
@@ -273,7 +273,7 @@ plt.scatter(x,y, s=8); plt.xlabel("x"); plt.ylabel("y");
 
 ![](../img/1_28U8r1xSD7ODB9BZnGHNZg.png)
 
-首先，我们需要一个损失功能。 这是一个回归问题，因为输出是连续输出，最常见的损失函数是均方误差（MSE）。
+首先，我们需要一个损失函数。 这是一个回归问题，因为输出是连续输出，最常见的损失函数是均方误差（MSE）。
 
 > 回归 - 目标输出是实数或整数实数
 
@@ -287,7 +287,7 @@ def mse_loss(a, b, x, y): return mse(lin(a,b,x), y)
 
 *   `y_hat` - 预测
 
-我们将制作10,000多个假数据并将它们转换为PyTorch变量，因为Jeremy不喜欢使用衍生物而PyTorch可以为他做到这一点：
+我们将制作 10,000 多个假数据并将它们转换为 PyTorch 变量，因为 Jeremy 不喜欢计算导数，而 PyTorch 可以为他做到：
 
 ```py
 x, y = gen_fake_data(10000, 3., 8.) 
@@ -301,7 +301,7 @@ a = V(np.random.randn(1), requires_grad=True)
 b = V(np.random.randn(1), requires_grad=True)
 ```
 
-然后设置学习率并完成10000个完全梯度下降的时期（不是SGD，因为每个时期将查看所有数据）：
+然后设置学习率并完成 10000 个全量梯度下降的迭代（不是 SGD，因为每个迭代将查看所有数据）：
 
 ```py
 learning_rate = 1e-3
@@ -327,16 +327,16 @@ for t in range(10000):
 
 ![](../img/1_LRtxJiNrnAX1o6mEnaiUpA.png)
 
-*   计算损失（记住， `a`和`b`最初设置为随机）
-*   不时（每1000个时期），打印出损失
-*   `loss.backward()`将使用`requires_grad=True`计算所有变量的渐变，并填写`.grad`属性
-*   将`a`更新为减去LR * `grad` （ `.data`访问变量内部的张量）
-*   当有多个损失函数或许多输出层对渐变有贡献时，PyTorch会将它们加在一起。 因此，你需要告诉何时将渐变设置回零（ `_`中的`zero_()`表示变量就地更改）。
-*   最后4行代码包含在`optim.SGD.step`函数中
+*   计算损失（记住，`a`和`b`最初设置为随机）
+*   偶尔（每 1000 个迭代），打印出损失
+*   `loss.backward()`将使用`requires_grad=True`计算所有变量的梯度，并填写`.grad`属性
+*   将`a`更新来减去`LR * grad`（`.data`访问变量内部的张量）
+*   当有多个损失函数，或许多输出层对梯度有贡献时，PyTorch 会将它们加在一起。 因此，你需要告诉何时将梯度设置回零（`_`中的`zero_()`表示变量原地更改）。
+*   最后 4 行代码包含在`optim.SGD.step`函数中
 
-#### 让我们只用Numpy（没有PyTorch） [[1:07:01](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h7m1s)] 
+#### 让我们只用 Numpy（没有 PyTorch） [[1:07:01](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h7m1s)] 
 
-我们实际上必须做微积分，但其他一切看起来应该相似：
+我们实际上必须做微分，但其他一切看起来应该相似：
 
 ```py
 x, y = gen_fake_data(50, 3., 8.)
@@ -356,52 +356,52 @@ def upd():
 
 ![](../img/1_yGWe-bn7PoDqx0pZc2fjtg.png)
 
-提示：Fast.ai AMI没有附带`ffmpeg` 。 所以如果你看到`KeyError: 'ffmpeg'`
+提示：Fast.ai AMI 没有附带`ffmpeg`。所以如果你看到`KeyError: 'ffmpeg'`
 
-*   运行`print(animation.writers.list())`并打印出可用的MovieWriters列表
-*   如果`ffmpeg`就在其中。 否则[安装它](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg) 。
+*   运行`print(animation.writers.list())`并打印出可用的`MovieWriters`列表
+*   如果`ffmpeg`不在其中，就[安装它](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg) 。
 
-### [递归神经网络 - RNN](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson6-rnn.ipynb)  [[1:09:16](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h9m16s)] 
+### [循环神经网络 - RNN](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson6-rnn.ipynb) [[1:09:16](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h9m16s)] 
 
-让我们学习如何写尼采这样的哲学。 这类似于我们在第4课中学到的语言模型，但这一次，我们将一次完成一个角色。 RNN与我们已经学到的没什么不同。
+让我们学习如何写尼采这样的哲学。 这类似于我们在第 4 课中学到的语言模型，但这一次，我们将一次完成一个字符。 RNN 与我们已经学到的没什么不同。
 
 ![](../img/1_wIccxf1fG4jtSZhLHTtw-A.png)
 
 #### 一些例子：
 
 *   [SwiftKey](https://blog.swiftkey.com/neural-networks-a-meaningful-leap-for-mobile-typing/)
-*   [Andrej Karpathy LaTex发电机](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
+*   [Andrej Karpathy LaTex 生成器](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
 
-#### 具有单个隐藏层的基本NN
+#### 具有单个隐藏层的基本 NN
 
-所有形状都是激活（激活是由relu，矩阵产品等计算的数字）。 箭头是层操作（可能不止一个）。 查看机器学习课程9-11，从头开始创建。
+所有形状都是激活（激活是由 relu，矩阵乘法等计算的数字）。 箭头是层操作（可能不止一个）。 查看机器学习课程 9-11，从头开始创建。
 
 ![](../img/1_vPfe01ALNgbxw8DP_4RFVw.png)
 
-#### 图像CNN具有单密集隐藏层
+#### 具有单密集隐层的图像 CNN 
 
-我们将介绍如何在下周更多地压平层，但主要方法称为“自适应最大池” - 我们在高度和宽度上进行平均并将其转换为向量。
+我们将在下周介绍，如何把层展开，但主要方法称为“自适应最大池” - 我们在高度和宽度上进行平均，并将其转换为向量。
 
 ![](../img/1_VEEVatttQmlWeI98vTO0iA.png)
 
-`batch_size`维度和激活函数（例如relu，softmax）未在此处显示
+`batch_size`维度和激活函数（例如 relu，softmax）未在此处显示
 
 
 
-#### 使用字符1和2  [[1:18:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h18m4s)] 预测字符3
+#### 使用字符 1 和 2 预测字符 3  [[1:18:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h18m4s)]
 
-我们将为NLP实现这一个。
+我们将为 NLP 实现这个。
 
-*   输入可以是单热编码字符（向量的长度=唯一字符的数量）或单个整数，并假设它是使用嵌入层进行一次热编码。
-*   与CNN的不同之处在于添加了char 2输入。
+*   输入可以是单热编码字符（向量的长度等于唯一字符的数量），或单个整数，并假设它由嵌入层进行单热编码。
+*   与 CNN 的不同之处在于添加了字符 2 输入。
 
 ![](../img/1_gc1z1R1d5zHkYc75iqSWtw.png)
 
-层图操作未显示; 记住箭头代表层操作
+层操作未显示；记住箭头代表层操作
 
 
 
-让我们在没有torchtext或fast.ai库的情况下实现这一点，以便我们可以看到。
+让我们在没有`torchtext`或 fast.ai 库的情况下来实现，以便我们可以看到。
 
 *   `set`将返回所有唯一字符。
 
@@ -418,20 +418,20 @@ print('total chars:', vocab_size)
 # total chars: 85
 ```
 
-*   总是很好地为填充添加null或空字符。
+*   添加`null`或空字符来填充，总是很好。
 
 ```py
 chars.insert(0, "\0") 
 ```
 
-将每个字符映射到唯一ID，以及字符的唯一ID
+将每个字符映射到唯一 ID，以及唯一 ID 到字符。
 
 ```py
 char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 ```
 
-现在我们可以使用其ID来表示文本：
+现在我们可以使用其 ID 来表示文本：
 
 ```py
 idx = [char_indices[c] for c in text]
@@ -440,11 +440,11 @@ idx[:10]
 # [40, 42, 29, 30, 25, 27, 29, 1, 1, 1]
 ```
 
-#### 问题：基于字符的模型与基于单词的模型 [[1:22:30](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h22m30s)] 
+#### 问题：基于字符的模型与基于单词的模型 [[1:22:30](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h22m30s)]
 
-*   通常，你希望将字符级别模型和字级别模型组合在一起（例如，用于翻译）。
-*   当词汇表包含不常用的单词时，字符级别模型很有用 - 单词级别模型将仅视为“未知”。 当你看到之前没有见过的单词时，可以使用字符级模型。
-*   在它们之间还有一种称为字节对编码（BPE）的东西，它查看n-gram字符。
+*   通常，你希望将字符级模型和单词级模型组合在一起（例如，用于翻译）。
+*   当词汇表包含不常用的单词时，字符级模型很有用 - 单词级模型将仅视为“未知”。 当你看到之前没有见过的单词时，可以使用字符级模型。
+*   在它们之间还有一种称为字节对编码（BPE）的东西，它查看 n-gram 字符。
 
 #### 创建输入 [[1:23:48](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h23m48s)] 
 
@@ -456,7 +456,7 @@ c3_dat = [idx[i+2] for i in range(0, len(idx)-cs, cs)]
 c4_dat = [idx[i+3] for i in range(0, len(idx)-cs, cs)]
 ```
 
-注意`c1_dat[n+1] == c4_dat[n]`因为我们跳过3（ `range`的第三个参数）
+注意`c1_dat[n+1] == c4_dat[n]`因为我们步长为 3（ `range`的第三个参数）
 
 ```py
 x1 = np.stack(c1_dat) 
@@ -465,19 +465,19 @@ x3 = np.stack(c3_dat)
 y = np.stack(c4_dat)
 ```
 
-`x`是我们的输入， `y`是我们的目标值。
+`x`是我们的输入，`y`是我们的目标值。
 
-#### 建立模型 [[1:26:08](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h26m8s)] 
+#### 建立模型 [[1:26:08](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h26m8s)]
 
 ```py
 n_hidden = 256 
 n_fac = 42
 ```
 
-*   `n_hiddein` - 图中的“ `n_hiddein` ”。
+*   `n_hiddin` - 图中的“`n_hiddin`”。
 *   `n_fac` - 嵌入矩阵的大小。
 
-这是上图的更新版本。 请注意，现在箭头已着色。 具有相同颜色的所有箭头将使用相同的权重矩阵。 这里的想法是，角色不具有不同的含义（语义上或概念上），这取决于它是序列中的第一个，第二个还是第三个项目，因此对它们的处理方式相同。
+这是上图的更新版本。 请注意，现在箭头已着色。 具有相同颜色的所有箭头，将使用相同的权重矩阵。 这里的想法是，字符不具有不同的含义（语义上或概念上），这取决于它是序列中的第一个，第二个还是第三个项目，因此对它们的处理方式相同。
 
 ![](../img/1_9XXQ3J7G3rD92tFkusi4bA.png)
 
@@ -509,25 +509,23 @@ def forward(self, c1, c2, c3):
 
 ![](../img/1_gBZslK323CITflsnXp-DSA.png)
 
-[视频[1:27:57]](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h27m57s)
+[视频 [1:27:57]](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h27m57s)
 
-
-
-*    [[1:29:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h29m58s)] 重要的是，这个`l_hidden`使用一个方形权重矩阵，其大小与`l_in`的输出相匹配。 然后`h`和`in2`将是相同的形状，允许我们在`self.l_hidden(h+in2)`看到它们的总和
-*   `V(torch.zeros(in1.size()).cuda())`只是使三条线相同，以便以后更容易放入for循环。
+*   [[1:29:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h29m58s)] 重要的是，这个`l_hidden`使用一个方形权重矩阵，其大小匹配`l_in`的输出。 然后`h`和`in2`将是相同的形状，允许我们在`self.l_hidden(h+in2)`看到它们的总和
+*   `V(torch.zeros(in1.size()).cuda())`只是使三行相同，以便以后更容易放入`for`循环。
 
 ```py
 md = ColumnarModelData.from_arrays('.', [-1], np.stack([x1,x2,x3], axis=1), y, bs=512)
 ```
 
-我们将复用[ColumnarModelData](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)  [[1:32:20](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)] 。 如果我们堆栈`x1` ， `x2`和`x3` ，我们将在`forward`方法中得到`c1` ， `c2` ， `c3` 。 当你想用原始方法训练模型时， `ColumnarModelData.from_arrays`会派上用场，你放入`[x1, x2, x3]` ，你将在`**def** **forward** (self, c1, c2, c3)`返回`**def** **forward** (self, c1, c2, c3)`
+我们将复用[`ColumnarModelData`](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s) [[1:32:20](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h32m20s)]。如果我们堆叠`x1` ， `x2`和`x3`，我们将在`forward`方法中得到`c1`，`c2`，`c3`。当你想用原始方法训练模型时， `ColumnarModelData.from_arrays`会派上用场，你放入`[x1, x2, x3]`，你将在`def forward(self, c1, c2, c3)`取回来。
 
 ```py
 m = Char3Model(vocab_size, n_fac).cuda() 
 ```
 
-*   我们创建了一个标准的PyTorch模型（不是`Learner` ）
-*   因为它是标准的PyTorch模型，所以不要忘记`.cuda`
+*   我们创建了一个标准的 PyTorch 模型（不是`Learner`）
+*   因为它是标准的 PyTorch 模型，所以不要忘记`.cuda`
 
 ```py
 it = iter(md.trn_dl)
@@ -535,15 +533,15 @@ it = iter(md.trn_dl)
 t = m(*V(xs) 
 ```
 
-*   它抓住了一个迭代器
+*   `iter`返回了一个迭代器
 *   `next`返回一个小批量
-*   “变量” `xs`张量，并通过模型 - 这将给我们512x85张量包含预测（批量大小*唯一字符）
+*   把`xs`张量变成“变量”，并使其通过模型 - 这将给我们 512x85 张量，它包含预测（批量大小乘唯一字符）
 
 ```py
 opt = optim.Adam(m.parameters(), 1e-2) 
 ```
 
-*   创建一个标准的PyTorch优化器 - 你需要传递一个要优化的东西列表，由`m.parameters()`返回
+*   创建一个标准的 PyTorch 优化器 - 你需要传递一个要优化的东西列表，由`m.parameters()`返回
 
 ```py
 fit(m, md, 1, opt, F.nll_loss)
@@ -551,9 +549,9 @@ set_lrs(opt, 0.001)
 fit(m, md, 1, opt, F.nll_loss)
 ```
 
-*   我们没有找到学习率查找器和SGDR，因为我们没有使用`Learner` ，所以我们需要手动进行学习率退火（将LR设置得稍低）
+*   我们没有找到学习率查找器和 SGDR，因为我们没有使用`Learner`，所以我们需要手动进行学习率退货（将 LR 设置得稍低）
 
-#### 测试模型 [[1:35:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h35m58s)] 
+#### 测试模型 [[1:35:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h35m58s)]
 
 ```py
 def get_next(inp):
@@ -563,7 +561,7 @@ def get_next(inp):
      return chars[i]
 ```
 
-此函数需要三个字符并返回模型预测的第四个字符。 注意： `np.argmax`返回最大值的索引。
+此函数需要三个字符并返回模型预测的第四个字符。注意：`np.argmax`返回最大值的索引。
 
 ```py
 get_next('y. ')
@@ -576,17 +574,15 @@ get_next('and')
 # ' '
 ```
 
-#### 让我们创建我们的第一个RNN  [[1:37:45](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h37m45s)] 
+#### 让我们创建我们的第一个 RNN  [[1:37:45](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h37m45s)] 
 
 我们可以简化上面的图表如下：
 
 ![](../img/1_xF-ab5Hn_3FGZRZtEGwFtw.png)
 
-使用字符1到n-1预测字符
+使用字符 1 到 n-1 预测字符
 
-
-
-让我们实现这一点。 这次，我们将使用前8个字符来预测第9个字符。 以下是我们如何创建输入和输出，就像上次一样：
+让我们实现它。 这次，我们将使用前 8 个字符来预测第 9 个字符。 以下是我们如何创建输入和输出，就像上次一样：
 
 ```py
 cs = 8
@@ -617,7 +613,7 @@ y[:cs]
 # array([ 1,  1, 43, 45, 40, 40, 39, 43])
 ```
 
-请注意它们是重叠的（即0-7预测8,1-8预测9）。
+请注意它们是重叠的（即 0-7 预测 8, 1-8 预测 9）。
 
 ```py
 val_idx = get_cv_idxs(len(idx)-cs-1)
@@ -646,15 +642,15 @@ class CharLoopModel(nn.Module):
         return F.log_softmax(self.l_out(h), dim=-1)
 ```
 
-大多数代码与以前相同。 你会注意到`forward`功能中有一个`for`循环。
+大多数代码与以前相同。 你会注意到`forward`函数中有一个`for`循环。
 
-> 双曲正切（Tanh） [[1:43:43](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h43m43s)] 
+> 双曲正切（Tanh） [[1:43:43](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h43m43s)]
 
-> 这是一个偏移的sigmoid。 通常在隐藏状态下使用双曲线tanh来隐藏状态转换，因为它会阻止它飞得太高或太低。 出于其他目的，relu更常见。
+> 这是一个移位的 sigmoid。 通常在隐藏状态中使用 tanh 来隐藏状态转换，因为它会阻止它飞得太高或太低。出于其他目的，relu 更常见。
 
 ![](../img/1_EFvLR4S8KFKN9xTvTVMcng.png)
 
-现在这是一个非常深的网络，因为它使用8个字符而不是2个。随着网络越来越深入，它们变得越来越难以训练。
+现在这是一个非常深的网络，因为它使用 8 个字符而不是 2 个。随着网络越来越深入，它们变得越来越难以训练。
 
 ```py
 m = CharLoopModel(vocab_size, n_fac).cuda() 
@@ -664,9 +660,9 @@ set_lrs(opt, 0.001)
 fit(m, md, 1, opt, F.nll_loss)
 ```
 
-#### 添加与连续
+#### 添加与连接
 
-我们现在将为`self.l_hidden( **h+inp** )` [inp](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h46m4s) `self.l_hidden( **h+inp** )`  [[1:46:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h46m4s)] 尝试别的东西。 原因是输入状态和隐藏状态在质量上是不同的。 输入是字符的编码，h是一系列字符的编码。 所以将它们加在一起，我们可能会丢失信息。 让我们将它们连接起来。 不要忘记更改输入以匹配形状（ `n_fac+n_hidden`而不是`n_fac` ）。
+我们现在将为`self.l_hidden(h+inp)` [[1:46:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h46m4s)] 尝试别的东西。 原因是输入状态和隐藏状态在质量上是不同的。 输入是字符的编码，h是一系列字符的编码。 所以将它们加在一起，我们可能会丢失信息。 让我们将它们连接起来。 不要忘记更改输入以匹配形状（ `n_fac+n_hidden`而不是`n_fac` ）。
 
 ```py
 class CharLoopConcatModel(nn.Module):
@@ -868,7 +864,7 @@ class CharSeqRnn(nn.Module):
         return F.log_softmax(self.l_out(outp), dim=-1)
 ```
 
-#### 渐变爆炸 [[2:08:21](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h8m21s)] 
+#### 梯度爆炸 [[2:08:21](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h8m21s)] 
 
 `self.rnn(inp, h)`是一个循环，一次又一次地应用相同的矩阵。 如果这个矩阵乘以每次都会增加激活次数，那么我们实际上就是以8的幂为例 - 我们称之为梯度爆炸。 我们希望确保初始`l_hidden`不会导致我们的激活平均增加或减少。
 

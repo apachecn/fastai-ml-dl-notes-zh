@@ -174,7 +174,7 @@ Jeremy喜欢建立模型的方式：
  _[PosixPath('data/pascal/PASCAL_VOC.zip'),_  _PosixPath('data/pascal/VOCdevkit'),_  _PosixPath('data/pascal/VOCtrainval_06-Nov-2007.tar'),_  _PosixPath('data/pascal/pascal_train2012.json'),_  _PosixPath('data/pascal/pascal_val2012.json'),_  _PosixPath('data/pascal/pascal_val2007.json'),_  _PosixPath('data/pascal/pascal_train2007.json'),_  _PosixPath('data/pascal/pascal_test2007.json')]_ 
 ```
 
-**关于发电机[** [**43:23**](https://youtu.be/Z0ssNAbe81M%3Ft%3D43m23s) **]：**
+**关于生成器[** [**43:23**](https://youtu.be/Z0ssNAbe81M%3Ft%3D43m23s) **]：**
 
 生成器是Python 3中可以迭代的东西。
 
