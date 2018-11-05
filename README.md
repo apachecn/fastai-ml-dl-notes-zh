@@ -22,7 +22,7 @@
 | 第二课 | [咸鱼](https://github.com/Watermelon233) |
 | 第三课 | [咸鱼](https://github.com/Watermelon233) |
 | 第四课 | |
-| 第五课 | |
+| 第五课 | [飞龙](https://github.com/wizardforcel) |
 | 第六课 | |
 | 第七课 | |
 | 第八课 | |
@@ -46,4 +46,5 @@
 * dl1.md √
 * dl2.md √
 * dl3.md √
+* dl5.md √
 * dl10.md √
