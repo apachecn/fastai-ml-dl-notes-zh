@@ -2,7 +2,7 @@
 
 ### [论坛](http://forums.fast.ai/t/wiki-lesson-6/9404)
 
-[2017年深度学习优化的重点](http://ruder.io/deep-learning-optimization-2017/index.html)
+[2017 年深度学习优化的重点](http://ruder.io/deep-learning-optimization-2017/index.html)
 
 上周回顾 [[2:15](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2m15s)] 
 
@@ -34,21 +34,21 @@ EmbeddingDotBias (
 
 `m.ib`是指项目偏差的嵌入层 - 在我们的例子中是电影偏见。 PyTorch模型和层的好处是我们可以将它们称为函数。 因此，如果你想获得预测，则调用`m(...)`并传入变量。
 
-层需要变量而不是张量，因为它需要跟踪导数 - 这就是`V(...)`将张量转换为变量的原因。 PyTorch 0.4将摆脱变量，我们将能够直接使用张量。
+层需要变量而不是张量，因为它需要跟踪导数 - 这就是`V(...)`将张量转换为变量的原因。PyTorch 0.4 将摆脱变量，我们将能够直接使用张量。
 
 ```py
 movie_bias = to_np(m.ib(V(topMovieIdx))) 
 ```
 
-`to_np`函数将采用变量或张量（无论是在CPU还是GPU上）并返回numpy数组。 Jeremy的方法 [[12:03](https://youtu.be/sHcLkfRrgoQ%3Ft%3D12m3s)] 是将numpy用于一切，除非他明确需要在GPU上运行某些东西或者需要它的衍生物 - 在这种情况下他使用PyTorch。 Numpy比PyTorch的使用时间更长，并且可以与OpenCV，Pandas等其他库一起使用。
+`to_np`函数将接受变量或张量（无论是在 CPU 还是 GPU 上）并返回 numpy 数组。 Jeremy 的方法 [[12:03](https://youtu.be/sHcLkfRrgoQ%3Ft%3D12m3s)] 是将 numpy 用于一切，除非他明确需要在 GPU 上运行某些东西或者需要它的导数 - 在这种情况下他使用 PyTorch。 Numpy 比 PyTorch 的使用时间更长，并且可以与 OpenCV，Pandas 等其他库一起使用。
 
-有关生产中CPU与GPU的问题。 建议的方法是对CPU进行推理，因为它更具可扩展性，你无需批量生产。 你可以通过键入`m.cpu()`将模型移动到CPU上，类似于键入`V(topMovieIndex).cpu()`的变量（从CPU到GPU将是`m.cuda()` ）。如果你的服务器没有GPU ，它会自动在CPU上运行推理。 要加载在GPU上训练过的已保存模型，请查看`torch_imports.py`以下代码`torch_imports.py` ：
+有关生产中 CPU 与 GPU 的问题。 建议的方法是对 CPU 进行推理，因为它更具可扩展性，你无需批量生产。 你可以通过键入`m.cpu()`将模型移动到 CPU 上，类似于对变量键入`V(topMovieIndex).cpu()`（从 CPU 到 GPU 是`m.cuda()`）。如果你的服务器没有 GPU ，它会自动在 CPU 上运行推理。 要加载在 GPU 上训练过的已保存模型，请查看`torch_imports.py`以下代码`torch_imports.py` ：
 
 ```py
 def load_model(m, p): m.load_state_dict(torch.load(p, map_location=lambda storage, loc: storage))
 ```
 
-现在我们对前3000部电影有电影偏见，让我们来看看收视率：
+现在我们对前 3000 部电影有了偏差，让我们来看看收视率：
 
 ```py
 movie_ratings = [(b[0], movie_names[i]) for i,b in zip(topMovies,movie_bias)]
@@ -58,7 +58,7 @@ movie_ratings = [(b[0], movie_names[i]) for i,b in zip(topMovies,movie_bias)]
 
 #### 最糟糕的电影
 
-关于排序键 - Python有`itemgetter`函数，但普通`lambda`只是一个字符。
+对于有序的键 - Python 有`itemgetter`函数，但普通的`lambda`只多了一个字符。
 
 ```py
 sorted(movie_ratings, key=lambda o: o[0])[:15]
@@ -88,9 +88,9 @@ sorted(movie_ratings, key=lambda o: o[0], reverse=True)[:15]
 '''
 ```
 
-#### 嵌入式解释 [[18:42](https://youtu.be/sHcLkfRrgoQ%3Ft%3D18m42s)] 
+#### 嵌入的解释 [[18:42](https://youtu.be/sHcLkfRrgoQ%3Ft%3D18m42s)] 
 
-每部电影有50个嵌入，很难看到50维空间，所以我们将它变成一个三维空间。 我们可以使用几种技术压缩尺寸：主成分分析（ [PCA](https://plot.ly/ipython-notebooks/principal-component-analysis/) ）（Rachel的计算线性代数类详细介绍了这一点 - 几乎与奇异值分解（SVD）相同）
+每部电影有 50 个嵌入，很难看到 50 维空间，所以我们将它变成一个三维空间。 我们可以使用几种技术来压缩维度：[主成分分析（PCA）](https://plot.ly/ipython-notebooks/principal-component-analysis/)（Rachel 的计算线性代数课程详细介绍了这一点 - 几乎与奇异值分解（SVD）相同）
 
 ```py
 movie_emb = to_np(m.i(V(topMovieIdx)))
@@ -106,7 +106,7 @@ movie_pca.shape
 # (3, 3000)
 ```
 
-我们将看看第一个维度“轻松观看与严肃”（我们不知道它代表什么但可以通过观察它们来推测）：
+我们将看看第一个维度“轻松与严肃”（我们不知道它代表什么但可以通过观察它们来推测）：
 
 ```py
 fac0 = movie_pca[0] 
@@ -136,7 +136,7 @@ sorted(movie_comp, key=itemgetter(0))[:10]
 '''
 ```
 
-第二个维度“对话驱动与CGI”
+第二个维度“对话驱动与 CGI”
 
 ```py
 fac1 = movie_pca[1]
@@ -179,41 +179,41 @@ plt.show()
 
 当你说`learn.fit`时会发生什么？
 
-#### [分类变量的实体嵌入](https://arxiv.org/pdf/1604.06737.pdf) [[24:42](https://youtu.be/sHcLkfRrgoQ%3Ft%3D24m42s)] 
+#### [类别变量的实体嵌入](https://arxiv.org/pdf/1604.06737.pdf) [[24:42](https://youtu.be/sHcLkfRrgoQ%3Ft%3D24m42s)] 
 
-第二篇论文谈论分类嵌入。 图。 1.标题应该听起来很熟悉，因为它们讨论了实体嵌入层如何等效于单热编码，然后是矩阵乘法。
+第二篇论文谈论累呗嵌入。 图一的标题应该听起来很熟悉，因为它们讨论了实体嵌入层如何等效于单热编码，然后是矩阵乘法。
 
 ![](../img/1_BgBtlqi7Ja6aQ8wGvWQbgQ.png)
 
-他们做的有趣的事情是，他们采用由神经网络训练的实体嵌入，用学习的实体嵌入替换每个分类变量，然后将其输入到梯度增强机（GBM），随机森林（RF）和KNN中 - 这减少了这个错误几乎与神经网络（NN）一样好。 这是一种很好的方式，可以在你的组织中提供神经网络的强大功能，而不必强迫其他人学习深度学习，因为他们可以继续使用他们当前使用的东西并使用嵌入作为输入。 GBM和RF列车比NN快得多。
+他们做的有趣的事情是，他们采用由神经网络训练的实体嵌入，用学习的实体嵌入替换每个类别变量，然后将其输入到梯度增强机（GBM），随机森林（RF）和 KNN 中 - 这减少了某些误差，几乎与神经网络（NN）一样好。 这是一种很好的方式，可以在你的组织中提供神经网络的强大功能，而不必强迫其他人学习深度学习，因为他们可以继续使用他们当前使用的东西并使用嵌入作为输入。 GBM 和 RF 的训练比 NN 快得多。
 
 ![](../img/1_XYcNx7NmTyblDXa5diFMbg.png)
 
-他们还绘制了德国国家的嵌入，有趣的是（正如杰里米所说的那样“令人费解”）类似于实际的地图。
+他们还绘制了德国的州的嵌入，有趣的是（正如 Jeremy 所说的那样“令人费解”）类似于实际的地图。
 
 他们还绘制了物理空间和嵌入空间中商店的距离 - 这显示出美丽而清晰的相关性。
 
 一周的天数或一年中的几个月之间似乎也存在相关性。 可视化嵌入可能很有趣，因为它向你显示你期望看到的内容或你未看到的内容。
 
-#### 关于Skip-Gram生成嵌入的问题 [[31:31](https://youtu.be/sHcLkfRrgoQ%3Ft%3D31m31s)] 
+#### 关于 Skip-Gram 生成嵌入的问题 [[31:31](https://youtu.be/sHcLkfRrgoQ%3Ft%3D31m31s)] 
 
-Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法是“发明”标签。 Word2Vec的方法是采用11个单词的句子，删除中间单词，并用随机单词替换它。 然后他们在原句中给出了标签1; 0到假一个，并建立了一个机器学习模型来查找假句子。 因此，他们现在可以将嵌入物用于其他目的。 如果你将它作为单个矩阵乘数（浅模型）而不是深度神经网络，你可以非常快速地训练 - 缺点是它是一个预测性较低的模型，但优点是你可以训练一个非常大的数据集更重要的是，最终的嵌入具有_线性特征_ ，允许我们很好地加，减或绘制。 在NLP中，我们应该超越Word2Vec和Glove（即基于线性的方法），因为这些嵌入不太具有预测性。 最先进的语言模型使用深度RNN。
+Skip-Gram 特定于 NLP。 将未标记的问题转变为标记问题的好方法是“发明”标签。 Word2Vec 的方法是选取 11 个单词的句子，删除中间单词，并用随机单词替换它。 然后他们将标签 1 给原句，标签 0 给假的句子，并建立了一个机器学习模型来查找假的句子。 因此，他们现在可以将嵌入用于其他目的。 如果你将它实现为单个矩阵乘法（浅模型）而不是深度神经网络，你可以非常快速地训练 - 缺点是它是一个预测性较低的模型，但优点是你可以训练一个非常大的数据集，更重要的是，最终的嵌入具有线性特征 ，允许我们很好地加，减或绘制。 在 NLP 中，我们应该超越 Word2Vec 和 Glove（即基于线性的方法），因为这些嵌入不太具有预测性。 最先进的语言模型使用深度 RNN。
 
 #### 要学习任何类型的特征空间，你需要标记数据或者需要发明虚假任务 [[35:45](https://youtu.be/sHcLkfRrgoQ%3Ft%3D35m45s)] 
 
-*   一个假的任务比另一个好吗？ 还没有很好的研究。
-*   直观地说，我们想要一个帮助机器学习你关心的各种关系的任务。
+*   一个虚假任务比另一个好吗？ 还没有很好的研究。
+*   直观地说，我们想要一个任务，帮助机器学习你关心的各种关系。
 *   在计算机视觉中，人们使用的一种虚假任务是应用虚幻和不合理的数据增强。
-*   如果你不能提出很棒的假任务，那就去使用糟糕的任务 - 你需要的很少，这通常是令人惊讶的。
-*   **自动编码器**  [[38:10](https://youtu.be/sHcLkfRrgoQ%3Ft%3D38m10s)]  - 它最近赢得了[保险索赔竞赛](https://www.kaggle.com/c/porto-seguro-safe-driver-prediction/discussion/44629) 。 采取单一策略，通过神经网络运行，并让它重建自己（确保中间层的激活少于输入变量）。 基本上，这是一个任务，其输入=输出作为一个假任务令人惊讶地工作。
+*   如果你不能提出很棒的虚假任务，那就去使用糟糕的任务 - 你需要的很少，这通常是令人惊讶的。
+*   **自编码器** [[38:10](https://youtu.be/sHcLkfRrgoQ%3Ft%3D38m10s)] - 它最近赢得了[保险索赔竞赛](https://www.kaggle.com/c/porto-seguro-safe-driver-prediction/discussion/44629)。 采取单一策略，通过神经网络运行，并让它重建自己（确保中间层的激活少于输入变量）。 基本上，这是一个任务，其输入等于输出，作为一个假任务它有效，令人惊讶。
 
-在计算机视觉中，你可以对猫和狗进行训练并将其用于CT扫描。 也许它可能适用于语言/ NLP！ （未来的研究）
+在计算机视觉中，你可以在猫狗上训练并将其用于 CT 扫描。 也许它可能适用于语言/ NLP！ （未来的研究）
 
-#### [罗斯曼](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson3-rossman.ipynb)  [[41:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D41m4s)] 
+#### [Rossmann](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson3-rossman.ipynb) [[41:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D41m4s)] 
 
 *   正确使用测试集的方法已添加到笔记本中。
-*   有关更详细的说明，请参阅机器学习课程。
-*   `apply_cats(joined_test, joined)`用于确保测试集和训练集具有相同的分类代码。
+*   对于更详细的说明，请参阅机器学习课程。
+*   `apply_cats(joined_test, joined)`用于确保测试集和训练集具有相同的类别编号。
 *   跟踪包含每个连续列的平均值和标准差的`mapper` ，并将相同的`mapper`应用于测试集。
 *   不要依赖Kaggle公共董事会 - 依靠你自己精心设计的验证集。
 
@@ -245,7 +245,7 @@ Skip-Gram特定于NLP。 将未标记的问题转变为标记问题的好方法�
 
 同样，我们现在了解`forward`功能正在发生什么。
 
-*   使用第_i_个分类变量调用嵌入层并将它们连接在一起
+*   使用第_i_个类别变量调用嵌入层并将它们连接在一起
 *   通过 Dropout 把它
 *   浏览每个线性层，调用它，应用relu和dropout
 *   然后最终线性层的大小为1
