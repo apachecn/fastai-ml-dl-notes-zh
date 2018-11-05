@@ -1,10 +1,10 @@
 # 深度学习：第一部分第六课
 
-### [论坛](http://forums.fast.ai/t/wiki-lesson-6/9404)
++   [论坛](http://forums.fast.ai/t/wiki-lesson-6/9404)
 
 [2017 年深度学习优化的重点](http://ruder.io/deep-learning-optimization-2017/index.html)
 
-上周回顾 [[2:15](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2m15s)] 
+## 上周回顾 [[2:15](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2m15s)] 
 
 我们上周深入研究了协同过滤，最后我们在 fast.ai 库中重新创建了`EmbeddingDotBias`类（`column_data.py`）。 让我们看一下嵌入的样子（[笔记本](https://github.com/fastai/fastai/blob/master/courses/dl1/lesson5-movielens.ipynb)）。
 
@@ -181,7 +181,7 @@ plt.show()
 
 #### [类别变量的实体嵌入](https://arxiv.org/pdf/1604.06737.pdf) [[24:42](https://youtu.be/sHcLkfRrgoQ%3Ft%3D24m42s)] 
 
-第二篇论文谈论累呗嵌入。 图一的标题应该听起来很熟悉，因为它们讨论了实体嵌入层如何等效于单热编码，然后是矩阵乘法。
+第二篇论文谈论类别嵌入。 图一的标题应该听起来很熟悉，因为它们讨论了实体嵌入层如何等效于单热编码，然后是矩阵乘法。
 
 ![](../img/1_BgBtlqi7Ja6aQ8wGvWQbgQ.png)
 
