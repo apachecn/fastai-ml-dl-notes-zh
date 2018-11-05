@@ -24,7 +24,7 @@
 
 我们来看看数据。 我们将使用`userId` （类别）， `movieId` （类别）和`rating`（因变量）进行建模。
 
-```
+```py
 ratings = pd.read_csv(path+'ratings.csv')
 ratings.head() 
 ```
@@ -35,22 +35,22 @@ ratings.head()
 
 我们创建了最受欢迎的电影和大多数电影狂热粉的交叉表，我们将其复制到 Excel 中进行可视化。
 
-```
+```py
 g=ratings.groupby('userId')['rating'].count()  
 topUsers=g.sort_values(ascending=False)[:15] 
 ```
 
-```
+```py
 g=ratings.groupby('movieId')['rating'].count()  
 topMovies=g.sort_values(ascending=False)[:15] 
 ```
 
-```
+```py
 top_r = ratings.join(topUsers, rsuffix='_r', how='inner', on='userId')
 top_r = top_r.join(topMovies, rsuffix='_r', how='inner', on='movieId') 
 ```
 
-```
+```py
 pd.crosstab(top_r.userId, top_r.movieId, top_r.rating, aggfunc=np.sum) 
 ```
 
@@ -80,23 +80,26 @@ pd.crosstab(top_r.userId, top_r.movieId, top_r.rating, aggfunc=np.sum)
 
 这应该看起来很熟悉了。 我们通过选择随机ID集来创建验证集。 `wd`是L2正则化的权重衰减， `n_factors`是我们想要的嵌入矩阵有多大。
 
-```
- val_idxs = get_cv_idxs(len(ratings))  wd = 2e-4  n_factors = 50 
+```py
+val_idxs = get_cv_idxs(len(ratings)) 
+wd = 2e-4 
+n_factors = 50
 ```
 
 我们从CSV文件创建模型数据对象：
 
-```
- cf = CollabFilterDataset.from_csv(path, 'ratings.csv', 'userId', 'movieId', 'rating') 
+```py
+cf = CollabFilterDataset.from_csv(path, 'ratings.csv', 'userId', 'movieId', 'rating')
 ```
 
 然后我们得到一个适合模型数据的学习器，并拟合模型：
 
-```
- learn = cf.get_learner(n_factors, val_idxs, 64, opt_fn=optim.Adam) 
+```py
+learn = cf.get_learner(n_factors, val_idxs, 64, opt_fn=optim.Adam)
+learn.fit(1e-2, 2, wds=wd, cycle_len=1, cycle_mult=2)
 ```
 
-```
+```py
  learn.fit(1e-2, 2, wds=wd, cycle_len=1, cycle_mult=2) 
 ```
 
@@ -104,31 +107,30 @@ pd.crosstab(top_r.userId, top_r.movieId, top_r.rating, aggfunc=np.sum)
 
 输出MSE
 
-
-
 由于输出是均方误差，你可以通过以下方式获取 RMSE：
 
-```
- math.sqrt(0.765) 
+```py
+math.sqrt(0.765) 
 ```
 
 输出约为0.88，优于0.91的基准。
 
 你可以通过常规方式获得预测：
 
-```
- preds = learn.predict() 
+```py
+preds = learn.predict() 
 ```
 
 你也可以使用seaborn `sns`（建立在`matplotlib`之上）：
 
-```
- y = learn.data.val_y  sns.jointplot(preds, y, kind='hex', stat_func=None) 
+```py
+y = learn.data.val_y
+sns.jointplot(preds, y, kind='hex', stat_func=None)
 ```
 
 ![](../img/1_cXAU8huHFkxKbJjZUwwxIA.png)
 
-### **使用Python的点乘**
+### **使用 Python 的点乘**
 
 ![](../img/1_kSUYsjtdLbyn2SqW9cKiHA.jpeg)
 
@@ -136,36 +138,43 @@ pd.crosstab(top_r.userId, top_r.movieId, top_r.rating, aggfunc=np.sum)
 
 `T`是 PyTorch 中的张量
 
-```
- a = T([[1., 2], [3, 4]])  b = T([[2., 2], [10, 10]]) 
+```py
+a = T([[1., 2], [3, 4]])
+b = T([[2., 2], [10, 10]])
 ```
 
 当我们在numpy或PyTorch中的张量之间有一个数学运算符时，它将逐元素运算，假设它们都具有相同的维数。 下面是你如何计算两个向量的点积（例如`(1,2)·(2,2)= 6` - 矩阵`a`和`b`的第一行）：
 
-```
- (a*b).sum(1) 
-```
+```py
+(a*b).sum(1)
 
-```
- 6  70  [torch.FloatTensor of size 2] 
+'''
+6
+70
+[torch.FloatTensor of size 2]
+'''
 ```
 
 ### **构建我们的第一个自定义层（即 PyTorch 模块）[** [**33:55**](https://youtu.be/J99NV9Cr75I%3Ft%3D33m55s) **]**
 
 我们通过创建一个扩展`nn.Module`并覆盖`forward`函数的 Python 类来实现它。
 
-```
- class DotProduct (nn.Module):  def forward(self, u, m): return (u*m).sum(1) 
-```
-
-现在我们可以调用它并得到预期的结果（注意我们不需要写`model.forward(a, b)`来调用`forward`函数 - 它是PyTorch魔法。） [[40:14](https://youtu.be/J99NV9Cr75I%3Ft%3D40m14s)] ：
-
-```
- model = DotProduct()  **model(a,b)** 
+```py
+class DotProduct (nn.Module):
+   def forward(self, u, m): return (u*m).sum(1)
 ```
 
-```
- 6  70  [torch.FloatTensor of size 2] 
+现在我们可以调用它并得到预期的结果（注意我们不需要写`model.forward(a, b)`来调用`forward`函数 - 它是 PyTorch 魔法。） [[40:14](https://youtu.be/J99NV9Cr75I%3Ft%3D40m14s)] ：
+
+```py
+model = DotProduct()
+model(a,b)
+
+'''
+6
+70
+[torch.FloatTensor of size 2]
+'''
 ```
 
 ### **建造更复杂的模块[** [**41:31**](https://youtu.be/J99NV9Cr75I%3Ft%3D41m31s) **]**
@@ -177,42 +186,57 @@ pd.crosstab(top_r.userId, top_r.movieId, top_r.rating, aggfunc=np.sum)
 
 用户ID很可能不是连续的，这使得很难用作嵌入矩阵的索引。 因此，我们将首先创建从零开始并且连续的索引，并使用带有匿名函数`lambda` Panda的`apply`函数将`ratings.userId`列替换为索引，并对`ratings.movieId`执行相同的操作。
 
-```
- u_uniq = ratings.userId.unique()  user2idx = {o:i **for** i,o **in** enumerate(u_uniq)}  ratings.userId = ratings.userId.apply( **lambda** x: user2idx[x]) 
-```
+```py
+u_uniq = ratings.userId.unique() 
+user2idx = {o:i for i,o in enumerate(u_uniq)} 
+ratings.userId = ratings.userId.apply(lambda x: user2idx[x])  
 
-```
- m_uniq = ratings.movieId.unique()  movie2idx = {o:i **for** i,o **in** enumerate(m_uniq)}  ratings.movieId = ratings.movieId.apply( **lambda** x: movie2idx[x]) 
-```
+m_uniq = ratings.movieId.unique() 
+movie2idx = {o:i for i,o in enumerate(m_uniq)} 
+ratings.movieId = ratings.movieId.apply(lambda x: movie2idx[x])  
 
-```
- n_users=int(ratings.userId.nunique()) n_movies=int(ratings.movieId.nunique()) 
+n_users=int(ratings.userId.nunique()) n_movies=int(ratings.movieId.nunique())
 ```
 
 _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保存在你的工具带中！
 
-```
- class EmbeddingDot(nn.Module):  def __init__(self, n_users, n_movies):  super().__init__()  self.u = nn.Embedding(n_users, n_factors)  self.m = nn.Embedding(n_movies, n_factors)  self.u.weight.data.uniform_(0,0.05)  self.m.weight.data.uniform_(0,0.05)  def forward(self, cats, conts):  users,movies = cats[:,0],cats[:,1]  u,m = self.u(users),self.m(movies)  return (u*m).sum(1) 
+```py
+class EmbeddingDot(nn.Module):
+    def __init__(self, n_users, n_movies):
+        super().__init__()
+        self.u = nn.Embedding(n_users, n_factors)
+        self.m = nn.Embedding(n_movies, n_factors)
+        self.u.weight.data.uniform_(0,0.05)
+        self.m.weight.data.uniform_(0,0.05)
+        
+    def forward(self, cats, conts):
+        users,movies = cats[:,0],cats[:,1]
+        u,m = self.u(users),self.m(movies)
+        return (u*m).sum(1)
 ```
 
 请注意， `__init__`是一个现在需要的构造函数，因为我们的类需要跟踪“状态”（多少部电影，多少用户，多少因素等）。 我们将权重初始化为0到0.05之间的随机数，你可以在这里找到关于权重初始化的标准算法的更多信息，“Kaiming Initialization”（PyTorch有He初始化实用函数，但是我们试图从头开始做事） [[46 ：58](https://youtu.be/J99NV9Cr75I%3Ft%3D46m58s)] 。
 
 `Embedding`不是张量而是**变量** 。 变量执行与张量完全相同的操作，但它也可以自动区分。 要从变量中拉出张量，请调用`data`属性。 所有张量函数都有一个变量，尾随下划线（例如`uniform_` ）将就地执行。
 
-```
- x = ratings.drop(['rating', 'timestamp'],axis=1)  y = ratings['rating'].astype(np.float32)  data = ColumnarModelData.from_data_frame(path, val_idxs, x, y, ['userId', 'movieId'], 64) 
+```py
+x = ratings.drop(['rating', 'timestamp'],axis=1)
+y = ratings['rating'].astype(np.float32)
+data = ColumnarModelData.from_data_frame(path, val_idxs, x, y, ['userId', 'movieId'], 64)
 ```
 
 我们正在重用Rossmann笔记本中的ColumnarModelData（来自fast.ai库），这也是为什么在`EmbeddingDot`类 [[50:20](https://youtu.be/J99NV9Cr75I%3Ft%3D50m20s)] 中为`def forward(self, cats, conts)`函数存在分类和连续变量的原因。 由于在这种情况下我们没有连续变量，我们将忽略`conts`并使用`cats`的第一和第二列作为`users`和`movies` 。 请注意，它们是小批量的用户和电影。 重要的是不要手动循环小批量，因为你不会获得GPU加速，而是一次处理整个小批量，正如你在上面的`forward`功能的第3和第4行看到的那样 [[51](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ： [00-52](https://youtu.be/J99NV9Cr75I%3Ft%3D51m) ：05 ]。
 
-```
- wd=1e-5  model = EmbeddingDot(n_users, n_movies).cuda()  opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9) 
+```py
+wd=1e-5
+model = EmbeddingDot(n_users, n_movies).cuda()
+opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9)
 ```
 
 `optim`是为PyTorch提供优化器的原因。 `model.parameters()`是从`nn.Modules`继承的函数之一，它为我们提供了更新/学习的`nn.Modules`重。
 
-```
- fit(model, data, 3, opt, F.mse_loss) 
+```py
+fit(model, data, 3, opt, F.mse_loss) 
 ```
 
 这个函数来自fast.ai库 [[54:40](https://youtu.be/J99NV9Cr75I%3Ft%3D54m40s)] 并且比我们一直在使用的`learner.fit()`更接近常规的PyTorch方法。 它不会为你提供诸如“重启的随机梯度下降”或开箱即用的“差分学习率”等功能。
@@ -221,16 +245,28 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 **偏见** - 适应普遍流行的电影或普遍热情的用户。
 
-```
- min_rating,max_rating = ratings.rating.min(),ratings.rating.max()  min_rating,max_rating 
-```
+```py
+min_rating,max_rating = ratings.rating.min(),ratings.rating.max()
+min_rating,max_rating
 
-```
- def get_emb(ni,nf):  e = nn.Embedding(ni, nf)  e.weight.data.uniform_(-0.01,0.01)  return e 
-```
+def get_emb(ni,nf):
+    e = nn.Embedding(ni, nf)
+    e.weight.data.uniform_(-0.01,0.01)
+    return e
 
-```
- class EmbeddingDotBias(nn.Module):  def __init__(self, n_users, n_movies):  super().__init__()  (self.u, self.m, **self.ub** , **self.mb** ) = [get_emb(*o) for o in [  (n_users, n_factors), (n_movies, n_factors), (n_users,1), (n_movies,1)  ]]  def forward(self, cats, conts):  users,movies = cats[:,0],cats[:,1]  um = (self.u(users)* self.m(movies)).sum(1)  res = um + ** self.ub(users)** .squeeze() + **self.mb(movies)** .squeeze()  res = F.sigmoid(res) * (max_rating-min_rating) + min_rating  return res 
+class EmbeddingDotBias(nn.Module):
+    def __init__(self, n_users, n_movies):
+        super().__init__()
+        (self.u, self.m, self.ub, self.mb) = [get_emb(*o) for o in [
+            (n_users, n_factors), (n_movies, n_factors), (n_users,1), (n_movies,1)
+        ]]
+        
+    def forward(self, cats, conts):
+        users,movies = cats[:,0],cats[:,1]
+        um = (self.u(users)* self.m(movies)).sum(1)
+        res = um + self.ub(users).squeeze() + self.mb(movies).squeeze()
+        res = F.sigmoid(res) * (max_rating-min_rating) + min_rating
+        return res
 ```
 
 `squeeze`是PyTorch版本的_广播_  [[1:04:11](https://youtu.be/J99NV9Cr75I%3Ft%3D1h4m11s)] 以获取更多信息，请参阅机器学习课程或[numpy文档](https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html) 。
@@ -241,12 +277,17 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 `F`是PyTorch函数（ `torch.nn.functional` ），包含张量的所有函数，在大多数情况下作为`F`导入。
 
-```
- wd=2e-4  model = EmbeddingDotBias(cf.n_users, cf.n_items).cuda()  opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9) 
-```
+```py
+wd=2e-4
+model = EmbeddingDotBias(cf.n_users, cf.n_items).cuda()
+opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9)
+fit(model, data, 3, opt, F.mse_loss)
 
-```
- fit(model, data, 3, opt, F.mse_loss)  [ 0\. 0.85056 0.83742]  [ 1\. 0.79628 0.81775]  [ 2\. 0.8012 0.80994] 
+'''
+[ 0.       0.85056  0.83742]                                     
+[ 1.       0.79628  0.81775]                                     
+[ 2.       0.8012   0.80994]
+'''
 ```
 
 让我们来看看我们在**Simple Python版本中**使用的fast.ai代码 [[1:13:44](https://youtu.be/J99NV9Cr75I%3Ft%3D1h13m44s)]  **。** 在`column_data.py`文件中， `CollabFilterDataSet.get_leaner`调用`get_model`函数，该函数创建与我们创建的相同的`EmbeddingDotBias`类。
@@ -259,8 +300,22 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 我们不是计算用户嵌入向量和电影嵌入向量的点积来得到预测，而是将两者连接起来并通过神经网络来提供它。
 
-```
- class EmbeddingNet(nn.Module):  def __init__(self, n_users, n_movies, **nh** =10, p1=0.5, p2=0.5):  super().__init__()  (self.u, self.m) = [get_emb(*o) for o in [  (n_users, n_factors), (n_movies, n_factors)]]  self.lin1 = **nn.Linear** (n_factors*2, nh)  self.lin2 = nn.Linear(nh, 1)  self.drop1 = nn.Dropout(p1)  self.drop2 = nn.Dropout(p2)  def forward(self, cats, conts):  users,movies = cats[:,0],cats[:,1]  x = self.drop1(torch.cat([self.u(users),self.m(movies)], dim=1))  x = self.drop2(F.relu(self.lin1(x)))  return F.sigmoid(self.lin2(x)) * (max_rating-min_rating+1) + min_rating-0.5 
+```py
+class EmbeddingNet(nn.Module):
+    def __init__(self, n_users, n_movies, nh=10, p1=0.5, p2=0.5):
+        super().__init__()
+        (self.u, self.m) = [get_emb(*o) for o in [
+            (n_users, n_factors), (n_movies, n_factors)]]
+        self.lin1 = nn.Linear(n_factors*2, nh)
+        self.lin2 = nn.Linear(nh, 1)
+        self.drop1 = nn.Dropout(p1)
+        self.drop2 = nn.Dropout(p2)
+        
+    def forward(self, cats, conts):
+        users,movies = cats[:,0],cats[:,1]
+        x = self.drop1(torch.cat([self.u(users),self.m(movies)], dim=1))
+        x = self.drop2(F.relu(self.lin1(x)))
+        return F.sigmoid(self.lin2(x)) * (max_rating-min_rating+1) + min_rating-0.5
 ```
 
 请注意，我们不再有偏差项，因为PyTorch中的`Linear`层已经存在偏差。 `nh`是线性层创建的一些激活（Jeremy称之为“数字隐藏”）。
@@ -269,16 +324,18 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 它只有一个隐藏层，所以可能不是“深层”，但这绝对是一个神经网络。
 
-```
- wd=1e-5  model = EmbeddingNet(n_users, n_movies).cuda()  opt = optim.Adam(model.parameters(), 1e-3, weight_decay=wd)  fit(model, data, 3, opt, **F.mse_loss** ) 
-```
+```py
+wd=1e-5
+model = EmbeddingNet(n_users, n_movies).cuda()
+opt = optim.Adam(model.parameters(), 1e-3, weight_decay=wd)
+fit(model, data, 3, opt, F.mse_loss)
 
-```
- A Jupyter Widget 
-```
-
-```
- [ 0\. 0.88043 0.82363]  [ 1\. 0.8941 0.81264]  [ 2\. 0.86179 0.80706] 
+'''
+A Jupyter Widget
+[ 0.       0.88043  0.82363]                                    
+[ 1.       0.8941   0.81264]                                    
+[ 2.       0.86179  0.80706]
+'''
 ```
 
 请注意，损失函数也在`F` （这里，它是均方损失）。
@@ -295,8 +352,8 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 目前，我们正在将权重更新传递给PyTorch的优化器。 优化器有什么作用？ 什么是`momentum` ？
 
-```
- opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9) 
+```py
+opt = optim.SGD(model.parameters(), 1e-1, weight_decay=wd, momentum=0.9)
 ```
 
 我们将在excel表（ [graddesc.xlsm](https://github.com/fastai/fastai/blob/master/courses/dl1/excel/graddesc.xlsm) ）中实现梯度下降 - 从右到左看工作表。 首先我们创建一个随机_x_ '， _y_与_x_的线性相关（例如_y_ = _a * x_ + _b_ ）。 通过使用_x_和_y_的集合，我们将尝试学习_a_和_b。_
@@ -359,8 +416,8 @@ _提示：_ `{o:i for i,o in enumerate(u_uniq)}`是一个方便的代码行保�
 
 如果你看一下fast.ai库（model.py），你会注意到在`fit`函数中，它不只是计算平均损失，而是计算损失的**指数加权移动平均值** 。
 
-```
- avg_loss = avg_loss * avg_mom + loss * (1-avg_mom) 
+```py
+avg_loss = avg_loss * avg_mom + loss * (1-avg_mom) 
 ```
 
 另一个有用的概念是每当你看到`α（...）+（1-α）（...）`时，立即想到**线性插值。**
