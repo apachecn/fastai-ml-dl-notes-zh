@@ -16,23 +16,17 @@
 %reload_ext autoreload  
 %autoreload 2  
 %matplotlib inline 
-```
 
-```py
 # This file contains all the main external libs we'll use  
 from fastai.imports import * 
-```
 
-```py
 from fastai.transforms import *  
 from fastai.conv_learner import *  
 from fastai.model import *  
 from fastai.dataset import *  
 from fastai.sgdr import *  
 from fastai.plots import * 
-```
 
-```py
 PATH = "data/dogscats/"  
 sz=224 
 ```
@@ -41,9 +35,7 @@ sz=224
 
 ```py
 !ls {PATH} 
-```
 
-```
 models sample test1 tmp train valid
 ```
 
@@ -52,24 +44,30 @@ models sample test1 tmp train valid
 
 ```py
 !ls {PATH}valid 
-```
 
-```
-cats dogs
-```
+# cats dogs
 
-```py
 files = !ls {PATH}valid/cats | head  files 
-```
 
-```py
-['cat.10016.jpg',  'cat.1001.jpg',  'cat.10026.jpg',  'cat.10048.jpg',  'cat.10050.jpg',  'cat.10064.jpg',  'cat.10071.jpg',  'cat.10091.jpg',  'cat.10103.jpg',  'cat.10104.jpg'] 
+'''
+['cat.10016.jpg',
+ 'cat.1001.jpg',
+ 'cat.10026.jpg',
+ 'cat.10048.jpg',
+ 'cat.10050.jpg',
+ 'cat.10064.jpg',
+ 'cat.10071.jpg',
+ 'cat.10091.jpg',
+ 'cat.10103.jpg',
+ 'cat.10104.jpg'] 
+'''
 ```
 
 *   此文件夹结构是共享和提供图像分类数据集的最常用方法。 每个文件夹都会告诉你标签（例如`dogs`或`cats`）。
 
 ```py
-img = plt.imread(f' {PATH} valid/cats/ {files[0]} ')  plt.imshow(img); 
+img = plt.imread(f' {PATH} valid/cats/ {files[0]} ')
+plt.imshow(img); 
 ```
 
 ![](../img/1_Uqy-JLzpyZedFNdpm15N2A.png)
@@ -77,31 +75,30 @@ img = plt.imread(f' {PATH} valid/cats/ {files[0]} ')  plt.imshow(img);
 *   `f'{PATH}valid/cats/{files[0]}'` - 这是一个 Python 3.6 格式化字符串，可以方便地格式化字符串。
 
 ```py
-img.shape 
-```
+img.shape
 
-```py
-(198, 179, 3)
-```
+# (198, 179, 3)
 
-```py
-img[:4,:4] 
-```
+img[:4,:4]
 
-```py
-array([[[ 29, 20, 23],  [ 31, 22, 25],  [ 34, 25, 28],  [ 37, 28, 31]], 
-```
-
-```py
-[[ 60, 51, 54],  [ 58, 49, 52],  [ 56, 47, 50],  [ 55, 46, 49]], 
-```
-
-```py
-[[ 93, 84, 87],  [ 89, 80, 83],  [ 85, 76, 79],  [ 81, 72, 75]], 
-```
-
-```py
-[[104, 95, 98],  [103, 94, 97],  [102, 93, 96],  [102, 93, 96]]], dtype=uint8) 
+'''
+array([[[ 29,  20,  23],
+        [ 31,  22,  25],
+        [ 34,  25,  28],
+        [ 37,  28,  31]],
+[[ 60,  51,  54],
+        [ 58,  49,  52],
+        [ 56,  47,  50],
+        [ 55,  46,  49]],
+[[ 93,  84,  87],
+        [ 89,  80,  83],
+        [ 85,  76,  79],
+        [ 81,  72,  75]],
+[[104,  95,  98],
+        [103,  94,  97],
+        [102,  93,  96],
+        [102,  93,  96]]], dtype=uint8)
+'''
 ```
 
 *   `img`是一个三维数组（又名 3 维张量）
@@ -117,10 +114,12 @@ array([[[ 29, 20, 23],  [ 31, 22, 25],  [ 34, 25, 28],  [ 37, 28, 31]],
 data = ImageClassifierData.from_paths(PATH, tfms=tfms_from_model(resnet34, sz))  
 learn = ConvLearner.pretrained(resnet34, data, precompute= True )  
 learn.fit (0.01, 3) 
-```
 
-```py
-[ 0. 0.04955 0.02605 0.98975]  [ 1. 0.03977 0.02916 0.99219]  [ 2. 0.03372 0.02929 0.98975] 
+'''
+[ 0.       0.04955  0.02605  0.98975]                         
+[ 1.       0.03977  0.02916  0.99219]                         
+[ 2.       0.03372  0.02929  0.98975]
+'''
 ```
 
 *   这将执行 3 个迭代，这意味着它将三次查看整个图像集。
@@ -144,20 +143,16 @@ learn.fit (0.01, 3)
 
 ```py
 data.val_y 
-```
 
-```py
-array([0, 0, 0, ..., 1, 1, 1]) 
+# array([0, 0, 0, ..., 1, 1, 1]) 
 ```
 
 这些 0 和 1 代表什么？
 
 ```py
 data.classes 
-```
 
-```py
-['cats', 'dogs'] 
+# ['cats', 'dogs'] 
 ```
 
 *   `data`包含验证和训练数据
@@ -168,18 +163,22 @@ data.classes
 ```py
 log_preds = learn.predict()  
 log_preds.shape 
-```
 
-```py
-(2000, 2)
-```
+# (2000, 2)
 
-```py
 log_preds[:10] 
-```
 
-```py
-array([[ -0.00002, -11.07446],  [ -0.00138, -6.58385],  [ -0.00083, -7.09025],  [ -0.00029, -8.13645],  [ -0.00035, -7.9663 ],  [ -0.00029, -8.15125],  [ -0.00002, -10.82139],  [ -0.00003, -10.33846],  [ -0.00323, -5.73731],  [ -0.0001 , -9.21326]], dtype=float32) 
+'''
+array([[ -0.00002, -11.07446],
+       [ -0.00138,  -6.58385],
+       [ -0.00083,  -7.09025],
+       [ -0.00029,  -8.13645],
+       [ -0.00035,  -7.9663 ],
+       [ -0.00029,  -8.15125],
+       [ -0.00002, -10.82139],
+       [ -0.00003, -10.33846],
+       [ -0.00323,  -5.73731],
+       [ -0.0001 ,  -9.21326]], dtype=float32)
 ```
 
 *   输出表示猫的预测和狗的预测
@@ -409,7 +408,9 @@ learn.sched.plot()
 ## 选择迭代数量 [[1:18:49](https://youtu.be/IPBSB1HLNLo%3Ft%3D1h18m49s)] 
 
 ```py
-[ 0. 0.04955 0.02605 0.98975]  [ 1. 0.03977 0.02916 0.99219]  [ 2. 0.03372 0.02929 0.98975] 
+[ 0.       0.04955  0.02605  0.98975]                         
+[ 1.       0.03977  0.02916  0.99219]                         
+[ 2.       0.03372  0.02929  0.98975]
 ```
 
 *   按照你的希望尽可能多，但如果你运行太久，准确性可能会变得更糟。 它被称为“过拟合”，我们稍后会详细了解它。
