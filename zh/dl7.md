@@ -25,7 +25,7 @@
 *   相同颜色的箭头表示使用的完全相同的权重矩阵。
 *   与之前的一个细微差别是第二和第三层有输入。 我们尝试了两种方法 - 将这些输入连接和添加到当前激活中。
 
-```
+```py
 class Char3Model(nn.Module):
     def __init__(self, vocab_size, n_fac):
         super().__init__()
@@ -56,7 +56,7 @@ class Char3Model(nn.Module):
 *   通过使用`nn.Linear`我们可以获得权重矩阵和偏置向量。
 *   为了处理第一个椭圆没有橙色箭头的事实，我们创建了一个空矩阵
 
-```
+```py
 class CharLoopModel(nn.Module):
     # This is an RNN!
     def __init__(self, vocab_size, n_fac):
@@ -78,7 +78,7 @@ class CharLoopModel(nn.Module):
 
 *   几乎相同，除了`for`循环
 
-```
+```py
 class CharRnn(nn.Module):
     def __init__(self, vocab_size, n_fac):
         super().__init__()
@@ -108,7 +108,7 @@ class CharRnn(nn.Module):
 
 #### 有状态的 RNN [[08:52](https://youtu.be/H3g26EVADgY%3Ft%3D8m52s)] 
 
-```
+```py
 class CharSeqStatefulRnn(nn.Module):
     def __init__(self, vocab_size, n_fac, bs):
         self.vocab_size = vocab_size
@@ -132,7 +132,7 @@ class CharSeqStatefulRnn(nn.Module):
 *   **Wrinkle#1** [[10:51](https://youtu.be/H3g26EVADgY%3Ft%3D10m51s)]  - 如果我们只是执行`self.h = h` ，并且我们在长度为一百万字符的文档上训练，那么 RNN 的展开版本的大小有一百万层（省略号） 。 一百万层全连接网络将占用大量内存，因为为了实现链式规则，我们必须增加一百万个层，同时记住每批的 100 万个梯度。
 *   为避免这种情况，我们会不时地忘记它的历史。 我们仍然可以记住状态（隐藏矩阵中的值）而不记得我们如何到达那里的一切事情。
 
-```
+```py
 def repackage_var(h):
     return Variable(h.data) if type(h) == Variable else tuple(repackage_var(v) for v in h)
 ```
@@ -168,7 +168,7 @@ def repackage_var(h):
 
 当使用希望数据为特定格式的现有 API 时，你可以更改数据来适合该格式，也可以编写自己的数据集子类来处理数据已有的格式。两个都很好，但在这种情况下，我们将以 TorchText 格式提供我们的数据。TorchText 的 Fast.ai 包装器，已经有了一些东西，你可以通过它获取训练路径和验证路径，并且每个路径中的一个或多个文本文件包含一堆文本，它们为你的语言模型连接在一起。
 
-```
+```py
 from torchtext import vocab, data  
 
 from fastai.nlp import * 
@@ -192,7 +192,7 @@ trn.txt
 *   这样做的另一个好处是，拥有一个验证集，它不是随机混乱的文本行的集合，似乎更为现实，但它完全是语料库的一部分。
 *   在处理语言模型时，实际上并不需要单独的文件。 你可以拥有多个文件，但无论如何它们只是连在一起。
 
-```
+```py
 TEXT = data.Field(lower=True, tokenize=list)
 bs=64; bptt=8; n_fac=42; n_hidden=256
 
@@ -213,7 +213,7 @@ len(md.trn_dl), md.nt, len(md.trn_ds), len(md.trn_ds[0].text)
 *   `len(md.trn_dl)` ：数据加载器的长度（即多少`md.nt`批量）， `md.nt` ：标记数量（即词汇表中有多少独特的东西）
 *   一旦运行`LanguageModelData.from_text_files` ， `TEXT`将包含一个名为`vocab`的额外属性。 `TEXT.vocab.itos`词汇表中的唯一项目列表， `TEXT.vocab.stoi`是从每个项目到数字的反向映射。
 
-```
+```py
 class CharSeqStatefulRnn(nn.Module):
     def __init__(self, vocab_size, n_fac, bs):
         self.vocab_size = vocab_size
@@ -238,7 +238,7 @@ class CharSeqStatefulRnn(nn.Module):
 *   `.view`将通过`vocab_size`将等级3张量重塑为`-1`等级2（无论多么大）。 TorchText会自动更改**目标**以使其变平，因此我们不需要为实际值执行此操作（当我们在第4课中查看小批量时，我们注意到它已被展平。杰里米说我们将了解为什么以后，所以后来现在。）
 *   PyTorch（截至0.3）， `log_softmax`要求我们指定我们想要在哪个轴上执行softmax（即我们想要总和为哪个轴）。 在这种情况下，我们希望在最后一个轴上进行`dim = -1` 。
 
-```
+```py
 m = CharSeqStatefulRnn(md.nt, n_fac, 512).cuda() 
 opt = optim.Adam(m.parameters(), 1e-3)
 
@@ -249,14 +249,14 @@ fit(m, md, 4, opt, F.nll_loss)
 
 我们删除了`nn.RNN`的使用并用`nn.RNNCell`替换它。 PyTorch源代码如下所示。 你应该能够阅读和理解（注意：它们不会连接输入和隐藏状态，但是它们将它们加在一起 ​​- 这是我们的第一种方法）：
 
-```
+```py
 def RNNCell(input, hidden, w_ih, w_hh, b_ih, b_hh):
     return F.tanh(F.linear(input, w_ih, b_ih) + F.linear(hidden, w_hh, b_hh))
 ```
 
 关于`tanh`问题 [[44:06](https://youtu.be/H3g26EVADgY%3Ft%3D44m6s)] ：正如我们上周看到的那样， `tanh`强迫值在-1和1之间。由于我们一次又一次地乘以这个权重矩阵，我们会担心`relu` （因为它是无界）可能有更多的梯度爆炸问题。 话虽如此，你可以指定`RNNCell`使用默认为`tanh`不同`nonlineality` ，并要求它使用`relu`如果你愿意）。
 
-```
+```py
 class CharSeqStatefulRnn2(nn.Module):
     def __init__(self, vocab_size, n_fac, bs):
         super().__init__()
@@ -309,7 +309,7 @@ class CharSeqStatefulRnn2(nn.Module):
 
 *   线性插值
 
-```
+```py
 def GRUCell(input, hidden, w_ih, w_hh, b_ih, b_hh):
     gi = F.linear(input, w_ih, b_ih)
     gh = F.linear(hidden, w_hh, b_hh)
@@ -324,7 +324,7 @@ def GRUCell(input, hidden, w_ih, w_hh, b_ih, b_hh):
 
 以上是`GRUCell`代码的样子，我们使用它的新模型如下：
 
-```
+```py
 class CharSeqStatefulGRU(nn.Module):
     def __init__(self, vocab_size, n_fac, bs):
         super().__init__()
@@ -350,7 +350,7 @@ class CharSeqStatefulGRU(nn.Module):
 
 LSTM还有一个状态称为“单元状态”（不仅仅是隐藏状态），所以如果你使用LSTM，你必须在`init_hidden`返回一个矩阵元组（与隐藏状态完全相同）：
 
-```
+```py
 from fastai import sgdr
 
 n_hidden=512
@@ -379,7 +379,7 @@ class CharSeqStatefulLSTM(nn.Module):
 
 #### 没有学习器课程的回调（特别是SGDR） [[55:23](https://youtu.be/H3g26EVADgY%3Ft%3D55m23s)] 
 
-```
+```py
 m = CharSeqStatefulLSTM(md.nt, n_fac, 512, 2).cuda()
 lo = LayerOptimizer(optim.Adam, m, 1e-2, 1e-5)
 ```
@@ -388,7 +388,7 @@ lo = LayerOptimizer(optim.Adam, m, 1e-2, 1e-5)
 *   `LayerOptimizer`存在的一个关键原因是差异学习率和差`LayerOptimizer`重衰减。 我们需要使用它的原因是fast.ai中的所有机制假设你有其中一个。 如果你想在代码中使用回调或SGDR而不使用Learner类，则需要使用它。
 *   `lo.opt`返回优化器。
 
-```
+```py
 on_end = lambda sched, cycle: save_model(m, f'{PATH}models/cyc_{cycle}')
 
 cb = [CosAnneal(lo, len(md.trn_dl), cycle_mult=2, on_cycle_end=on_end)]
@@ -404,7 +404,7 @@ fit(m, md, 2**4-1, lo.opt, F.nll_loss, callbacks=cb)
 
 #### 测试 [[59:55](https://youtu.be/H3g26EVADgY%3Ft%3D59m55s)] 
 
-```
+```py
 def get_next(inp):
     idxs = TEXT.numericalize(inp)
     p = m(VV(idxs.transpose(0,1)))
@@ -440,7 +440,7 @@ CIFAR 10是学术界一个古老且众所周知的数据集 - 在ImageNet之前�
 
 [此处](http://pjreddie.com/media/files/cifar.tgz)提供图像格式的CIFAR 10数据
 
-```
+```py
 from fastai.conv_learner import *
 PATH = "data/cifar10/"
 os.makedirs(PATH,exist_ok=True)
@@ -459,7 +459,7 @@ bs=256
 *   `stats` - 当我们使用预先训练的模型时，你可以调用`tfms_from_model`来创建必要的变换，以根据训练过的原始模型中每个通道的均值和标准偏差将我们的数据集转换为标准化数据集。由于我们是从头开始训练模型，我们需要告诉它我们的数据的均值和标准偏差来规范它。 确保你可以计算每个通道的平均值和标准偏差。
 *   `tfms` - 对于CIFAR 10数据增强，人们通常在边缘周围进行水平翻转和黑色填充，并在填充图像中随机选择32×32区域。
 
-```
+```py
 data = get_data(32,bs)
 
 lr=1e-2
@@ -467,7 +467,7 @@ lr=1e-2
 
 来自我们的学生Kerem Turgutlu的[这本笔记本](https://github.com/KeremTurgutlu/deeplearning/blob/master/Exploring%2520Optimizers.ipynb) ：
 
-```
+```py
 class SimpleNet(nn.Module):
     def __init__(self, layers):
         super().__init__()
@@ -484,13 +484,13 @@ class SimpleNet(nn.Module):
 
 *   `nn.ModuleList` - 每当你在PyTorch中创建一个层列表时，你必须将它包装在`ModuleList`以将这些作为属性注册。
 
-```
+```py
 learn = ConvLearner.from_model_data(SimpleNet([32*32*3, 40,10]), data) 
 ```
 
 *   现在我们提高了一级API - 而不是调用`fit`函数，我们_从自定义模型_创建一个`learn`对象。 `ConfLearner.from_model_data`采用标准的PyTorch模型和模型数据对象。
 
-```
+```py
 learn, [o.numel() for o in learn.model.parameters()]
 
 (SimpleNet(
@@ -520,7 +520,7 @@ learn.sched.plot()
 
 ![](../img/1__5sTAdoWHTBQUzbaVrc4HA.png)
 
-```
+```py
 %time learn.fit(lr, 2)
 
 '''
@@ -548,7 +548,7 @@ Wall time: 55.3 s
 *   让我们用卷积模型替换完全连接的模型。 全连接层只是做一个点积。 这就是权重矩阵很大的原因（3072输入* 40 = 122880）。 我们没有非常有效地使用这些参数，因为输入中的每个像素都具有不同的权重。 我们想要做的是一组3乘3像素，它们具有特定的模式（即卷积）。
 *   我们将使用具有三乘三内核的过滤器。 如果有多个过滤器，则输出将具有其他维度。
 
-```
+```py
 class ConvNet(nn.Module):
     def __init__(self, layers, c):
         super().__init__()
@@ -570,7 +570,7 @@ class ConvNet(nn.Module):
 *   `kernel_size=3` ，过滤器的大小
 *   `stride=2`将使用每隔3乘3的区域，这将使每个维度的输出分辨率减半（即它具有与2乘2最大池相同的效果）
 
-```
+```py
 learn = ConvLearner.from_model_data(ConvNet([3, 20, 40, 80], 10), data)
 
 learn.summary()
@@ -606,7 +606,7 @@ OrderedDict([('Conv2d-1',
 *   `x = x.view(x.size(0), -1)` - `x`的特征形状为1乘1，因此它将删除最后两层。
 *   这个模型被称为“完全卷积网络” - 每个层都是卷积的，除了最后一层。
 
-```
+```py
 learn.lr_find(end_lr=100)
 learn.sched.plot()
 ```
@@ -615,7 +615,7 @@ learn.sched.plot()
 
 *   `lr_find`尝试的默认最终学习率为10.如果此时丢失仍然越来越好，则可以通过指定`end_lr`来覆盖。
 
-```
+```py
 %time learn.fit(1e-1, 2)
 
 '''
@@ -650,7 +650,7 @@ Wall time: 1min 46s
 
 通过创建`ConvLayer` （我们的第一个自定义层！）简化`forward`功能。 在PyTorch中，层定义和神经网络定义是相同的。 任何时候你有一个层，你可以将它用作神经网络，当你有神经网络时，你可以将它用作层。
 
-```
+```py
 class ConvLayer(nn.Module):
     def __init__(self, ni, nf):
         super().__init__()
@@ -661,7 +661,7 @@ class ConvLayer(nn.Module):
 
 *   `padding=1` - 当你进行卷积时，图像每边缩小1个像素。 因此它不会从32乘32到16乘16但实际上是15乘15\. `padding`将添加边框，以便我们可以保留边缘像素信息。 对于一个大图像来说，这并不是什么大不了的事情，但是当它降到4比4时，你真的不想丢掉一整块。
 
-```
+```py
 class ConvNet2(nn.Module):
     def __init__(self, layers, c):
         super().__init__()
@@ -685,7 +685,7 @@ class ConvNet2(nn.Module):
 *   我们可以简单地使用`nn.BatchNorm`但要了解它，我们将从头开始编写它。
 *   It is unlikely that the weight matrices on average are not going to cause your activations to keep getting smaller and smaller or keep getting bigger and bigger. It is important to keep them at reasonable scale. So we start things off with zero-mean standard deviation one by normalizing the input. What we really want to do is to do this for all layers, not just the inputs.
 
-```
+```py
 class BnLayer(nn.Module):
     def __init__(self, ni, nf, stride=2, kernel_size=3):
         super().__init__()
@@ -721,7 +721,7 @@ class BnLayer(nn.Module):
 *   如果可以，请尝试并始终在每个层上使用批量规范
 *   不要停止对数据进行规范化，以便使用你的数据的人知道你如何规范化数据。 其他库可能无法正确处理预训练模型的批量规范，因此当人们开始重新训练时，可能会导致问题。
 
-```
+```py
 class ConvBnNet(nn.Module):
     def __init__(self, layers, c):
         super().__init__()
@@ -747,7 +747,7 @@ class ConvBnNet(nn.Module):
 
 让我们增加模型的深度。 我们不能只添加更多的步幅2层，因为它每次将图像的大小减半。 相反，在每个步幅2层之后，我们插入步幅1层。
 
-```
+```py
 class ConvBnNet2(nn.Module):
     def __init__(self, layers, c):
         super().__init__()
@@ -798,7 +798,7 @@ Wall time: 57.6 s
 
 #### ResNet  [[01:52:43](https://youtu.be/H3g26EVADgY%3Ft%3D1h52m43s)] 
 
-```
+```py
 class ResnetLayer(BnLayer):
     def forward(self, x): return x + super().forward(x)
 
@@ -826,7 +826,7 @@ class Resnet(nn.Module):
 *   `ResnetLayer`继承自`BnLayer`并覆盖`forward` 。
 *   然后添加一堆层并使它更深3倍，因为`x + super().forward(x)` ，它仍然训练得很漂亮。
 
-```
+```py
 learn = ConvLearner.from_model_data(Resnet([10, 20, 40, 80, 160], 10), data)
 
 wd=1e-5
@@ -907,13 +907,13 @@ Wall time: 16min 38s
 
 `return x + super().forward(x)`
 
-```
+```py
 y = x + f(x)
 ```
 
 其中_x_是来自前一层的预测， _y_是来自当前层的预测。围绕公式进行预测，我们得到：公式shuffle
 
-```
+```py
 f(x) = y - x
 ```
 
@@ -928,7 +928,7 @@ f(x) = y - x
 
 在这里，我们增加了功能的大小并增加了丢失。
 
-```
+```py
 class Resnet2(nn.Module):
     def __init__(self, layers, c, p=0.5):
         super().__init__()
@@ -978,7 +978,7 @@ metrics.log_loss(y,preds), accuracy(preds,y)
 
 回去的狗和猫。 我们将创建resnet34（如果你对尾随数字的含义感兴趣， [请参阅此处](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py) - 只是不同的参数）。
 
-```
+```py
 PATH = "data/dogscats/"
 sz = 224
 arch = resnet34  # <-- Name of the function 
@@ -1063,7 +1063,7 @@ ResNet(
 *   当你使用fast.ai的`ConvLearner` ，它会为你删除最后两层。 fast.ai将AvgPool2d替换为Adaptive Average Pooling和Adaptive Max Pooling，并将两者连接在一起。
 *   在本练习中，我们将做一个简单的版本。
 
-```
+```py
 m = nn.Sequential(*children(m)[:-2], 
                   nn.Conv2d(512, 2, 3, padding=1), 
                   nn.AdaptiveAvgPool2d(1), Flatten(), 
@@ -1075,7 +1075,7 @@ m = nn.Sequential(*children(m)[:-2],
 *   平均汇集然后softmax
 *   最后没有线性层。 这是产生两个数字的另一种方式 - 这使我们可以做CAM！
 
-```
+```py
 tfms = tfms_from_model(arch, sz, aug_tfms=transforms_side_on, max_zoom=1.1)
 data = ImageClassifierData.from_paths(PATH, tfms=tfms, bs=bs)
 
@@ -1102,7 +1102,7 @@ learn.fit(0.01, 1, cycle_len=1)
 
 大数字对应猫。 那么这个矩阵是什么？ 该矩阵简单地等于特征矩阵特征`py`向量的值：
 
-```
+```py
 f2=np.dot(np.rollaxis(feat,0,3), py)
 f2-=f2.min()
 f2/=f2.max()
@@ -1111,7 +1111,7 @@ f2
 
 `py` vector是预测，“我100％确信它是一只猫。” `feat`是从最终卷积层（我们添加的`Conv2d`层）出来的值（2×7×7）。 如果我们将`feat`乘以`py` ，我们得到所有第一个通道而不是第二个通道。 因此，它将返回与猫对齐的部分的最后卷积层的值。 换句话说，如果我们将`feat`乘以`[0, 1]` ，它就会成为一只狗。
 
-```
+```py
 sf = SaveFeatures(m[-4])
 py = m(Variable(x.cuda()))
 sf.remove()
@@ -1136,7 +1136,7 @@ feat.shape
 
 “钩子”是让我们让模型返回矩阵的机制。 `register_forward_hook`要求PyTorch每次计算一个层时都会运行给定的函数 - 有点像每次计算层时发生的回调。 在下面的例子中，它保存了我们感兴趣的特定层的值：
 
-```
+```py
 class SaveFeatures():
     features=None
     def __init__(self, m): 
