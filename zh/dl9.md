@@ -1065,7 +1065,7 @@ learn.fit(lrs, 1, cycle_len=10, use_clr=(20,10))
 
 如果你直接进入并阅读这样的论文，这4段可能没有意义。 但是现在我们已经完成了它，你读了那些，并希望能够“哦，这就是杰里米所说的，只有他们[伤害它比杰里米](https://youtu.be/0frKXR-2PBY%3Ft%3D2h37s)更好，而言语更少 [[2:00:37](https://youtu.be/0frKXR-2PBY%3Ft%3D2h37s)] 。 如果你开始读一篇论文然后“哎呀”，那么诀窍就是开始回读引文。
 
-Jeremy读取**匹配策略**和**训练目标** （又名丢失函数） [[2:01:44](https://youtu.be/0frKXR-2PBY%3Ft%3D2h1m44s)] 
+Jeremy读取**匹配策略**和**训练目标** （又名损失函数） [[2:01:44](https://youtu.be/0frKXR-2PBY%3Ft%3D2h1m44s)] 
 
 #### 一些文章提示 [[2:02:34](https://youtu.be/0frKXR-2PBY%3Ft%3D2h2m34s)] 
 

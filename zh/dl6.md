@@ -662,7 +662,7 @@ fit(m, md, 1, opt, F.nll_loss)
 
 #### 添加与连接
 
-我们现在将为`self.l_hidden(h+inp)` [[1:46:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h46m4s)] 尝试别的东西。 原因是输入状态和隐藏状态在质量上是不同的。 输入是字符的编码，h是一系列字符的编码。 所以将它们加在一起，我们可能会丢失信息。 让我们将它们连接起来。 不要忘记更改输入以匹配形状（ `n_fac+n_hidden`而不是`n_fac` ）。
+我们现在将为`self.l_hidden(h+inp)` [[1:46:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h46m4s)] 尝试别的东西。 原因是输入状态和隐藏状态本质上是不同的。 输入是字符的编码，`h`是一系列字符的编码。 所以将它们加在一起，我们可能会丢失信息。 让我们将它们连接起来。 不要忘记更改输入来匹配形状（ `n_fac+n_hidden`而不是`n_fac` ）。
 
 ```py
 class CharLoopConcatModel(nn.Module):
@@ -686,9 +686,9 @@ class CharLoopConcatModel(nn.Module):
 
 这提供了一些改进。
 
-#### RNT与PyTorch  [[1:48:47](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h48m47s)] 
+#### RNT 与 PyTorch  [[1:48:47](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h48m47s)] 
 
-PyTorch将自动为我们和线性输入层编写`for`循环。
+PyTorch 将自动为我们和线性输入层编写`for`循环。
 
 ```py
 class CharRnn(nn.Module):
@@ -708,7 +708,7 @@ class CharRnn(nn.Module):
 ```
 
 *   由于稍后会变得明显的原因， `self.rnn`会返回输出，还会返回隐藏状态。
-*   PyTorch的细微差别在于`self.rnn`会将一个新的隐藏状态附加到张量而不是替换（换句话说，它将返回图中的所有椭圆）。 我们只想要最后一个，所以我们做`outp[-1]`
+*   PyTorch 的细微差别在于，`self.rnn`会将一个新的隐藏状态附加到张量而不是替换（换句话说，它将返回图中的所有椭圆）。 我们只想要最后一个，所以我们执行`outp[-1]`
 
 ```py
 m = CharRnn(vocab_size, n_fac).cuda() 
@@ -723,7 +723,7 @@ outp.size(), hn.size()
 '''
 ```
 
-在PyTorch版本中，隐藏状态是等级3张量`h = V(torch.zeros(1, bs, n_hidden))` （在我们的版本中，它是等级2张量） [[1:51:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h51m58s)] 。 我们稍后会详细了解这一点，但事实证明你可以拥有倒退的第二个RNN。 我们的想法是找到倒退的关系会更好 - 它被称为“双向RNN”。 你也可以向RNN提供RNN馈送，称为“多层RNN”。 对于这些RNN，你将需要张量中的附加轴来跟踪隐藏状态的其他层。 现在，我们只有1，然后回来1。
+在 PyTorch 版本中，隐藏状态是 3 阶张量`h = V(torch.zeros(1, bs, n_hidden))` （在我们的版本中，它是二阶张量） [[1:51:58](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h51m58s)]。 我们稍后会详细了解它，但事实证明你可以拥有反向的第二个 RNN。 我们的想法是找到反向的关系会更好 - 它被称为“双向 RNN”。 你也可以向 RNN 提供 RNN 的输出，称为“多层 RNN”。 对于这些 RNN，你将需要张量中的额外轴，来跟踪其他层的隐藏状态。 现在，我们只有一层。
 
 #### 测试模型
 
@@ -747,27 +747,25 @@ get_next_n('for thos', 40)
 # 'for those the same the same the same the same th' 
 ```
 
-这一次，我们每次循环`n`次调用`get_next` ，每次我们将通过删除第一个字符并添加我们刚预测的字符来替换输入。
+这一次，我们循环`n`次，每次调用`get_next` ，每次我们将通过删除第一个字符，并添加我们刚预测的字符来替换输入。
 
-对于一个有趣的家庭作业，尝试编写自己的`nn.RNN` “ `JeremysRNN` ”而不需要查看PyTorch源代码。
+作为一个有趣的家庭作业，尝试编写自己的`nn.RNN`，“`JeremysRNN`”，不要查看 PyTorch 源代码。
 
 #### 多输出 [[1:55:31](https://youtu.be/sHcLkfRrgoQ%3Ft%3D1h55m31s)] 
 
-从上一个图中，我们可以通过将char 1与char 2相同地处理为n-1来进一步简化。 你注意到三角形（输出）也在循环内移动，换句话说，我们在每个字符后创建一个预测。
+从上一个图中，我们可以通过将字符 1 与字符 2 相同地处理为 n-1 来进一步简化。 你注意到三角形（输出）也在循环内移动，换句话说，我们在每个字符后创建一个预测。
 
 ![](../img/1_0-XkFkCIatPvenvKPfe2_g.png)
 
-使用字符1到n-1预测字符2到n
+使用字符 1 到 n-1 预测字符 2 到 n
 
-
-
-我们可能希望这样做的原因之一是我们之前看到的冗余：
+我们可能希望这样做的原因之一，是我们之前看到的冗余：
 
 ```py
 array([[40, 42, 29, 30, 25, 27, 29, 1],  [42, 29, 30, 25, 27, 29, 1, 1],  [29, 30, 25, 27, 29, 1, 1, 1],  [30, 25, 27, 29, 1, 1, 1, 43],  [25, 27, 29, 1, 1, 1, 43, 45],  [27, 29, 1, 1, 1, 43, 45, 40],  [29, 1, 1, 1, 43, 45, 40, 40],  [ 1, 1, 1, 43, 45, 40, 40, 39]]) 
 ```
 
-我们可以通过这次采用**不重叠**的角色来提高效率。 因为我们正在进行多输出，对于输入字符0到7，输出将是char 1到8的预测。
+这次我们可以通过使用**不重叠**的字符来提高效率。 因为我们正在进行多输出，对于输入字符 0 到 7，输出将是字符 1 到 8 的预测。
 
 ```py
 xs[:cs,:cs]
@@ -815,13 +813,13 @@ class CharSeqRnn(nn.Module):
         return F.log_softmax(self.l_out(outp), dim=-1)
 ```
 
-请注意，我们不再执行`outp[-1]`因为我们想保留所有这些。 但其他一切都是一样的。 一个复杂性 [[2:00:37](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h37s)] 是我们想要像以前一样使用负对数似然丢失函数，但它期望两个等级2张量（两个小批量向量）。 但在这里，我们有3级张量：
+请注意，我们不再执行`outp[-1]`因为我们想保留所有这些。 但其他一切都是一样的。 复杂性 [[2:00:37](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h37s)] 是，我们想要像以前一样使用负对数似然损失函数，但它期望两个二阶张量（两个小批量向量）。 但在这里，我们有三阶张量：
 
-*   8个字符（时间步长）
-*   84个概率
-*   为512 minibatch
+*   8 个字符（时间步长）
+*   84 个概率
+*   512 个小批量
 
-#### 让我们写一个自定义的损失函数 [[2:02:10](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h2m10s)] ：
+#### 让我们写一个自定义的损失函数 [[2:02:10](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h2m10s)]：
 
 ```py
 def nll_loss_seq(inp, targ):
@@ -830,23 +828,23 @@ def nll_loss_seq(inp, targ):
     return F.nll_loss(inp.view(-1,nh), targ)
 ```
 
-*   `F.nll_loss`是PyTorch损失函数。
-*   展平我们的投入和目标。
-*   转置前两个轴，因为PyTorch期望1.序列长度（多少时间步长），2。批量大小，3。隐藏状态本身。 `yt.size()`是512乘8，而`sl, bs`是8乘512。
-*   当你执行“转置”之类的操作时，PyTorch通常不会实际调整内存顺序，而是保留一些内部元数据来将其视为转置。 当你转置矩阵时，PyTorch只会更新元数据。 如果你看到一个错误“此张量不连续”，请在其后添加`.contiguous()`并且错误消失。
-*   `.view`与`np.reshape`相同。 `-1`表示只要它需要。
+*   `F.nll_loss`是 PyTorch 损失函数。
+*   展开我们的输入和目标。
+*   转置前两个轴，因为 PyTorch 期望第一维：序列长度（多少时间步长），第二维：批量大小，第三位：隐藏状态本身。 `yt.size()`是 512 乘 8，而`sl, bs`是 8 乘 512。
+*   当你执行“转置”之类的操作时，PyTorch 通常不会实际调整内存顺序，而是保留一些内部元数据来将其视为转置。当你转置矩阵时，PyTorch 只会更新元数据。如果你看到错误“此张量不连续”，请在其后添加`.contiguous()`，错误就消失了。
+*   `.view`与`np.reshape`相同。`-1`表示应该是的东西。
 
 ```py
 fit(m, md, 4, opt, null_loss_seq) 
 ```
 
-请记住， `fit(...)`是实现训练循环的最低级别fast.ai抽象。 所以所有参数都是标准的PyTorch，除了`md` ，它是我们的模型数据对象，它包装了测试集，训练集和验证集。
+请记住， `fit(...)`是实现训练循环的最低级别 fast.ai抽象。 所以所有参数都是标准的 PyTorch，除了`md`，它是我们的模型数据对象，它包装了测试集，训练集和验证集。
 
-问题 [[2:06:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h6m4s)] ：既然我们在循环中放了一个三角形，我们需要更大的序列大小吗？
+问题 [[2:06:04](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h6m4s)]：既然我们在循环中放了一个三角形，我们需要更大的序列大小吗？
 
-*   如果我们有一个像8这样的短序列，那么第一个字符就没有任何意义了。 它以空的隐藏状态零开始。
+*   如果我们有一个像 8 这样的短序列，那么第一个字符就没有可依照的东西。它以空的隐藏状态来开始。
 *   我们将在下周学习如何避免这个问题。
-*   基本思想是“为什么我们每次都要将隐藏状态重置为零？”（参见下面的代码）。 如果我们能够以某种方式排列这些迷你批次，以便下一个小批量正确连接代表Nietsche作品中的下一个字母，那么我们可以将`h = V(torch.zeros(1, bs, n_hidden))`到构造函数中。
+*   基本思想是“为什么我们每次都要将隐藏状态重置为零？”（参见下面的代码）。 如果我们能够以某种方式排列这些小批量，以便下一个小批量正确连接，来表示 Nietsche 作品中的下一个字母，那么我们可以将`h = V(torch.zeros(1, bs, n_hidden))`移动到构造函数中。
 
 ```py
 class CharSeqRnn(nn.Module):
@@ -866,16 +864,16 @@ class CharSeqRnn(nn.Module):
 
 #### 梯度爆炸 [[2:08:21](https://youtu.be/sHcLkfRrgoQ%3Ft%3D2h8m21s)] 
 
-`self.rnn(inp, h)`是一个循环，一次又一次地应用相同的矩阵。 如果这个矩阵乘以每次都会增加激活次数，那么我们实际上就是以8的幂为例 - 我们称之为梯度爆炸。 我们希望确保初始`l_hidden`不会导致我们的激活平均增加或减少。
+`self.rnn(inp, h)`是一个循环，一次又一次地应用相同的矩阵。 如果这个矩阵乘法每次都会增加激活，那么我们实际上就是计算了 8 次方 - 我们称之为梯度爆炸。 我们希望确保，初始`l_hidden`不会导致我们的激活平均上增加或减少。
 
-一个很好的矩阵就是这样称为单位矩阵：
+一个很好的矩阵就是这样，称为单位矩阵：
 
 ![](../img/1_MH5NhqJBth84L9ufaxJCig.jpeg)
 
-我们可以使用单位矩阵覆盖随机初始化的隐藏隐藏权重：
+我们可以使用单位矩阵覆盖随机初始化的隐藏权重：
 
 ```py
 m.rnn.weight_hh_l0.data.copy_(torch.eye(n_hidden)) 
 ```
 
-这是由Geoffrey Hinton等人介绍的。 人。 in 2015 ( [A Simple Way to Initialize Recurrent Networks of Rectified Linear Units](https://arxiv.org/abs/1504.00941) ) — after RNN has been around for decades. It works very well, and you can use higher learning rate since it is well behaved.
+这由 Geoffrey Hinton 等人在 2015 年引入（[初始化 ReLU 循环网络的一种简便方法](https://arxiv.org/abs/1504.00941)） — 在 RNN 已经存在了几十年之后。 它运作良好，你可以使用更高的学习率，因为它表现良好。
