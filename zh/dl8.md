@@ -529,7 +529,7 @@ Matplotlib之所以如此命名是因为它最初是Matlab绘图库的克隆。 
 
 ![](../img/1_CbjuSpn8ZnX6SMLNiBzoag.png)
 
-如你所见，已经对输入做了大量事情，以便将其传递给预先训练的模型。 因此我们有一个名为`denorm` for denormalize的函数，并且还修复了维度顺序等等。因为非规范化取决于变换 [[1:37:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h37m52s)] ，并且数据集知道使用什么变换来创建它，所以这就是你必须要做的事情`md.val_ds.denorm`并将其转换为numpy数组后传递小批量：
+如你所见，已经对输入做了大量事情，以便将其传递给预训练的模型。 因此我们有一个名为`denorm` for denormalize的函数，并且还修复了维度顺序等等。因为非规范化取决于变换 [[1:37:52](https://youtu.be/Z0ssNAbe81M%3Ft%3D1h37m52s)] ，并且数据集知道使用什么变换来创建它，所以这就是你必须要做的事情`md.val_ds.denorm`并将其转换为numpy数组后传递小批量：
 
 ```
  show_img(md.val_ds.denorm(to_np(x))[0]); 
