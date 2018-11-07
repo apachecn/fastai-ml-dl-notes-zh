@@ -24,7 +24,7 @@
 | 第四课 | |
 | 第五课 | [飞龙](https://github.com/wizardforcel) |
 | 第六课 | [飞龙](https://github.com/wizardforcel) |
-| 第七课 | |
+| 第七课 | [飞龙](https://github.com/wizardforcel) |
 | 第八课 | |
 | 第九课 | |
 | 第十课 | [wnma3mz](https://github.com/wnma3mz) |
