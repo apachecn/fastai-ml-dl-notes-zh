@@ -1,5 +1,7 @@
 # 深度学习：第一部分第三课
 
+> 译者：[咸鱼](https://github.com/Watermelon233)
+
 +   [课程论坛](http://forums.fast.ai/t/wiki-lesson-3/9401/1)
 
 ### 学生创建的有用材料：

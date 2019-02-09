@@ -1,5 +1,7 @@
 # 深度学习：第一部分第五课
 
+> 译者：[飞龙](https://github.com/wizardforcel)
+
 +   [课程论坛](http://forums.fast.ai/t/wiki-lesson-5/9403)
 
 ## 一，引言

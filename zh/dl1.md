@@ -1,5 +1,7 @@
 # 深度学习：第一部分第一课
 
+> 译者：[咸鱼](https://github.com/Watermelon233)、[Piddnad](https://github.com/Piddnad)
+
 +   [课程论坛](http://forums.fast.ai/t/wiki-lesson-1/9398/1)
 
 ## 入门 [[0:00](https://youtu.be/IPBSB1HLNLo)]：

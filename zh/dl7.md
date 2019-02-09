@@ -1,5 +1,7 @@
 # 深度学习：第一部分第七课
 
+> 译者：[飞龙](https://github.com/wizardforcel)
+
 +   [论坛](http://forums.fast.ai/t/wiki-lesson-7/9405)
 
 第 1 部分的主题是：

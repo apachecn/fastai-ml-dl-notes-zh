@@ -12,26 +12,10 @@
 +   [ApacheCN 学习资源](http://www.apachecn.org/)
 +   [fast.ai 数值线性代数讲义 v2](https://github.com/apachecn/fastai-num-linalg-v2-zh)
 
-## 贡献者
+## 负责人
 
-| 章节 | 贡献者 |
-| --- | --- |
-| 负责人 | [飞龙](https://github.com/wizardforcel) |
-| 深度学习| - |
-| 第一课 | [咸鱼](https://github.com/Watermelon233) |
-| 第二课 | [咸鱼](https://github.com/Watermelon233) |
-| 第三课 | [咸鱼](https://github.com/Watermelon233) |
-| 第四课 | |
-| 第五课 | [飞龙](https://github.com/wizardforcel) |
-| 第六课 | [飞龙](https://github.com/wizardforcel) |
-| 第七课 | [飞龙](https://github.com/wizardforcel) |
-| 第八课 | |
-| 第九课 | |
-| 第十课 | [wnma3mz](https://github.com/wnma3mz) |
-| 第十一课 | |
-| 第十二课 | |
-| 第十三课 | |
-| 第十四课 | |
++   [飞龙](https://github.com/wizardforcel)
++   [咸鱼](https://github.com/Watermelon233)
 
 ## 贡献指南
 

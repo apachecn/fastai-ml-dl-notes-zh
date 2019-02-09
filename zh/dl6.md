@@ -1,5 +1,7 @@
 # 深度学习：第一部分第六课
 
+> 译者：[飞龙](https://github.com/wizardforcel)
+
 +   [论坛](http://forums.fast.ai/t/wiki-lesson-6/9404)
 
 [2017 年深度学习优化的重点](http://ruder.io/deep-learning-optimization-2017/index.html)
